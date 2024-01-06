@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace HamerSoft.PuniTY.TCP
+namespace HamerSoft.PuniTY
 {
     public class PunityTcpServer : MonoBehaviour
     {
@@ -139,12 +139,15 @@ namespace HamerSoft.PuniTY.TCP
             // You can start any process, HelloWorld is a do-nothing example.
             var root = Application.dataPath.Replace("Assets", "");
 
-            _myProcess.StartInfo.FileName =
-                Path.Combine(root, "Packages", "com.hamersoft.punity", "Plugins",
-                    $"PunityTCPClient{(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor ? ".exe" : "")}");
-            // _myProcess.StartInfo.CreateNoWindow = true;
-            _myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            // _myProcess.StartInfo.FileName =
+            //     Path.Combine(root, "Packages", "com.hamersoft.punity", "Plugins",
+            //         $"PunityTCPClient{(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor ? ".exe" : "")}");
+            _myProcess.StartInfo.CreateNoWindow = true;
+            _myProcess.StartInfo.FileName = Path.Combine(Application.streamingAssetsPath,
+                $"PunityTCPClient{(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor ? ".exe" : "")}");
+            // _myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
             _myProcess.StartInfo.Arguments = $"{server} {port}";
+            _myProcess.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
             _myProcess.Start();
             // This code assumes the process you are starting will terminate itself.
             // Given that it is started without a window so you cannot terminate it
