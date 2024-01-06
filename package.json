@@ -1,0 +1,30 @@
+{
+  "name": "com.hamersoft.punity",
+  "version": "0.0.0",
+  "displayName": "PuniTY",
+  "description": "A PseudoTerminal for Unity3D.",
+  "unity": "2021.3",
+  "documentationUrl": "https://hamersoft.github.io/PuniTY/",
+  "changelogUrl": "https://github.com/HamerSoft/PuniTy/releases",
+  "licensesUrl": "License.md",
+  "keywords": [
+    "HamerSoft",
+    "Unity3D",
+    "Integreated Terminal",
+    "Terminal",
+    "Pseudo",
+    "PseudoTerminal",
+    "bash",
+    "cmd",
+    "powershell",
+    "sh"
+  ],
+  "author": {
+    "name": "HamerSoft",
+    "email": "r.hamers@hamersoft.com",
+    "url": "https://hamersoft.com"
+  },
+  "type": "library",
+  "dependencies": {
+  }
+}
