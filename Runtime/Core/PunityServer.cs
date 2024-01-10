@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Net.Sockets;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using HamerSoft.PuniTY.Core.Logging;
 
-namespace HamerSoft.PuniTY.TCP.Core
+namespace HamerSoft.PuniTY
 {
     public class PunityServer : IPunityServer
     {
         public event Action<string> ResponseReceived;
+        public event Action ConnectionLost;
 
         public bool IsConnected => _client?.Connected == true;
 
-        private readonly UTF8Encoding _encoding;
-        private readonly Regex _ansiRegex;
         private readonly ILogger _logger;
         private Thread _listeningThread;
         private TcpListener _server;
@@ -25,10 +21,7 @@ namespace HamerSoft.PuniTY.TCP.Core
 
         internal PunityServer(ILogger logger = null)
         {
-            _logger = logger ?? new EditorLogger();
-            _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-            _ansiRegex = new Regex(
-                @"[\u001B\u009B][[\]()#;?]*(?:(?:(?:[a-zA-Z\d]*(?:;[a-zA-Z\d]*)*)?\u0007)|(?:(?:\d{1,4}(?:;\d{0,4})*)?[\dA-PRZcf-ntqry=><~]))");
+            _logger = logger;
         }
 
         public void Start(StartArguments args)
@@ -40,22 +33,21 @@ namespace HamerSoft.PuniTY.TCP.Core
             try
             {
                 _server = new TcpListener(_startArguments.Ip, (int)_startArguments.Port);
-
                 _server.Start();
                 _listeningThread = new Thread(WaitForClient);
                 _listeningThread?.Start();
             }
             catch (SocketException e)
             {
-                _logger.LogError("SocketException:", e);
+                _logger?.LogError("SocketException:", e);
             }
         }
 
         private void WaitForClient()
         {
-            _logger.Log("Waiting for a connection... ");
+            _logger?.Log("Waiting for a connection... ");
             _client = _server.AcceptTcpClient();
-            _logger.Log("Connected!");
+            _logger?.Log("Established Connection!");
             _ioStream = _client.GetStream();
             StartReading();
         }
@@ -71,8 +63,7 @@ namespace HamerSoft.PuniTY.TCP.Core
                 if (bytesRead < 0)
                     return;
 
-                var output = _encoding.GetString(buffer, 0, bytesRead);
-                output = _ansiRegex.Replace(output, string.Empty);
+                var output = _startArguments.Encoder.Read(buffer[..bytesRead]);
 
                 OnResponseReceived(output);
 
@@ -101,13 +92,13 @@ namespace HamerSoft.PuniTY.TCP.Core
 
         public async Task Write(string text)
         {
-            var bytes = GetBytes(text);
+            var bytes = _startArguments.Encoder.Write(text);
             await _ioStream.WriteAsync(bytes, 0, bytes.Length);
         }
 
         public async Task WriteLine(string text)
         {
-            var bytes = GetBytes($"{Environment.NewLine}{text}");
+            var bytes = _startArguments.Encoder.Write($"{Environment.NewLine}{text}");
             await _ioStream.WriteAsync(bytes, 0, bytes.Length);
         }
 
@@ -115,15 +106,10 @@ namespace HamerSoft.PuniTY.TCP.Core
         {
             await _ioStream.WriteAsync(bytes, 0, bytes.Length);
         }
-        
+
         public void Dispose()
         {
-           Stop();
-        }
-        
-        private static byte[] GetBytes(string message)
-        {
-            return Encoding.ASCII.GetBytes(message);
+            Stop();
         }
     }
 }

@@ -6,6 +6,7 @@ namespace HamerSoft.PuniTY
     public interface IPunityServer : IDisposable
     {
         public event Action<string> ResponseReceived;
+        public event Action ConnectionLost;
         public bool IsConnected { get; }
 
         public void Start(StartArguments args);

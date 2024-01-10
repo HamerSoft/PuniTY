@@ -8,12 +8,18 @@ namespace HamerSoft.PuniTY.Core.Client
     internal class PunityClient : IPunityClient
     {
         private Process _myProcess;
-        private ClientArguments _args;
+        private StartArguments _args;
+        private readonly ILogger _logger;
 
         public event Action Exited;
         public bool HasExited => _myProcess?.HasExited == true;
 
-        void IPunityClient.Start(ClientArguments args)
+        public PunityClient(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+        void IPunityClient.Start(StartArguments args)
         {
             _args = args;
             if (!_args.IsValid(out var message))
@@ -35,11 +41,21 @@ namespace HamerSoft.PuniTY.Core.Client
             _myProcess.StartInfo.Arguments = $"{_args.Ip} {_args.Port}";
             _myProcess.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
             _myProcess.Start();
+            _myProcess.Exited += ProcessExited;
+        }
+
+        private void ProcessExited(object sender, EventArgs e)
+        {
+            _logger.LogError("Punity Client exited!");
+            _myProcess.Exited -= ProcessExited;
+            Exited?.Invoke();
         }
 
         public void Stop()
         {
             _myProcess?.Kill();
+            _myProcess.Exited -= ProcessExited;
+            Exited?.Invoke();
         }
     }
 }

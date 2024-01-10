@@ -6,7 +6,7 @@ namespace HamerSoft.PuniTY.Core.Client
     {
         public event Action Exited;
         public bool HasExited { get; }
-        public void Start(ClientArguments args);
+        public void Start(StartArguments args);
         public void Stop();
     }
 }

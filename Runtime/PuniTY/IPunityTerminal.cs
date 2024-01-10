@@ -4,7 +4,9 @@ namespace HamerSoft.PuniTY
 {
     public interface IPunityTerminal : IDisposable
     {
-        public void Start(string workingDirectory, string app);
+        public event Action Stopped;
+        public bool IsRunning { get; }
+        public void Start(StartArguments arguments, ITerminalUI ui);
         public void Stop();
     }
 }
