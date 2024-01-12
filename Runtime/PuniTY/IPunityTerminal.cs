@@ -6,7 +6,7 @@ namespace HamerSoft.PuniTY
     {
         public event Action Stopped;
         public bool IsRunning { get; }
-        public void Start(StartArguments arguments, ITerminalUI ui);
+        public void Start(StartArguments arguments, ITerminalUI ui = null);
         public void Stop();
     }
 }

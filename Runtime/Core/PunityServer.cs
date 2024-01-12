@@ -1,32 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HamerSoft.PuniTY
+namespace HamerSoft.PuniTY.Core
 {
-    public class PunityServer : IPunityServer
+    // make server into hub to accept clients
+    // pass the stream along to create a client
+    // write through the client instead of the server
+    // write tests based on the stream abstraction
+    internal class PunityServer : IPunityServer
     {
-        public event Action<string> ResponseReceived;
-        public event Action ConnectionLost;
+        public event Action<Guid> ConnectionLost;
+        public event Action<Guid, Stream> ClientConnected;
 
-        public bool IsConnected => _client?.Connected == true;
+        public bool IsConnected => _clients.Count > 0;
+        public int ConnectedClients => _clients.Count;
 
         private readonly ILogger _logger;
         private Thread _listeningThread;
         private TcpListener _server;
-        private TcpClient _client;
-        private NetworkStream _ioStream;
-        private StartArguments _startArguments;
 
-        internal PunityServer(ILogger logger = null)
+        private StartArguments _startArguments;
+        private bool _stopped;
+
+        private Dictionary<Guid, TcpClient> _clients;
+
+        internal PunityServer(ILogger logger)
         {
+            _clients = new();
             _logger = logger;
         }
 
-        public void Start(StartArguments args)
+        public void Start(StartArguments startArguments)
         {
-            _startArguments = args;
+            _stopped = false;
+            _startArguments = startArguments;
             if (!_startArguments.IsValid(out var message))
                 throw new ArgumentException(message);
 
@@ -39,72 +50,56 @@ namespace HamerSoft.PuniTY
             }
             catch (SocketException e)
             {
-                _logger?.LogError("SocketException:", e);
+                _logger.LogError("SocketException:", e);
             }
+        }
+
+        public void Stop(IPunityClient client)
+        {
+            if (client == null || !_clients.Remove(client.Id, out var tcpClient))
+                return;
+            tcpClient.Close();
+            tcpClient.Dispose();
+            OnConnectionLost(client.Id);
         }
 
         private void WaitForClient()
         {
-            _logger?.Log("Waiting for a connection... ");
-            _client = _server.AcceptTcpClient();
-            _logger?.Log("Established Connection!");
-            _ioStream = _client.GetStream();
-            StartReading();
-        }
-
-        private void StartReading()
-        {
-            const int readSize = 4096;
-            byte[] buffer = new byte[readSize];
-            AsyncCallback callback = null;
-            callback = ar =>
+            while (!_stopped)
             {
-                int bytesRead = _ioStream.EndRead(ar);
-                if (bytesRead < 0)
-                    return;
-
-                var output = _startArguments.Encoder.Read(buffer[..bytesRead]);
-
-                OnResponseReceived(output);
-
-                Array.Clear(buffer, 0, buffer.Length);
-                _ioStream.BeginRead(buffer, 0, readSize, callback, this);
-            };
-
-            _ioStream.BeginRead(buffer, 0, readSize, callback, this);
-        }
-
-        private void OnResponseReceived(string response)
-        {
-            ResponseReceived?.Invoke(response);
+                _logger.Log("Waiting for a connection... ");
+                var tcpClient = _server.AcceptTcpClient();
+                if (tcpClient != null)
+                {
+                    var id = Guid.NewGuid();
+                    _clients[id] = tcpClient;
+                    _logger.Log("Established Connection with new client!");
+                    ClientConnected?.Invoke(id, tcpClient.GetStream());
+                }
+            }
         }
 
         public void Stop()
         {
+            _stopped = true;
+            _logger.Log("Server stopping!");
             _listeningThread?.Abort();
             _listeningThread = null;
             _server?.Stop();
+            foreach (var client in _clients)
+            {
+                client.Value?.Close();
+                client.Value?.Dispose();
+                OnConnectionLost(client.Key);
+            }
+
+            _clients.Clear();
             _server = null;
-            _ioStream?.Close();
-            _ioStream?.Dispose();
-            _ioStream = null;
         }
 
-        public async Task Write(string text)
+        private void OnConnectionLost(Guid id)
         {
-            var bytes = _startArguments.Encoder.Write(text);
-            await _ioStream.WriteAsync(bytes, 0, bytes.Length);
-        }
-
-        public async Task WriteLine(string text)
-        {
-            var bytes = _startArguments.Encoder.Write($"{Environment.NewLine}{text}");
-            await _ioStream.WriteAsync(bytes, 0, bytes.Length);
-        }
-
-        public async Task Write(byte[] bytes)
-        {
-            await _ioStream.WriteAsync(bytes, 0, bytes.Length);
+            ConnectionLost?.Invoke(id);
         }
 
         public void Dispose()

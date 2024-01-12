@@ -1,13 +1,12 @@
 ﻿using System;
-using HamerSoft.PuniTY.Core.Client;
-using HamerSoft.PuniTY.Core.Logging;
+using System.IO;
 
-namespace HamerSoft.PuniTY
+namespace HamerSoft.PuniTY.Core
 {
-    public class PunityTerminal : IPunityTerminal
+    internal class PunityTerminal : IPunityTerminal
     {
+        private readonly IPunityServer _server;
         private readonly ILogger _logger;
-        private PunityServer _server;
         private IPunityClient _client;
         private ITerminalUI _ui;
 
@@ -15,9 +14,11 @@ namespace HamerSoft.PuniTY
         public bool IsRunning { get; private set; }
 
 
-        public PunityTerminal(ILogger logger = null)
+        internal PunityTerminal(IPunityServer server, IPunityClient client, ILogger logger)
         {
-            _logger = logger ?? new EditorLogger();
+            _logger = logger;
+            _server = server;
+            _client = client;
         }
 
         public void Start(StartArguments arguments, ITerminalUI ui)
@@ -29,12 +30,11 @@ namespace HamerSoft.PuniTY
             }
 
             _ui = ui;
-            _server = new PunityServer(_logger);
-            _server.ResponseReceived += ServerResponseReceived;
+
             _server.ConnectionLost += ServerOnConnectionLost;
-            _server.Start(arguments);
-            _client = new PunityClient(_logger);
+            _server.ClientConnected += ServerOnClientConnected;
             _client.Exited += ClientExited;
+            _client.ResponseReceived += ClientResponseReceived;
             _client.Start(arguments);
             if (ui != null)
             {
@@ -46,26 +46,25 @@ namespace HamerSoft.PuniTY
             IsRunning = true;
         }
 
-        private void ServerOnConnectionLost()
+        private void ServerOnClientConnected(Guid id, Stream stream)
         {
-            throw new NotImplementedException();
+            _client.Connect(id, stream);
         }
 
         public void Stop()
         {
+            if (_server != null)
+            {
+                _server.Stop(_client);
+                _server.ConnectionLost -= ServerOnConnectionLost;
+            }
+
             if (_client != null)
             {
                 _client.Exited -= ClientExited;
+                _client.ResponseReceived -= ClientResponseReceived;
                 _client.Stop();
                 _client = null;
-            }
-
-            if (_server != null)
-            {
-                _server.ResponseReceived -= ServerResponseReceived;
-                _server.ConnectionLost -= ServerOnConnectionLost;
-                _server.Stop();
-                _server = null;
             }
 
             if (_ui != null)
@@ -81,20 +80,25 @@ namespace HamerSoft.PuniTY
 
         private async void UiWrittenLine(string text)
         {
-            await _server.WriteLine(text);
+            await _client.WriteLine(text);
         }
 
         private async void UiWrittenByte(byte[] bytes)
         {
-            await _server.Write(bytes);
+            await _client.Write(bytes);
         }
 
         private async void UiWritten(string text)
         {
-            await _server.Write(text);
+            await _client.Write(text);
         }
 
-        private void ServerResponseReceived(string message)
+        private void ServerOnConnectionLost(Guid guid)
+        {
+            throw new NotImplementedException("Not sure when client disconnects from server!");
+        }
+
+        private void ClientResponseReceived(string message)
         {
             _ui.Print(message);
         }

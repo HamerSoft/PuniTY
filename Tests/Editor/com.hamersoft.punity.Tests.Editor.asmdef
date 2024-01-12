@@ -1,0 +1,21 @@
+{
+    "name": "com.hamersoft.punity.Tests.Editor",
+    "rootNamespace": "",
+    "references": [
+        "com.hamersoft.punity",
+        "com.hamersoft.punity.Editor",
+        "UnityEngine.TestRunner",
+        "UnityEditor.UI.EditorTests"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
