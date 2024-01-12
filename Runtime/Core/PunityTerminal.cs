@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace HamerSoft.PuniTY.Core
 {
@@ -11,6 +12,7 @@ namespace HamerSoft.PuniTY.Core
         private ITerminalUI _ui;
 
         public event Action Stopped;
+        public event Action<string> ResponseReceived;
         public bool IsRunning { get; private set; }
 
 
@@ -48,15 +50,16 @@ namespace HamerSoft.PuniTY.Core
 
         private void ServerOnClientConnected(Guid id, Stream stream)
         {
-            _client.Connect(id, stream);
+            if (_client.Id == id)
+                _client.Connect(stream);
         }
 
         public void Stop()
         {
             if (_server != null)
             {
-                _server.Stop(_client);
                 _server.ConnectionLost -= ServerOnConnectionLost;
+                _server.ClientConnected -= ServerOnClientConnected;
             }
 
             if (_client != null)
@@ -78,6 +81,24 @@ namespace HamerSoft.PuniTY.Core
             IsRunning = false;
         }
 
+        public async Task Write(string text)
+        {
+            if (_client != null)
+                await _client.Write(text);
+        }
+
+        public async Task WriteLine(string text)
+        {
+            if (_client != null)
+                await _client.WriteLine(text);
+        }
+
+        public async Task Write(byte[] bytes)
+        {
+            if (_client != null)
+                await _client.Write(bytes);
+        }
+
         private async void UiWrittenLine(string text)
         {
             await _client.WriteLine(text);
@@ -95,17 +116,18 @@ namespace HamerSoft.PuniTY.Core
 
         private void ServerOnConnectionLost(Guid guid)
         {
-            throw new NotImplementedException("Not sure when client disconnects from server!");
+            Stop();
         }
 
         private void ClientResponseReceived(string message)
         {
-            _ui.Print(message);
+            ResponseReceived?.Invoke(message);
+            _ui?.Print(message);
         }
 
         private void ClientExited()
         {
-            _ui.Print("Connection to client lost! Exiting...");
+            _ui?.Print("Connection to client lost! Exiting...");
             Stop();
         }
 

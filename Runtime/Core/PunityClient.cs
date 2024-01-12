@@ -19,16 +19,10 @@ namespace HamerSoft.PuniTY.Core
         public event Action Exited;
         public bool HasExited => _myProcess?.HasExited == true;
 
-        public PunityClient(ILogger logger)
-        {
-            _logger = logger;
-        }
-
-        public void Connect(Guid id, Stream stream)
+        public PunityClient(Guid id, ILogger logger)
         {
             Id = id;
-            _stream = stream;
-            StartReading();
+            _logger = logger;
         }
 
         public void Start(StartArguments args)
@@ -41,7 +35,7 @@ namespace HamerSoft.PuniTY.Core
 
             _myProcess.StartInfo.UseShellExecute = false;
             _myProcess.StartInfo.Verb = "runas";
-            var root = Application.dataPath.Replace("Assets", "");
+            // var root = Application.dataPath.Replace("Assets", "");
 
             // _myProcess.StartInfo.FileName =
             //     Path.Combine(root, "Packages", "com.hamersoft.punity", "Plugins",
@@ -50,10 +44,17 @@ namespace HamerSoft.PuniTY.Core
             _myProcess.StartInfo.FileName = Path.Combine(Application.streamingAssetsPath,
                 $"PunityTCPClient{(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor ? ".exe" : "")}");
             // _myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-            _myProcess.StartInfo.Arguments = $"{_startArguments.Ip} {_startArguments.Port}";
-            _myProcess.StartInfo.WorkingDirectory = Environment.CurrentDirectory;
-            _myProcess.Start();
+            _myProcess.StartInfo.Arguments =
+                $"{_startArguments.Ip} {_startArguments.Port} \"{_startArguments.App}\" {Id}  \"{_startArguments.WorkingDirectory}\"";
+            _myProcess.StartInfo.WorkingDirectory = _startArguments.WorkingDirectory;
             _myProcess.Exited += ProcessExited;
+            _myProcess.Start();
+        }
+
+        public void Connect(Stream stream)
+        {
+            _stream = stream;
+            StartReading();
         }
 
         private void StartReading()
@@ -115,8 +116,8 @@ namespace HamerSoft.PuniTY.Core
                 _myProcess.Exited -= ProcessExited;
             }
 
-            _stream.Close();
-            _stream.Dispose();
+            _stream?.Close();
+            _stream?.Dispose();
             _stream = null;
             Exited?.Invoke();
         }

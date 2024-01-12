@@ -8,7 +8,7 @@ namespace HamerSoft.PuniTY
         private readonly UTF8Encoding _encoding;
         private readonly Regex _ansiRegex;
 
-        internal AnsiEncoder()
+        public AnsiEncoder()
         {
             _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             _ansiRegex = new Regex(

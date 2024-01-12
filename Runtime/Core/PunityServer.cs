@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace HamerSoft.PuniTY.Core
 {
@@ -68,12 +68,20 @@ namespace HamerSoft.PuniTY.Core
             while (!_stopped)
             {
                 _logger.Log("Waiting for a connection... ");
+                byte[] buffer = new byte[36];
                 var tcpClient = _server.AcceptTcpClient();
                 if (tcpClient != null)
                 {
-                    var id = Guid.NewGuid();
+                    _ = tcpClient.GetStream().Read(buffer, 0, buffer.Length);
+                    _logger.Log("Established Connection with new client! Awaiting confirmation...");
+                    var responseID = Encoding.UTF8.GetString(buffer);
+                    if (!Guid.TryParse(responseID, out var id))
+                    {
+                        _logger.LogWarning($"Client connected but invalid ID: {responseID}!");
+                        continue;
+                    }
+
                     _clients[id] = tcpClient;
-                    _logger.Log("Established Connection with new client!");
                     ClientConnected?.Invoke(id, tcpClient.GetStream());
                 }
             }

@@ -163,7 +163,8 @@ namespace HamerSoft.PuniTY
 
         public async void Write(string message)
         {
-            await _server.Write(message);
+            if (gameObject.activeInHierarchy)
+                await _server.Write(message);
         }
     }
 }

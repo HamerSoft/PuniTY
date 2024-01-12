@@ -17,9 +17,9 @@ namespace HamerSoft.PuniTY
             return new PunityServer(logger ?? new EditorLogger());
         }
 
-        public IPunityClient CreateClient(ILogger logger = null)
+        public static IPunityClient CreateClient(ILogger logger = null)
         {
-            return new PunityClient(logger ?? new EditorLogger());
+            return new PunityClient(System.Guid.NewGuid(), logger ?? new EditorLogger());
         }
 
         public ITerminalUI CreateUI(ILogger logger = null)

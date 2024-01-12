@@ -18,6 +18,6 @@ namespace HamerSoft.PuniTY.Core
 
         public void Start(StartArguments args);
         public void Stop();
-        public void Connect(Guid id, Stream stream);
+        public void Connect(Stream stream);
     }
 }

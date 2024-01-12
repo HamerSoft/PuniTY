@@ -20,9 +20,9 @@ namespace PuniTY
             Server.Start(startArguments);
         }
 
-        public IPunityTerminal OpenTerminal(StartArguments startArguments, ITerminalUI ui = null, ILogger logger = null)
+        public IPunityTerminal OpenTerminal(StartArguments startArguments, ILogger logger = null, ITerminalUI ui = null)
         {
-            var terminal = PunityFactory.CreateTerminal(Server, new PunityClient(logger));
+            var terminal = PunityFactory.CreateTerminal(Server, PunityFactory.CreateClient(logger));
             terminal.Start(startArguments, ui);
             return terminal;
         }
