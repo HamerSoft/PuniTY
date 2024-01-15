@@ -6,7 +6,7 @@ namespace HamerSoft.PuniTY.Configuration
     {
         public IPAddress Ip { get; }
         public uint Port { get; }
-       
+
 
         private string _ip;
 
@@ -15,6 +15,12 @@ namespace HamerSoft.PuniTY.Configuration
             _ip = ip;
             if (IPAddress.TryParse(ip, out var ipAddress))
                 Ip = ipAddress;
+            Port = port;
+        }
+
+        public StartArguments(IPAddress ip, uint port)
+        {
+            Ip = ip;
             Port = port;
         }
 

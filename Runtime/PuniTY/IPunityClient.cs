@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 
-namespace HamerSoft.PuniTY.Core
+namespace HamerSoft.PuniTY
 {
     public interface IPunityClient
     {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 using UnityEngine;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
+
 namespace HamerSoft.PuniTY.Core
 {
     internal class PunityClient : IPunityClient

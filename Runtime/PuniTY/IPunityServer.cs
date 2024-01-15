@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using HamerSoft.PuniTY.Configuration;
-using HamerSoft.PuniTY.Core;
 
 namespace HamerSoft.PuniTY
 {

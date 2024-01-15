@@ -11,7 +11,7 @@ namespace HamerSoft.PuniTY.Configuration
         public IEncoder Encoder { get; }
 
         public ClientArguments(StartArguments startArguments, string app, IEncoder encoder,
-            string workingDirectory = null) : base(startArguments.Ip.ToString(), startArguments.Port)
+            string workingDirectory = null) : base(startArguments.Ip, startArguments.Port)
         {
             Encoder = encoder;
             App = app;
@@ -38,6 +38,8 @@ namespace HamerSoft.PuniTY.Configuration
             else if (Encoder == null)
                 message =
                     "No encoding specified! Take the default HamerSoft.PuniTY.AnsiEncoder for ANSI VT100 terminals.";
+            else if (!Directory.Exists(WorkingDirectory))
+                message = $"Directory {WorkingDirectory} does not exist!";
 
             return isValid && message == null;
         }

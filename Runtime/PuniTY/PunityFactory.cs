@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.Core;
+﻿using System.Runtime.CompilerServices;
+using HamerSoft.PuniTY.Core;
 using HamerSoft.PuniTY.Core.Logging;
 using HamerSoft.PuniTY.Logging;
 using HamerSoft.PuniTY.UI;
