@@ -1,4 +1,4 @@
-﻿namespace HamerSoft.PuniTY
+﻿namespace HamerSoft.PuniTY.Encoding
 {
     public interface IEncoder
     {

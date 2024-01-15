@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HamerSoft.PuniTY
+namespace HamerSoft.PuniTY.Logging
 {
     public interface ILogger
     {

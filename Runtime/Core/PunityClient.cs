@@ -2,14 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using HamerSoft.PuniTY.Configuration;
 using UnityEngine;
-
+using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 namespace HamerSoft.PuniTY.Core
 {
     internal class PunityClient : IPunityClient
     {
         private Process _myProcess;
-        private StartArguments _startArguments;
+        private ClientArguments _startArguments;
         private Stream _stream;
         private readonly ILogger _logger;
 
@@ -25,9 +26,9 @@ namespace HamerSoft.PuniTY.Core
             _logger = logger;
         }
 
-        public void Start(StartArguments args)
+        public void Start(ClientArguments startArguments)
         {
-            _startArguments = args;
+            _startArguments = startArguments;
             if (!_startArguments.IsValid(out var message))
                 throw new ArgumentException(message);
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using HamerSoft.PuniTY.Configuration;
+using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.Core
 {
@@ -15,15 +17,14 @@ namespace HamerSoft.PuniTY.Core
         public event Action<string> ResponseReceived;
         public bool IsRunning { get; private set; }
 
-
         internal PunityTerminal(IPunityServer server, IPunityClient client, ILogger logger)
         {
-            _logger = logger;
             _server = server;
             _client = client;
+            _logger = logger;
         }
 
-        public void Start(StartArguments arguments, ITerminalUI ui)
+        public void Start(ClientArguments arguments, ITerminalUI ui)
         {
             if (IsRunning)
             {

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 
-namespace HamerSoft.PuniTY
+namespace HamerSoft.PuniTY.Encoding
 {
     public class AnsiEncoder : IEncoder
     {
@@ -17,7 +17,7 @@ namespace HamerSoft.PuniTY
 
         public byte[] Write(string message)
         {
-            return Encoding.ASCII.GetBytes(message);
+            return System.Text.Encoding.ASCII.GetBytes(message);
         }
 
         public string Read(byte[] message)

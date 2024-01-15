@@ -1,4 +1,5 @@
 ﻿using System;
+using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.UI
 {

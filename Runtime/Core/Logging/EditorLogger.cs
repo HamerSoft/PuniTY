@@ -1,6 +1,7 @@
 ﻿#define PUNITY_LOGGING //ToDo add to docs and configuration
 using System;
 using UnityEngine;
+using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.Core.Logging
 {

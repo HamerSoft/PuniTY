@@ -1,5 +1,6 @@
 ﻿using HamerSoft.PuniTY;
-using HamerSoft.PuniTY.Core;
+using HamerSoft.PuniTY.Configuration;
+using HamerSoft.PuniTY.Logging;
 
 namespace PuniTY
 {
@@ -20,7 +21,8 @@ namespace PuniTY
             Server.Start(startArguments);
         }
 
-        public IPunityTerminal OpenTerminal(StartArguments startArguments, ILogger logger = null, ITerminalUI ui = null)
+        public IPunityTerminal OpenTerminal(ClientArguments startArguments, ILogger logger = null,
+            ITerminalUI ui = null)
         {
             var terminal = PunityFactory.CreateTerminal(Server, PunityFactory.CreateClient(logger));
             terminal.Start(startArguments, ui);
