@@ -5,7 +5,7 @@ using HamerSoft.PuniTY.Configuration;
 
 namespace HamerSoft.PuniTY
 {
-    public interface IPunityClient
+    internal interface IPunityClient
     {
         public Guid Id { get; }
         public bool IsConnected { get; }

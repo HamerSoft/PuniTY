@@ -6,7 +6,7 @@ namespace PuniTY
 {
     public class Main
     {
-        public IPunityServer Server;
+        internal IPunityServer Server;
         private StartArguments _startArguments;
 
         // [InitializeOnLoadMethod]

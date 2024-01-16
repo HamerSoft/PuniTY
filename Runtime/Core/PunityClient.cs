@@ -14,12 +14,13 @@ namespace HamerSoft.PuniTY.Core
         private ClientArguments _startArguments;
         private Stream _stream;
         private readonly ILogger _logger;
+        private AsyncCallback _callback;
 
-        public bool IsConnected => _stream != null;
-        public event Action<string> ResponseReceived;
         public Guid Id { get; private set; }
+        public bool IsConnected => _stream != null;
+        public bool HasExited { get; protected set; }
         public event Action Exited;
-        public bool HasExited => _myProcess?.HasExited == true;
+        public event Action<string> ResponseReceived;
 
         public PunityClient(Guid id, ILogger logger)
         {
@@ -27,11 +28,12 @@ namespace HamerSoft.PuniTY.Core
             _logger = logger;
         }
 
-        public void Start(ClientArguments startArguments)
+        public virtual void Start(ClientArguments startArguments)
         {
             _startArguments = startArguments;
-            if (!_startArguments.IsValid(out var message))
-                throw new ArgumentException(message);
+            string message = null;
+            if (_startArguments == null || !_startArguments.IsValid(out message))
+                throw new ArgumentException(message ?? "StartArguments cannot be null!");
 
             _myProcess = new Process();
 
@@ -49,12 +51,19 @@ namespace HamerSoft.PuniTY.Core
             _myProcess.StartInfo.Arguments =
                 $"{_startArguments.Ip} {_startArguments.Port} \"{_startArguments.App}\" {Id}  \"{_startArguments.WorkingDirectory}\"";
             _myProcess.StartInfo.WorkingDirectory = _startArguments.WorkingDirectory;
+            HasExited = false;
             _myProcess.Exited += ProcessExited;
             _myProcess.Start();
         }
 
         public void Connect(Stream stream)
         {
+            if (HasExited)
+            {
+                _logger.LogWarning("Client has already exited! Cannot connect!");
+                return;
+            }
+
             _stream = stream;
             StartReading();
         }
@@ -63,22 +72,21 @@ namespace HamerSoft.PuniTY.Core
         {
             const int readSize = 4096;
             byte[] buffer = new byte[readSize];
-            AsyncCallback callback = null;
-            callback = ar =>
+            _callback = null;
+            _callback = ar =>
             {
                 int bytesRead = _stream.EndRead(ar);
-                if (bytesRead < 0)
-                    return;
+                if (bytesRead > 0)
+                {
+                    var output = _startArguments.Encoder.Read(buffer[..bytesRead]);
+                    OnResponseReceived(output);
+                }
 
-                var output = _startArguments.Encoder.Read(buffer[..bytesRead]);
-
-                OnResponseReceived(output);
-
-                Array.Clear(buffer, 0, buffer.Length);
-                _stream.BeginRead(buffer, 0, readSize, callback, this);
+                if (!HasExited && IsConnected)
+                    _stream.BeginRead(buffer, 0, readSize, _callback, this);
             };
 
-            _stream.BeginRead(buffer, 0, readSize, callback, this);
+            _stream.BeginRead(buffer, 0, readSize, _callback, this);
         }
 
         private void OnResponseReceived(string response)
@@ -90,6 +98,10 @@ namespace HamerSoft.PuniTY.Core
         {
             _logger.LogError("Punity Client exited!");
             _myProcess.Exited -= ProcessExited;
+            HasExited = true;
+            _stream?.Close();
+            _stream?.Dispose();
+            _stream = null;
             Exited?.Invoke();
         }
 
@@ -97,30 +109,37 @@ namespace HamerSoft.PuniTY.Core
         {
             var bytes = _startArguments.Encoder.Write(text);
             await _stream.WriteAsync(bytes, 0, bytes.Length);
+            await _stream.FlushAsync();
         }
 
         public async Task WriteLine(string text)
         {
             var bytes = _startArguments.Encoder.Write($"{Environment.NewLine}{text}");
             await _stream.WriteAsync(bytes, 0, bytes.Length);
+            await _stream.FlushAsync();
         }
 
         public async Task Write(byte[] bytes)
         {
             await _stream.WriteAsync(bytes, 0, bytes.Length);
+            await _stream.FlushAsync();
         }
 
         public void Stop()
         {
             if (_myProcess != null)
             {
-                _myProcess.Kill();
+                if (!_myProcess.HasExited)
+                    _myProcess.Kill();
                 _myProcess.Exited -= ProcessExited;
+                _myProcess = null;
             }
 
+            HasExited = true;
             _stream?.Close();
             _stream?.Dispose();
             _stream = null;
+
             Exited?.Invoke();
         }
     }

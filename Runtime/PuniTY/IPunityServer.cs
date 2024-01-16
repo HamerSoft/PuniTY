@@ -4,7 +4,7 @@ using HamerSoft.PuniTY.Configuration;
 
 namespace HamerSoft.PuniTY
 {
-    public interface IPunityServer : IDisposable
+    internal interface IPunityServer : IDisposable
     {
         public event Action<Guid> ConnectionLost;
         public event Action<Guid, Stream> ClientConnected;

@@ -3,10 +3,10 @@ using HamerSoft.PuniTY.Encoding;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Tests.Editor
+namespace HamerSoft.PuniTY.Tests.Editor
 {
     [TestFixture]
-    public class ArgumentsTests
+    public class ArgumentsTests : TestBase
     {
         [Test]
         public void StartArguments_Are_Invalid_With_Invalid_IP()
@@ -51,9 +51,6 @@ namespace Tests.Editor
             Assert.That(clientArguments.IsValid(out _), Is.False);
         }
 
-        private string GetValidAppName()
-        {
-            return Application.platform == RuntimePlatform.WindowsEditor ? @"C:\Program Files\Git\bin\sh.exe" : "/bin/bash/";
-        }
+     
     }
 }
