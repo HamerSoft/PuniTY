@@ -29,7 +29,7 @@ namespace HamerSoft.PuniTY.Core
             _logger = logger;
         }
 
-        public virtual void Start(ClientArguments startArguments)
+        public void Start(ClientArguments startArguments)
         {
             if (_isStarted)
             {

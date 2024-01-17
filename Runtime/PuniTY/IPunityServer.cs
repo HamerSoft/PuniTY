@@ -12,7 +12,7 @@ namespace HamerSoft.PuniTY
         public int ConnectedClients { get; }
 
         public void Start(StartArguments startArguments);
-        public void Stop(IPunityClient client);
+        public void Stop(ref IPunityClient client);
         public void Stop();
     }
 }

@@ -15,19 +15,6 @@ namespace HamerSoft.PuniTY.Tests.Editor
     [TestFixture]
     public class ClientTests : TestBase
     {
-        private class ConnectionForcedClient : PunityClient
-        {
-            public ConnectionForcedClient(Guid id, ILogger logger) : base(id, logger)
-            {
-            }
-
-            public override void Start(ClientArguments startArguments)
-            {
-                base.Start(startArguments);
-                HasExited = false;
-            }
-        }
-
         [Test]
         public void When_Client_Is_Started_With_Null_Arguments_Exception_Is_Thrown()
         {
@@ -106,15 +93,15 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
             bool hasExit = false;
 
-            void exitted()
+            void Exitted()
             {
                 hasExit = true;
-                client.Exited -= exitted;
+                client.Exited -= Exitted;
             }
 
-            client.Exited += exitted;
+            client.Exited += Exitted;
             client.Stop();
-            Assert.That(hasExit, Is.True);
+            Assert.That(hasExit && client.HasExited, Is.True);
         }
 
         [Test]

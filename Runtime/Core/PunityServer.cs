@@ -8,10 +8,6 @@ using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.Core
 {
-    // make server into hub to accept clients
-    // pass the stream along to create a client
-    // write through the client instead of the server
-    // write tests based on the stream abstraction
     internal class PunityServer : IPunityServer
     {
         public event Action<Guid> ConnectionLost;
@@ -55,13 +51,15 @@ namespace HamerSoft.PuniTY.Core
             }
         }
 
-        public void Stop(IPunityClient client)
+        public void Stop(ref IPunityClient client)
         {
             if (client == null || !_clients.Remove(client.Id, out var tcpClient))
                 return;
             tcpClient.Close();
             tcpClient.Dispose();
+            client.Stop();
             OnConnectionLost(client.Id);
+            client = null;
         }
 
         private void WaitForClient()
