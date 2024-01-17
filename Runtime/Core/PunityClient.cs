@@ -15,6 +15,7 @@ namespace HamerSoft.PuniTY.Core
         private Stream _stream;
         private readonly ILogger _logger;
         private AsyncCallback _callback;
+        private bool _isStarted;
 
         public Guid Id { get; private set; }
         public bool IsConnected => _stream != null;
@@ -30,6 +31,13 @@ namespace HamerSoft.PuniTY.Core
 
         public virtual void Start(ClientArguments startArguments)
         {
+            if (_isStarted)
+            {
+                _logger.LogWarning("Client has already been started!");
+                return;
+            }
+
+            _isStarted = true;
             _startArguments = startArguments;
             string message = null;
             if (_startArguments == null || !_startArguments.IsValid(out message))
@@ -58,9 +66,26 @@ namespace HamerSoft.PuniTY.Core
 
         public void Connect(Stream stream)
         {
+            if (!_isStarted)
+            {
+                _logger.LogError("Client has not yet started, cannot connect!");
+            }
+
             if (HasExited)
             {
                 _logger.LogWarning("Client has already exited! Cannot connect!");
+                return;
+            }
+
+            if (IsConnected)
+            {
+                _logger.LogWarning("Client is already connected!");
+                return;
+            }
+
+            if (stream == null)
+            {
+                _logger.LogWarning("Cannot connect to NULL stream!");
                 return;
             }
 
@@ -96,17 +121,18 @@ namespace HamerSoft.PuniTY.Core
 
         private void ProcessExited(object sender, EventArgs e)
         {
-            _logger.LogError("Punity Client exited!");
-            _myProcess.Exited -= ProcessExited;
-            HasExited = true;
-            _stream?.Close();
-            _stream?.Dispose();
-            _stream = null;
-            Exited?.Invoke();
+            _logger.LogWarning("Punity Client exited!");
+            Stop();
         }
 
         public async Task Write(string text)
         {
+            if (!IsConnected || HasExited || _stream == null)
+            {
+                _logger.LogWarning("Cannot write to client, make sure to start and connect!");
+                return;
+            }
+
             var bytes = _startArguments.Encoder.Write(text);
             await _stream.WriteAsync(bytes, 0, bytes.Length);
             await _stream.FlushAsync();
@@ -114,6 +140,12 @@ namespace HamerSoft.PuniTY.Core
 
         public async Task WriteLine(string text)
         {
+            if (!IsConnected || HasExited || _stream == null)
+            {
+                _logger.LogWarning("Cannot write to client, make sure to start and connect!");
+                return;
+            }
+
             var bytes = _startArguments.Encoder.Write($"{Environment.NewLine}{text}");
             await _stream.WriteAsync(bytes, 0, bytes.Length);
             await _stream.FlushAsync();
@@ -121,6 +153,12 @@ namespace HamerSoft.PuniTY.Core
 
         public async Task Write(byte[] bytes)
         {
+            if (!IsConnected || HasExited || _stream == null)
+            {
+                _logger.LogWarning("Cannot write to client, make sure to start and connect!");
+                return;
+            }
+
             await _stream.WriteAsync(bytes, 0, bytes.Length);
             await _stream.FlushAsync();
         }
@@ -139,8 +177,10 @@ namespace HamerSoft.PuniTY.Core
             _stream?.Close();
             _stream?.Dispose();
             _stream = null;
+            _isStarted = false;
 
             Exited?.Invoke();
+            _logger.Log("Client stopped!");
         }
     }
 }

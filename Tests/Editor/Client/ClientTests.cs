@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Core;
 using HamerSoft.PuniTY.Core.Logging;
-using HamerSoft.PuniTY.Logging;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.Tests.Editor
 {
@@ -55,7 +58,67 @@ namespace HamerSoft.PuniTY.Tests.Editor
         }
 
         [Test]
-        public async Task When_Client_Is_Connected_Can_Write_To_Stream()
+        public void Client_Cannot_Connect_When_Not_Started()
+        {
+            var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
+            var stream = new MemoryStream();
+            client.Connect(stream);
+            LogAssert.Expect(LogType.Error, new Regex(""));
+            CloseStream(stream);
+        }
+
+        [Test]
+        public void Client_Cannot_Connect_Already_Exited()
+        {
+            var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
+            var stream = new MemoryStream();
+            client.Start(GetValidClientArguments());
+            client.Stop();
+            client.Connect(stream);
+            LogAssert.Expect(LogType.Error, new Regex(""));
+            CloseStream(stream);
+        }
+
+        [Test]
+        public void Client_Cannot_Connect_Already_Connected()
+        {
+            var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
+            var stream = new MemoryStream();
+            client.Start(GetValidClientArguments());
+            client.Connect(stream);
+            client.Connect(stream);
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+            CloseStream(stream);
+        }
+
+        [Test]
+        public void Client_Cannot_Connect_When_Stream_Is_Null()
+        {
+            var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
+            client.Start(GetValidClientArguments());
+            client.Connect(null);
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+        }
+
+        [Test]
+        public void Client_Raises_Event_Upon_Exit()
+        {
+            var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
+            bool hasExit = false;
+
+            void exitted()
+            {
+                hasExit = true;
+                client.Exited -= exitted;
+            }
+
+            client.Exited += exitted;
+            client.Stop();
+            Assert.That(hasExit, Is.True);
+        }
+
+        [Test]
+        public async Task When_Client_Is_Connected_Can_Write_To_And_Receive_From_Stream()
         {
             var guid = Guid.NewGuid();
             var client = new PunityClient(guid, new EditorLogger());
@@ -76,16 +139,14 @@ namespace HamerSoft.PuniTY.Tests.Editor
             client.ResponseReceived += Responded;
             await client.Write(guid.ToString());
             stream.Position = 0;
-            var elapsedTime = 0;
-            while (response == null && elapsedTime < 5000)
-            {
-                await Task.Delay(100);
-                elapsedTime += 100;
-            }
+
+            await WaitUntil(() => response != null);
+
 
             client.Stop();
             client.ResponseReceived -= Responded;
             Assert.That(response, Is.Not.Null);
+            Assert.That(response, Is.EqualTo(guid.ToString()));
         }
     }
 }
