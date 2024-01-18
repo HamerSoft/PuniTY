@@ -8,6 +8,7 @@ namespace HamerSoft.PuniTY
     {
         public event Action<Guid> ConnectionLost;
         public event Action<Guid, Stream> ClientConnected;
+        public event Action Stopped;
         public bool IsConnected { get; }
         public int ConnectedClients { get; }
 

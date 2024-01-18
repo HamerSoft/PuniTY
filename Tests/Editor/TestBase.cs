@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Encoding;
@@ -50,6 +51,14 @@ namespace HamerSoft.PuniTY.Tests.Editor
             _ioStream = _tcpClient.GetStream();
             var idBytes = System.Text.Encoding.ASCII.GetBytes(Id.ToString());
             _ioStream.Write(idBytes, 0, idBytes.Length);
+            Connect(_ioStream);
+        }
+
+        public async Task<bool> StartAsync(ClientArguments startArguments, CancellationToken token = default)
+        {
+            Start(startArguments);
+            await Task.Delay(100, token);
+            return true;
         }
 
         public void Stop()
@@ -87,12 +96,24 @@ namespace HamerSoft.PuniTY.Tests.Editor
             return new ClientArguments(ip, port, GetValidAppName(), new AnsiEncoder(), Environment.CurrentDirectory);
         }
 
+        protected ClientArguments GetValidClientArguments(StartArguments startArguments)
+        {
+            return new ClientArguments(startArguments, GetValidAppName(), new AnsiEncoder(),
+                Environment.CurrentDirectory);
+        }
+
+        protected StartArguments GetValidServerArguments(string ip = "127.0.0.1", uint port = 13000)
+        {
+            return new StartArguments(ip, port);
+        }
+
         protected async Task WaitUntil(Func<bool> predicate, double timeout = 1000)
         {
             var elapsedTime = 0;
             while (!predicate.Invoke() && elapsedTime < timeout)
             {
                 await Task.Delay(100);
+                elapsedTime += 100;
             }
         }
 

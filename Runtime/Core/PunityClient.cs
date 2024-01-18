@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 using UnityEngine;
@@ -31,10 +32,27 @@ namespace HamerSoft.PuniTY.Core
 
         public void Start(ClientArguments startArguments)
         {
+            if (!CanStartClient(startArguments))
+                return;
+            StartClientProcess();
+        }
+
+        public async Task<bool> StartAsync(ClientArguments startArguments, CancellationToken token = default)
+        {
+            if (!CanStartClient(startArguments))
+                return false;
+            StartClientProcess();
+            while (!IsConnected && !HasExited && !token.IsCancellationRequested)
+                await Task.Delay(50, token);
+            return IsConnected && !HasExited && !token.IsCancellationRequested;
+        }
+
+        private bool CanStartClient(ClientArguments startArguments)
+        {
             if (_isStarted)
             {
                 _logger.LogWarning("Client has already been started!");
-                return;
+                return false;
             }
 
             _isStarted = true;
@@ -42,7 +60,11 @@ namespace HamerSoft.PuniTY.Core
             string message = null;
             if (_startArguments == null || !_startArguments.IsValid(out message))
                 throw new ArgumentException(message ?? "StartArguments cannot be null!");
+            return true;
+        }
 
+        private void StartClientProcess()
+        {
             _myProcess = new Process();
 
             _myProcess.StartInfo.UseShellExecute = false;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 
@@ -19,6 +20,7 @@ namespace HamerSoft.PuniTY
         public Task Write(byte[] bytes);
 
         public void Start(ClientArguments startArguments);
+        public Task<bool> StartAsync(ClientArguments startArguments, CancellationToken token = default);
         public void Stop();
         public void Connect(Stream stream);
     }

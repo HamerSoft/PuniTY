@@ -12,13 +12,14 @@ namespace HamerSoft.PuniTY.Core
     {
         public event Action<Guid> ConnectionLost;
         public event Action<Guid, Stream> ClientConnected;
+        public event Action Stopped;
 
         public bool IsConnected => _clients.Count > 0;
         public int ConnectedClients => _clients.Count;
 
         private readonly ILogger _logger;
         private Thread _listeningThread;
-        private TcpListener _server;
+        private TcpListener _tcpServer;
 
         private StartArguments _startArguments;
         private bool _stopped;
@@ -35,13 +36,14 @@ namespace HamerSoft.PuniTY.Core
         {
             _stopped = false;
             _startArguments = startArguments;
-            if (!_startArguments.IsValid(out var message))
-                throw new ArgumentException(message);
+            string message = null;
+            if (_startArguments == null || !_startArguments.IsValid(out message))
+                throw new ArgumentException(message ?? "Cannot start server with NULL arguments");
 
             try
             {
-                _server = new TcpListener(_startArguments.Ip, (int)_startArguments.Port);
-                _server.Start();
+                _tcpServer = new TcpListener(_startArguments.Ip, (int)_startArguments.Port);
+                _tcpServer.Start();
                 _listeningThread = new Thread(WaitForClient);
                 _listeningThread?.Start();
             }
@@ -60,6 +62,7 @@ namespace HamerSoft.PuniTY.Core
             client.Stop();
             OnConnectionLost(client.Id);
             client = null;
+            Stopped?.Invoke();
         }
 
         private void WaitForClient()
@@ -68,7 +71,7 @@ namespace HamerSoft.PuniTY.Core
             {
                 _logger.Log("Waiting for a connection... ");
                 byte[] buffer = new byte[36];
-                var tcpClient = _server.AcceptTcpClient();
+                var tcpClient = _tcpServer.AcceptTcpClient();
                 if (tcpClient != null)
                 {
                     _ = tcpClient.GetStream().Read(buffer, 0, buffer.Length);
@@ -92,7 +95,7 @@ namespace HamerSoft.PuniTY.Core
             _logger.Log("Server stopping!");
             _listeningThread?.Abort();
             _listeningThread = null;
-            _server?.Stop();
+            _tcpServer?.Stop();
             foreach (var client in _clients)
             {
                 client.Value?.Close();
@@ -101,7 +104,8 @@ namespace HamerSoft.PuniTY.Core
             }
 
             _clients.Clear();
-            _server = null;
+            _tcpServer = null;
+            Stopped?.Invoke();
         }
 
         private void OnConnectionLost(Guid id)
