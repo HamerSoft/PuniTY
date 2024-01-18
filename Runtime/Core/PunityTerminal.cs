@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Logging;
@@ -32,21 +33,38 @@ namespace HamerSoft.PuniTY.Core
                 return;
             }
 
-            _ui = ui;
+            IsRunning = true;
+            AssignEvents(ui);
+            _client.Start(arguments);
+        }
 
+        public async Task StartAsync(ClientArguments arguments, ITerminalUI ui = null,
+            CancellationToken token = default)
+        {
+            if (IsRunning)
+            {
+                _logger.LogWarning("Terminal already running");
+                return;
+            }
+
+            IsRunning = true;
+            AssignEvents(ui);
+            await _client.StartAsync(arguments, token);
+        }
+
+        private void AssignEvents(ITerminalUI ui)
+        {
+            _ui = ui;
             _server.ConnectionLost += ServerOnConnectionLost;
             _server.ClientConnected += ServerOnClientConnected;
             _client.Exited += ClientExited;
             _client.ResponseReceived += ClientResponseReceived;
-            _client.Start(arguments);
             if (ui != null)
             {
                 _ui.Written += UiWritten;
                 _ui.WrittenLine += UiWrittenLine;
                 _ui.WrittenByte += UiWrittenByte;
             }
-
-            IsRunning = true;
         }
 
         private void ServerOnClientConnected(Guid id, Stream stream)
@@ -129,11 +147,6 @@ namespace HamerSoft.PuniTY.Core
         private void ClientExited()
         {
             _ui?.Print("Connection to client lost! Exiting...");
-            Stop();
-        }
-
-        public void Dispose()
-        {
             Stop();
         }
     }

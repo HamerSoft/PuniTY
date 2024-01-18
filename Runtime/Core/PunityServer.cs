@@ -23,7 +23,6 @@ namespace HamerSoft.PuniTY.Core
 
         private StartArguments _startArguments;
         private bool _stopped;
-
         private Dictionary<Guid, TcpClient> _clients;
 
         internal PunityServer(ILogger logger)
@@ -111,11 +110,6 @@ namespace HamerSoft.PuniTY.Core
         private void OnConnectionLost(Guid id)
         {
             ConnectionLost?.Invoke(id);
-        }
-
-        public void Dispose()
-        {
-            Stop();
         }
     }
 }
