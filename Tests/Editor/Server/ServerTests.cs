@@ -37,7 +37,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var server = new PunityServer(new EditorLogger());
             server.ClientConnected += ClientConnected;
             server.Start(GetValidServerArguments());
-            var client = new MockClient(clientId);
+            var client = new MockTCPClient(clientId);
             client.Start(GetValidClientArguments());
 
             await WaitUntil(() => isConnected);
@@ -69,7 +69,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
 
             for (int i = 0; i < numberOfClients; i++)
             {
-                var client = new MockClient(Guid.NewGuid());
+                var client = new MockTCPClient(Guid.NewGuid());
                 clientIds.Add(client.Id);
                 clients.Add(client);
                 client.Start(GetValidClientArguments());
@@ -112,7 +112,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var server = new PunityServer(new EditorLogger());
             server.Start(GetValidServerArguments());
 
-            var client = new MockClient(Guid.NewGuid());
+            var client = new MockTCPClient(Guid.NewGuid());
             await client.StartAsync(GetValidClientArguments());
 
             server.ConnectionLost += ConnectionLost;
