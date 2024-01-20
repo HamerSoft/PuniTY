@@ -59,5 +59,10 @@ namespace HamerSoft.PuniTY.Tests.Editor
             _clients.Clear();
             Stopped?.Invoke();
         }
+
+        public void ForceLoseConnection(IPunityClient client)
+        {
+            ConnectionLost?.Invoke(client.Id);
+        }
     }
 }

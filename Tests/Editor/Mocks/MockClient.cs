@@ -62,6 +62,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             _exitted = true;
             CloseStream(_stream);
             _stream = null;
+            Exited?.Invoke();
         }
 
         private void CloseStream(Stream stream)
@@ -73,6 +74,11 @@ namespace HamerSoft.PuniTY.Tests.Editor
         public void Connect(Stream stream)
         {
             _stream = stream;
+        }
+
+        public void ForceResponse(string messageToBeSend)
+        {
+            ResponseReceived?.Invoke(messageToBeSend);
         }
     }
 }

@@ -135,7 +135,8 @@ namespace HamerSoft.PuniTY.Core
 
         private void ServerOnConnectionLost(Guid guid)
         {
-            Stop();
+            if (guid == _client.Id)
+                Stop();
         }
 
         private void ClientResponseReceived(string message)
