@@ -9,10 +9,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.TestTools;
 using Debug = UnityEngine.Debug;
 
 namespace HamerSoft.PuniTY
 {
+    [ExcludeFromCoverage]
     public class PunityTcpServer : MonoBehaviour
     {
         private Process _myProcess;

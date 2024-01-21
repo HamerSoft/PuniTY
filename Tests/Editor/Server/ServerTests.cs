@@ -15,12 +15,12 @@ namespace HamerSoft.PuniTY.Tests.Editor
     [TestFixture]
     public class ServerTests : TestBase
     {
-        private PunityServer _server;
+        private IPunityServer _server;
 
         [SetUp]
         public void Setup()
         {
-            _server = new PunityServer(new EditorLogger());
+            _server = PunityFactory.CreateServer();
         }
 
         [Test]

@@ -20,7 +20,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                var client = new PunityClient(System.Guid.NewGuid(), new EditorLogger());
+                var client = PunityFactory.CreateClient(new EditorLogger());
                 client.Start(null);
             });
         }
@@ -47,7 +47,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public void Client_Cannot_Connect_When_Not_Started()
         {
-            var client = new PunityClient(Guid.NewGuid(), new EditorLogger());
+            var client = PunityFactory.CreateClient(new EditorLogger());
             var stream = new MemoryStream();
             client.Connect(stream);
             LogAssert.Expect(LogType.Error, new Regex(""));

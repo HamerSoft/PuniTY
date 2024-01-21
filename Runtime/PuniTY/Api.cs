@@ -4,15 +4,15 @@ using HamerSoft.PuniTY;
 using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Logging;
 
-namespace PuniTY
+namespace HamerSoft.PuniTY
 {
-    public class Main
+    public class Api
     {
         internal IPunityServer Server;
         private StartArguments _startArguments;
 
         // [InitializeOnLoadMethod]
-        public Main(ILogger logger = null)
+        public Api(ILogger logger = null)
         {
             Server = PunityFactory.CreateServer(logger);
         }

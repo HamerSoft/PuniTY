@@ -22,7 +22,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_Terminal_Is_Started_It_Receives_Responses()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = PunityFactory.CreateTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), null);
             string receivedMessage = null;
             const string messageToBeSend = "HamerSoft";

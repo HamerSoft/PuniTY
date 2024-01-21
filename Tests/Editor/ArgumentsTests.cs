@@ -32,7 +32,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
 
             Assert.That(clientArguments.IsValid(out _), Is.False);
         }
-        
+
         [Test]
         public void ClientArguments_Are_Invalid_When_Encodier_IsNull()
         {
@@ -51,6 +51,16 @@ namespace HamerSoft.PuniTY.Tests.Editor
             Assert.That(clientArguments.IsValid(out _), Is.False);
         }
 
-     
+        [Test]
+        public void ClientArguments_Are_Valid_With_App_And_WorkingDir()
+        {
+            Assert.That(GetValidClientArguments().IsValid(out _), Is.True);
+        }
+
+        [Test]
+        public void ClientArguments_Are_Valid_With_ServerArguments()
+        {
+            Assert.That(GetValidClientArguments(GetValidServerArguments()).IsValid(out _), Is.True);
+        }
     }
 }
