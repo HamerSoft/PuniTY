@@ -55,6 +55,12 @@ namespace HamerSoft.PuniTY.Core
             catch (SocketException e)
             {
                 _logger.LogError("SocketException:", e);
+                _tcpServer?.Server?.Close();
+                _tcpServer?.Server?.Dispose();
+                _tcpServer?.Stop();
+                _listeningThread?.Abort();
+                _listeningThread = null;
+                _started = false;
             }
         }
 
