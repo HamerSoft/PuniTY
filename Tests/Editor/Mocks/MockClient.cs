@@ -18,27 +18,29 @@ namespace HamerSoft.PuniTY.Tests.Editor
         public bool HasExited => _exitted;
         public event Action<string> ResponseReceived;
         public event Action Exited;
+        public string WrittenText { get; private set; }
+
 
         internal MockClient(Guid id, MockServer server)
         {
+            WrittenText = "";
             _server = server;
             Id = id;
         }
 
         public async Task Write(string text)
         {
-            var bytes = System.Text.Encoding.ASCII.GetBytes(text);
-            await _stream.WriteAsync(bytes, 0, bytes.Length);
+            WrittenText += text;
         }
 
-        public Task WriteLine(string text)
+        public async Task WriteLine(string text)
         {
-            throw new NotImplementedException();
+            WrittenText += text;
         }
 
-        public Task Write(byte[] bytes)
+        public async Task Write(byte[] bytes)
         {
-            throw new NotImplementedException();
+            WrittenText += System.Text.Encoding.ASCII.GetString(bytes);
         }
 
         public void Start(ClientArguments startArguments)

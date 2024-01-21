@@ -4,7 +4,8 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 using HamerSoft.PuniTY.Configuration;
-using HamerSoft.PuniTY.Logging;
+using UnityEngine;
+using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.Core
 {
@@ -20,10 +21,9 @@ namespace HamerSoft.PuniTY.Core
         private readonly ILogger _logger;
         private Thread _listeningThread;
         private TcpListener _tcpServer;
-
         private StartArguments _startArguments;
-        private bool _stopped;
-        private Dictionary<Guid, TcpClient> _clients;
+        private bool _started;
+        private readonly Dictionary<Guid, TcpClient> _clients;
 
         internal PunityServer(ILogger logger)
         {
@@ -33,7 +33,13 @@ namespace HamerSoft.PuniTY.Core
 
         public void Start(StartArguments startArguments)
         {
-            _stopped = false;
+            if (_started)
+            {
+                Debug.LogWarning("Server was already started!");
+                return;
+            }
+
+            _started = true;
             _startArguments = startArguments;
             string message = null;
             if (_startArguments == null || !_startArguments.IsValid(out message))
@@ -66,7 +72,7 @@ namespace HamerSoft.PuniTY.Core
 
         private void WaitForClient()
         {
-            while (!_stopped)
+            while (_started)
             {
                 _logger.Log("Waiting for a connection... ");
                 byte[] buffer = new byte[36];
@@ -90,7 +96,10 @@ namespace HamerSoft.PuniTY.Core
 
         public void Stop()
         {
-            _stopped = true;
+            if (!_started)
+                return;
+            
+            _started = false;
             _logger.Log("Server stopping!");
             _listeningThread?.Abort();
             _listeningThread = null;

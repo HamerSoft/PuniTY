@@ -61,6 +61,7 @@ namespace HamerSoft.PuniTY.Core
             _client.ResponseReceived += ClientResponseReceived;
             if (ui != null)
             {
+                _ui.Closed += Stop;
                 _ui.Written += UiWritten;
                 _ui.WrittenLine += UiWrittenLine;
                 _ui.WrittenByte += UiWrittenByte;
@@ -91,6 +92,7 @@ namespace HamerSoft.PuniTY.Core
 
             if (_ui != null)
             {
+                _ui.Closed -= Stop;
                 _ui.Written -= UiWritten;
                 _ui.WrittenLine -= UiWrittenLine;
                 _ui.WrittenByte -= UiWrittenByte;

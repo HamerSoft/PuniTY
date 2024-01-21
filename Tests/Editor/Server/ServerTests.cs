@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Core;
 using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace HamerSoft.PuniTY.Tests.Editor
 {
@@ -47,6 +50,18 @@ namespace HamerSoft.PuniTY.Tests.Editor
 
             server.Stop();
             client.Stop();
+            await Task.Delay(500);
+        }
+
+        [Test]
+        public async Task Server_Cannot_Be_Started_When_Already_Started()
+        {
+            var server = new PunityServer(new EditorLogger());
+            server.Start(GetValidServerArguments());
+            server.Start(GetValidServerArguments());
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+            server.Stop();
+            await Task.Delay(500);
         }
 
         [TestCase(2)]
@@ -79,6 +94,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             Assert.IsTrue(connectedClients.SetEquals(clientIds));
             server.Stop();
             clients.ForEach(c => c.Stop());
+            await Task.Delay(500);
         }
 
         [Test]
@@ -97,6 +113,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             server.Stop();
             await WaitUntil(() => isStopped);
             Assert.IsTrue(isStopped);
+            await Task.Delay(500);
         }
 
         [Test]
@@ -120,6 +137,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             await WaitUntil(() => lostGuid != default);
             Assert.That(lostGuid, Is.EqualTo(client.Id));
             client.Stop();
+            await Task.Delay(500);
         }
     }
 }

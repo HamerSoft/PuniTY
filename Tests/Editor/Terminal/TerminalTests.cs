@@ -110,6 +110,33 @@ namespace HamerSoft.PuniTY.Tests.Editor
             Assert.IsFalse(terminal.IsRunning);
         }
 
+        [Test]
+        public async Task When_Writing_To_Terminal_Client_Receives_Message()
+        {
+            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            terminal.Start(GetValidClientArguments(), null);
+            await terminal.Write("foo");
+            Assert.That("foo", Is.EqualTo(_client.WrittenText));
+        }
+
+        [Test]
+        public async Task When_WritingLine_To_Terminal_Client_Receives_Message()
+        {
+            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            terminal.Start(GetValidClientArguments(), null);
+            await terminal.WriteLine("foo-bar");
+            Assert.That("foo-bar", Is.EqualTo(_client.WrittenText));
+        }
+
+        [Test]
+        public async Task When_WritingBytes_To_Terminal_Client_Receives_Message()
+        {
+            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            terminal.Start(GetValidClientArguments(), null);
+            await terminal.Write(System.Text.Encoding.ASCII.GetBytes("foo-bar"));
+            Assert.That("foo-bar", Is.EqualTo(_client.WrittenText));
+        }
+
         [TearDown]
         public void TearDown()
         {
