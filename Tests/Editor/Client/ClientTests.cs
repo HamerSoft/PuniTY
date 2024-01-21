@@ -6,9 +6,9 @@ using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Core;
 using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
-using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.Tests.Editor
 {
@@ -105,6 +105,25 @@ namespace HamerSoft.PuniTY.Tests.Editor
         }
 
         [Test]
+        public async Task Client_Can_Be_Started_Async()
+        {
+            var guid = Guid.NewGuid();
+            var client = new PunityClient(guid, new EditorLogger());
+            var stream = new MemoryStream();
+
+            void Connect()
+            {
+                client.Connect(stream);
+            }
+
+            EditorApplication.update += Connect;
+            await client.StartAsync(GetValidClientArguments());
+            Assert.That(client.IsConnected, Is.True);
+            EditorApplication.update -= Connect;
+            client.Stop();
+        }
+
+        [Test]
         public async Task When_Client_Is_Connected_Can_Write_To_And_Receive_From_Stream()
         {
             var guid = Guid.NewGuid();
@@ -192,7 +211,6 @@ namespace HamerSoft.PuniTY.Tests.Editor
             stream.Position = 0;
 
             await WaitUntil(() => response != null);
-
 
             client.Stop();
             client.ResponseReceived -= Responded;
