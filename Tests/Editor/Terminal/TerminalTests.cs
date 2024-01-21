@@ -42,6 +42,28 @@ namespace HamerSoft.PuniTY.Tests.Editor
         }
 
         [Test]
+        public async Task When_Terminal_Is_StartedAsync_It_Receives_Responses()
+        {
+            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            await terminal.StartAsync(GetValidClientArguments(), null);
+            string receivedMessage = null;
+            const string messageToBeSend = "HamerSoft";
+
+            void ResponseReceived(string message)
+            {
+                receivedMessage = message;
+            }
+
+            terminal.ResponseReceived += ResponseReceived;
+            _client.ForceResponse(messageToBeSend);
+
+            await WaitUntil(() => receivedMessage != null);
+            terminal.ResponseReceived -= ResponseReceived;
+            Assert.That(receivedMessage, Is.EqualTo(messageToBeSend));
+            _server.Stop();
+        }
+
+        [Test]
         public async Task When_Server_Stops_Terminal_Is_Stopped()
         {
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
@@ -116,7 +138,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), null);
             await terminal.Write("foo");
-            Assert.That("foo", Is.EqualTo(_client.WrittenText));
+            Assert.That(_client.WrittenText, Is.EqualTo("foo"));
         }
 
         [Test]
@@ -125,7 +147,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), null);
             await terminal.WriteLine("foo-bar");
-            Assert.That("foo-bar", Is.EqualTo(_client.WrittenText));
+            Assert.That(_client.WrittenText, Is.EqualTo("foo-bar"));
         }
 
         [Test]
@@ -134,7 +156,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), null);
             await terminal.Write(System.Text.Encoding.ASCII.GetBytes("foo-bar"));
-            Assert.That("foo-bar", Is.EqualTo(_client.WrittenText));
+            Assert.That(_client.WrittenText, Is.EqualTo("foo-bar"));
         }
 
         [TearDown]

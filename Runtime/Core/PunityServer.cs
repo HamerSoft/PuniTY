@@ -62,8 +62,8 @@ namespace HamerSoft.PuniTY.Core
         {
             if (client == null || !_clients.Remove(client.Id, out var tcpClient))
                 return;
-            tcpClient.Close();
-            tcpClient.Dispose();
+            tcpClient?.Close();
+            tcpClient?.Dispose();
             client.Stop();
             OnConnectionLost(client.Id);
             client = null;
@@ -98,11 +98,13 @@ namespace HamerSoft.PuniTY.Core
         {
             if (!_started)
                 return;
-            
+
             _started = false;
             _logger.Log("Server stopping!");
             _listeningThread?.Abort();
             _listeningThread = null;
+            _tcpServer?.Server.Close();
+            _tcpServer?.Server.Dispose();
             _tcpServer?.Stop();
             foreach (var client in _clients)
             {

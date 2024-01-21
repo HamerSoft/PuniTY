@@ -10,8 +10,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         public event Action<byte[]> WrittenByte;
         public string WrittenText { get; private set; }
         public bool IsClosed { get; set; }
-
-
+        
         public MockUi()
         {
             WrittenText = "";
@@ -34,7 +33,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
 
         public void WriteLine(string message)
         {
-            WrittenLine?.Invoke($"{message}{Environment.NewLine}");
+            WrittenLine?.Invoke($"{Environment.NewLine}{message}");
         }
 
         public void Close()

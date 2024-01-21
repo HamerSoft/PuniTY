@@ -27,7 +27,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
 
             terminal.Start(GetValidClientArguments(), _ui);
             _client.ForceResponse("foo");
-            Assert.That("foo", Is.EqualTo(_ui.WrittenText));
+            Assert.That(_ui.WrittenText, Is.EqualTo("foo"));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), _ui);
             _ui.Write("foo");
-            Assert.That("foo", Is.EqualTo(_client.WrittenText));
+            Assert.That(_client.WrittenText, Is.EqualTo("foo"));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), _ui);
             _ui.WriteLine("foo-bar");
-            Assert.That($"foo-bar{Environment.NewLine}", Is.EqualTo(_client.WrittenText));
+            Assert.That(_client.WrittenText, Is.EqualTo($"{Environment.NewLine}foo-bar"));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), _ui);
             _ui.Write(System.Text.Encoding.ASCII.GetBytes("foo-bar"));
-            Assert.That("foo-bar", Is.EqualTo(_client.WrittenText));
+            Assert.That(_client.WrittenText, Is.EqualTo("foo-bar"));
         }
 
         [Test]
@@ -67,7 +67,8 @@ namespace HamerSoft.PuniTY.Tests.Editor
             Assert.That(terminal.IsRunning, Is.False);
         }
 
-        [Test] public void When_UI_Closed_Stops_Client()
+        [Test]
+        public void When_UI_Closed_Stops_Client()
         {
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), _ui);

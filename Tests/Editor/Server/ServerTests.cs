@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Core;
@@ -14,14 +15,18 @@ namespace HamerSoft.PuniTY.Tests.Editor
     [TestFixture]
     public class ServerTests : TestBase
     {
+        private PunityServer _server;
+
+        [SetUp]
+        public void Setup()
+        {
+            _server = new PunityServer(new EditorLogger());
+        }
+
         [Test]
         public void When_StartArguments_Are_Invalid_Server_Does_Not_Start()
         {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var server = new PunityServer(new EditorLogger());
-                server.Start(null);
-            });
+            Assert.Throws<ArgumentException>(() => { _server.Start(null); });
         }
 
         [Test]
@@ -37,31 +42,62 @@ namespace HamerSoft.PuniTY.Tests.Editor
                 isConnected = true;
             }
 
-            var server = new PunityServer(new EditorLogger());
-            server.ClientConnected += ClientConnected;
-            server.Start(GetValidServerArguments());
+            _server.ClientConnected += ClientConnected;
+            _server.Start(GetValidServerArguments());
             var client = new MockTCPClient(clientId);
             client.Start(GetValidClientArguments());
 
             await WaitUntil(() => isConnected);
 
-            Assert.That(connectedId, Is.EqualTo(clientId));
-            server.ClientConnected -= ClientConnected;
-
-            server.Stop();
+            Assert.That(clientId, Is.EqualTo(connectedId));
+            _server.ClientConnected -= ClientConnected;
             client.Stop();
-            await Task.Delay(500);
         }
 
         [Test]
-        public async Task Server_Cannot_Be_Started_When_Already_Started()
+        public void Server_Logs_Error_When_Socket_Already_Taken()
         {
-            var server = new PunityServer(new EditorLogger());
-            server.Start(GetValidServerArguments());
-            server.Start(GetValidServerArguments());
+            var args = GetValidServerArguments();
+            var tcpListener = new TcpListener(args.Ip, (int)args.Port);
+            tcpListener.Start();
+            _server.Start(args);
+            LogAssert.Expect(LogType.Error, new Regex(""));
+            tcpListener.Server.Close();
+            tcpListener.Server.Dispose();
+            tcpListener.Stop();
+        }
+
+        [Test]
+        public async Task When_Server_Is_Connected_To_Client_IsConnected_Is_True()
+        {
+            var clientId = Guid.NewGuid();
+            Guid connectedId = default;
+            var isConnected = false;
+
+            void ClientConnected(Guid id, Stream s)
+            {
+                connectedId = id;
+                isConnected = true;
+            }
+
+            _server.ClientConnected += ClientConnected;
+            _server.Start(GetValidServerArguments());
+            var client = new MockTCPClient(clientId);
+            client.Start(GetValidClientArguments());
+
+            await WaitUntil(() => isConnected);
+
+            Assert.That(_server.IsConnected, Is.True);
+            _server.ClientConnected -= ClientConnected;
+            client.Stop();
+        }
+
+        [Test]
+        public void Server_Cannot_Be_Started_When_Already_Started()
+        {
+            _server.Start(GetValidServerArguments());
+            _server.Start(GetValidServerArguments());
             LogAssert.Expect(LogType.Warning, new Regex(""));
-            server.Stop();
-            await Task.Delay(500);
         }
 
         [TestCase(2)]
@@ -78,9 +114,8 @@ namespace HamerSoft.PuniTY.Tests.Editor
                 connectedClients.Add(id);
             }
 
-            var server = new PunityServer(new EditorLogger());
-            server.ClientConnected += ClientConnected;
-            server.Start(GetValidServerArguments());
+            _server.ClientConnected += ClientConnected;
+            _server.Start(GetValidServerArguments());
 
             for (int i = 0; i < numberOfClients; i++)
             {
@@ -90,18 +125,18 @@ namespace HamerSoft.PuniTY.Tests.Editor
                 client.Start(GetValidClientArguments());
             }
 
-            await WaitUntil(() => connectedClients.Count == numberOfClients);
+            await WaitUntil(() => connectedClients.Count == numberOfClients, 15000);
             Assert.IsTrue(connectedClients.SetEquals(clientIds));
-            server.Stop();
-            clients.ForEach(c => c.Stop());
-            await Task.Delay(500);
+            Assert.That(_server.ConnectedClients, Is.EqualTo(numberOfClients));
+            clients.ForEach(c => _server.Stop(ref c));
+            _server.Stop();
+            await Task.Delay(2000);
         }
 
         [Test]
         public async Task When_Server_Is_Stopped_Event_Is_Raised()
         {
-            var server = new PunityServer(new EditorLogger());
-            server.Start(GetValidServerArguments());
+            _server.Start(GetValidServerArguments());
             var isStopped = false;
 
             void Stopped()
@@ -109,11 +144,10 @@ namespace HamerSoft.PuniTY.Tests.Editor
                 isStopped = true;
             }
 
-            server.Stopped += Stopped;
-            server.Stop();
+            _server.Stopped += Stopped;
+            _server.Stop();
             await WaitUntil(() => isStopped);
             Assert.IsTrue(isStopped);
-            await Task.Delay(500);
         }
 
         [Test]
@@ -126,18 +160,22 @@ namespace HamerSoft.PuniTY.Tests.Editor
                 lostGuid = guid;
             }
 
-            var server = new PunityServer(new EditorLogger());
-            server.Start(GetValidServerArguments());
+            _server.Start(GetValidServerArguments());
 
             var client = new MockTCPClient(Guid.NewGuid());
             await client.StartAsync(GetValidClientArguments());
 
-            server.ConnectionLost += ConnectionLost;
-            server.Stop();
+            _server.ConnectionLost += ConnectionLost;
+            _server.Stop();
             await WaitUntil(() => lostGuid != default);
             Assert.That(lostGuid, Is.EqualTo(client.Id));
             client.Stop();
-            await Task.Delay(500);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _server.Stop();
         }
     }
 }

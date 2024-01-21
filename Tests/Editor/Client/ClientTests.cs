@@ -135,5 +135,69 @@ namespace HamerSoft.PuniTY.Tests.Editor
             Assert.That(response, Is.Not.Null);
             Assert.That(response, Is.EqualTo(guid.ToString()));
         }
+
+        [Test]
+        public async Task When_Client_Is_Connected_Can_WriteByte_To_And_Receive_From_Stream()
+        {
+            var guid = Guid.NewGuid();
+            var client = new PunityClient(guid, new EditorLogger());
+            client.Start(GetValidClientArguments());
+            var stream = new MemoryStream();
+            client.Connect(stream);
+            string response = null;
+
+            void Responded(string message)
+            {
+                if (string.IsNullOrWhiteSpace(message))
+                    return;
+                response = message;
+                client.Stop();
+                client.ResponseReceived -= Responded;
+            }
+
+            client.ResponseReceived += Responded;
+            await client.Write(System.Text.Encoding.ASCII.GetBytes(guid.ToString()));
+            stream.Position = 0;
+
+            await WaitUntil(() => response != null);
+
+
+            client.Stop();
+            client.ResponseReceived -= Responded;
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response, Is.EqualTo(guid.ToString()));
+        }
+
+        [Test]
+        public async Task When_Client_Is_Connected_Can_WriteLine_To_And_Receive_From_Stream()
+        {
+            var guid = Guid.NewGuid();
+            var client = new PunityClient(guid, new EditorLogger());
+            client.Start(GetValidClientArguments());
+            var stream = new MemoryStream();
+            client.Connect(stream);
+            string response = null;
+
+            void Responded(string message)
+            {
+                if (string.IsNullOrWhiteSpace(message))
+                    return;
+                response = message;
+                client.Stop();
+                client.ResponseReceived -= Responded;
+            }
+
+            client.ResponseReceived += Responded;
+            await client.WriteLine(guid.ToString());
+            stream.Position = 0;
+
+            await WaitUntil(() => response != null);
+
+
+            client.Stop();
+            client.ResponseReceived -= Responded;
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response, Is.EqualTo($"{Environment.NewLine}{guid.ToString()}"));
+        }
     }
 }
