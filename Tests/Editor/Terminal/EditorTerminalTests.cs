@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace HamerSoft.PuniTY.Tests.Editor
 {
     [TestFixture]
-    public class TerminalTests : TestBase
+    public class EditorTerminalTests : TestBase
     {
         private MockServer _server;
         private MockClient _client;

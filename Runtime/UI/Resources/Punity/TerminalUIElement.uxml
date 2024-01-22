@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Packages/com.hamersoft.punity/Runtime/UI/Resources/Punity/TerminalUIElement.uss?fileID=7433441132597879392&amp;guid=fda7c78bafaa2134896b78ccb72c484b&amp;type=3#TerminalUIElement" />
+    <ui:VisualElement name="container" class="container">
+        <ui:TextField picking-mode="Ignore" readonly="true" name="output" multiline="true" class="output" />
+        <ui:TextField picking-mode="Ignore" readonly="false" name="input" multiline="true" class="input" style="flex-shrink: 1; flex-direction: column;" />
+    </ui:VisualElement>
+</ui:UXML>

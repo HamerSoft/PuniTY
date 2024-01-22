@@ -23,9 +23,9 @@ namespace HamerSoft.PuniTY
             return new PunityClient(System.Guid.NewGuid(), logger ?? new EditorLogger());
         }
 
-        internal ITerminalUI CreateUI(ILogger logger = null)
+        internal static ITerminalUI CreateUI(ILogger logger = null)
         {
-            return new TerminalUI(logger ?? new EditorLogger());
+            return new TerminalUIElement(logger ?? new EditorLogger());
         }
     }
 }

@@ -1,7 +1,9 @@
 {
     "name": "com.hamersoft.punity.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:f0b8a0092a8f27c4a81a8aa091b29e48"
+    ],
     "includePlatforms": [
         "Editor"
     ],
