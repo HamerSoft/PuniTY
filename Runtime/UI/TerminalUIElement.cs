@@ -1,4 +1,5 @@
 ﻿using System;
+using HamerSoft.Threads;
 using UnityEngine;
 using UnityEngine.UIElements;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
@@ -26,8 +27,9 @@ namespace HamerSoft.PuniTY.UI
             _input = this.Q<TextField>("input");
         }
 
-        public void Print(string message)
+        public async void Print(string message)
         {
+            await Dispatcher.ToMainThread();
             _output.value += message;
         }
 

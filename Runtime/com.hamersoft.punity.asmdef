@@ -1,7 +1,9 @@
 {
     "name": "com.hamersoft.punity",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:e9c539bce7de75e43b4bfeb7ee81cc0c"
+    ],
     "includePlatforms": [
         "Editor",
         "LinuxStandalone64",

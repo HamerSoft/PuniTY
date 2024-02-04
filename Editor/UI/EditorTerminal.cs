@@ -21,6 +21,11 @@ namespace Hamersoft.PuniTY.Editor.UI
             wnd.titleContent = new GUIContent("Punity Terminal");
         }
 
+        private void OnDestroy()
+        {
+            _terminal?.Stop();
+        }
+
         public void CreateGUI()
         {
             rootVisualElement.Add(_terminalUi = PunityFactory.CreateUI() as TerminalUIElement);
