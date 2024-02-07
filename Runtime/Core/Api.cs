@@ -1,18 +1,21 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using HamerSoft.PuniTY.Configuration;
+using HamerSoft.PuniTY.Core.Logging;
 using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.Core
 {
     public sealed class Api : IPunityApi
     {
+        internal static Api Instance => _instance ??= new Api(new PunityServer(new EditorLogger()));
+        private static Api _instance;
         private IPunityServer _server;
         private StartArguments _startArguments;
 
-        public Api(ILogger logger = null)
+        private Api(IPunityServer server)
         {
-            _server = PunityFactory.CreateServer(logger);
+            _server = server;
         }
 
         public void StartServer(StartArguments startArguments)
@@ -40,7 +43,6 @@ namespace HamerSoft.PuniTY.Core
         public void Stop()
         {
             _server?.Stop();
-            _server = null;
         }
     }
 }

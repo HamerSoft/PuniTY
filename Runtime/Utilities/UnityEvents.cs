@@ -7,6 +7,11 @@ namespace HamerSoft.PuniTY.Utilities
     {
         internal event Action ApplicationQuit;
 
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         private void OnDestroy()
         {
             ApplicationQuit?.Invoke();
