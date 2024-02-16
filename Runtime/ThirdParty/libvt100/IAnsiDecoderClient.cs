@@ -1,5 +1,5 @@
 using System;
-using HamerSoft.PuniTY.VT100Adapter;
+using HamerSoft.PuniTY.ThirdParty.VT100Adapter;
 
 namespace libVT100
 {
@@ -79,6 +79,7 @@ namespace libVT100
         ForegroundNormalMagenta = 35,
         ForegroundNormalCyan = 36,
         ForegroundNormalWhite = 37,
+        ForegroundColor = 38,
         ForegroundNormalReset = 39,
 
         /// Set background color, normal intensity
@@ -90,6 +91,7 @@ namespace libVT100
         BackgroundNormalMagenta = 45,
         BackgroundNormalCyan = 46,
         BackgroundNormalWhite = 47,
+        BackgroundColor = 48,
         BackgroundNormalReset = 49,
 
         /// Set foreground color, high intensity (aixtem)

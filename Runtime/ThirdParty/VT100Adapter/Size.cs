@@ -1,4 +1,4 @@
-﻿namespace HamerSoft.PuniTY.VT100Adapter
+﻿namespace HamerSoft.PuniTY.ThirdParty.VT100Adapter
 {
     public struct Size
     {

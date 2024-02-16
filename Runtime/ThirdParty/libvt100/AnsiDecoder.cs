@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using HamerSoft.PuniTY.VT100Adapter;
+using HamerSoft.PuniTY.ThirdParty.VT100Adapter;
 
 namespace libVT100
 {

@@ -1,4 +1,4 @@
-using HamerSoft.PuniTY.VT100Adapter;
+using HamerSoft.PuniTY.ThirdParty.VT100Adapter;
 
 namespace libVT100
 {

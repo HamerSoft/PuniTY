@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using HamerSoft.PuniTY.VT100Adapter;
+using HamerSoft.PuniTY.ThirdParty.VT100Adapter;
 
 namespace libVT100
 {
