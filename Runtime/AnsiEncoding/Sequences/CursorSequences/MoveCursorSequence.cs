@@ -15,9 +15,13 @@
 
         public override void Execute(IScreen screen, string parameters)
         {
-            var param = parameters.Split(';');
-            var defaultCells = 1;
-            screen.MoveCursor(int.TryParse(param[0], out var cells) ? cells : defaultCells, Direction);
+            var cells = 1;
+            if (string.IsNullOrWhiteSpace(parameters) || int.TryParse(parameters, out cells))
+                screen.MoveCursor(cells, Direction);
+            else
+            {
+                Logger.Warning($"Failed to parse move cursor command {Direction} => {parameters}");
+            }
         }
     }
 }
