@@ -49,6 +49,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(_screen.Cursor.Position.x, Is.EqualTo(0));
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
         }
+
         [Test]
         public void When_CursorMove_UpMultiple_Command_Is_Executed_CursorMovesUp()
         {
@@ -73,6 +74,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(0));
         }
+
         [Test]
         public void When_CursorMove_MultipleForward_Command_Is_Executed_CursorMovesForward()
         {
@@ -98,7 +100,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(_screen.Cursor.Position.x, Is.EqualTo(0));
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(0));
         }
-        
+
         [Test]
         public void When_CursorMove_MultipleBack_Command_Is_Executed_CursorMovesBack()
         {
@@ -124,7 +126,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(_screen.Cursor.Position.x, Is.EqualTo(0));
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(0));
         }
-        
+
         [Test]
         public void When_CursorMove_MultipleDown_Command_Is_Executed_CursorMovesDown()
         {
@@ -137,8 +139,33 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [Test]
         public void When_CursorMove_Down_Command_Is_Executed_AtEdge_NothingHappens()
         {
+            MoveCursor(1, Direction.Down);
             Assert.That(_screen.Cursor.Position.x, Is.EqualTo(0));
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void When_CursorMove_NextLine_IsExecuted_Cursor_Moves_To_Start_Down()
+        {
+            _screen.SetCursorPosition(new Vector2Int(0,1));
+            MoveCursor(1,true);
+            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(0));
+            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(0));
+        }
+        
+        
+        [Test]
+        public void When_CursorMove_NextLine_Multiple_IsExecuted_Cursor_Moves_To_Start_Down()
+        {
+            _screen.SetCursorPosition(new Vector2Int(0,3));
+            MoveCursor(2,true);
+            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(0));
+            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+        }
+
+        private void MoveCursor(int columns, bool next)
+        {
+            Decode($"\x001b[{(columns == 1 ? "" : $"{columns}")}{(next ? 'E' : 'F')}");
         }
 
         private void MoveCursor(int cells, Direction direction)
