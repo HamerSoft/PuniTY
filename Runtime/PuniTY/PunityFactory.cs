@@ -27,5 +27,10 @@ namespace HamerSoft.PuniTY
         {
             return new TerminalUIElement(logger ?? new EditorLogger());
         }
+
+        internal static ITerminalUI CreateVT100UI(ILogger logger = null)
+        {
+            return new Vt100UIElement(logger ?? new EditorLogger());
+        }
     }
 }

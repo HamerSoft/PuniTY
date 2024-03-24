@@ -16,6 +16,7 @@ namespace HamerSoft.PuniTY.Core
 
         public event Action Stopped;
         public event Action<string> ResponseReceived;
+        public event Action<byte[]> BytesReceived;
         public bool IsRunning { get; private set; }
 
         internal PunityTerminal(IPunityServer server, IPunityClient client, ILogger logger)
@@ -59,6 +60,7 @@ namespace HamerSoft.PuniTY.Core
             _server.ClientConnected += ServerOnClientConnected;
             _client.Exited += ClientExited;
             _client.ResponseReceived += ClientResponseReceived;
+            _client.BytesReceived += ClientBytesReceived;
             if (ui != null)
             {
                 _ui.Closed += Stop;
@@ -86,6 +88,7 @@ namespace HamerSoft.PuniTY.Core
             {
                 _client.Exited -= ClientExited;
                 _client.ResponseReceived -= ClientResponseReceived;
+                _client.BytesReceived -= ClientBytesReceived;
                 _client.Stop();
                 _client = null;
             }
@@ -144,6 +147,12 @@ namespace HamerSoft.PuniTY.Core
         private void ClientResponseReceived(string message)
         {
             ResponseReceived?.Invoke(message);
+            _ui?.Print(message);
+        }
+
+        private void ClientBytesReceived(byte[] message)
+        {
+            BytesReceived?.Invoke(message);
             _ui?.Print(message);
         }
 

@@ -21,6 +21,11 @@ namespace HamerSoft.PuniTY.Tests.Editor
             WrittenText += message;
         }
 
+        public void Print(byte[] message)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Write(string message)
         {
             Written?.Invoke(message);

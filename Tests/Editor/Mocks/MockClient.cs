@@ -17,6 +17,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         public bool IsConnected => _stream != null;
         public bool HasExited => _exitted;
         public event Action<string> ResponseReceived;
+        public event Action<byte[]> BytesReceived;
         public event Action Exited;
         public string WrittenText { get; private set; }
 

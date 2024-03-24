@@ -51,7 +51,10 @@ namespace libVT100
         protected override void ProcessCommand(byte _command, String _parameter)
         {
             //System.Console.WriteLine ( "ProcessCommand: {0} {1}", (char) _command, _parameter );
-            switch ((char)_command)
+            var character = (char)_command;
+            var bell = 0x07;
+            var b = (char)bell;
+            switch (character)
             {
                 case 'A':
                     OnMoveCursor(Direction.Up, DecodeInt(_parameter, 1));
@@ -80,7 +83,10 @@ namespace libVT100
                 case 'G':
                     OnMoveCursorToColumn(DecodeInt(_parameter, 1) - 1);
                     break;
-
+                case 'X':
+                    break;
+                case 'a':
+                    break;
                 case 'H':
                 case 'f':
                 {
@@ -113,7 +119,6 @@ namespace libVT100
                 case 'T':
                     OnScrollPageDownwards(DecodeInt(_parameter, 1));
                     break;
-
                 case 'm':
                 {
                     String[] commands = _parameter.Split(';');
@@ -222,6 +227,9 @@ namespace libVT100
                         case "?25":
                             OnModeChanged(AnsiMode.HideCursor);
                             break;
+                        case "?2004":
+                            OnModeChanged(AnsiMode.CloseBracketedPaste);
+                        break;
 
                         default:
                             throw new InvalidParameterException(_command, _parameter);
@@ -286,6 +294,9 @@ namespace libVT100
                         case "?25":
                             OnModeChanged(AnsiMode.ShowCursor);
                             break;
+                        case "?2004":
+                            OnModeChanged(AnsiMode.OpenBracketedPaste);
+                            break;
 
                         default:
                             throw new InvalidParameterException(_command, _parameter);
@@ -302,6 +313,10 @@ namespace libVT100
                     OnModeChanged(AnsiMode.AlternateKeypad);
                     // Set alternate keypad mode (rto: non-numeric, presumably)
                     break;
+
+                // case ']':
+                // case '[':
+                // break;
 
                 default:
                     throw new InvalidCommandException(_command, _parameter);

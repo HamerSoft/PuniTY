@@ -13,6 +13,7 @@ namespace HamerSoft.PuniTY
         public bool HasExited { get; }
 
         public event Action<string> ResponseReceived;
+        public event Action<byte[]> BytesReceived;
         public event Action Exited;
 
         public Task Write(string text);

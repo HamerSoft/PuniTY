@@ -143,14 +143,16 @@ namespace libVT100
         DisableInterlacing,
         NumericKeypad,
         AlternateKeypad,
+        OpenBracketedPaste,
+        CloseBracketedPaste
     }
 
     public interface IAnsiDecoderClient : IDisposable
     {
         void Characters(IAnsiDecoder _sender, char[] _chars);
-        void SaveCursor(IAnsiDecoder _sernder);
-        void RestoreCursor(IAnsiDecoder _sender);
-        Size GetSize(IAnsiDecoder _sender);
+        void SaveCursor(IAnsiDecoder sender);
+        void RestoreCursor(IAnsiDecoder sender);
+        Size GetSize(IAnsiDecoder sender);
         void MoveCursor(IAnsiDecoder _sender, Direction _direction, int _amount);
         void MoveCursorToBeginningOfLineBelow(IAnsiDecoder _sender, int _lineNumberRelativeToCurrentLine);
         void MoveCursorToBeginningOfLineAbove(IAnsiDecoder _sender, int _lineNumberRelativeToCurrentLine);

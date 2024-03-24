@@ -15,7 +15,7 @@ namespace Hamersoft.PuniTY.Editor.UI
         private IPunityTerminal _terminal;
 
         [MenuItem("Tools/HamerSoft/Punity/Start Terminal")]
-        public static void ShowExample()
+        public static void ShowTerminal()
         {
             EditorTerminal wnd = GetWindow<EditorTerminal>();
             wnd.titleContent = new GUIContent("Punity Terminal");

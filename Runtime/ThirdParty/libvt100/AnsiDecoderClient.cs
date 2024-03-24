@@ -25,15 +25,15 @@ namespace libVT100
             }
         }
 
-        void IAnsiDecoderClient.SaveCursor(IAnsiDecoder _sernder)
+        void IAnsiDecoderClient.SaveCursor(IAnsiDecoder sender)
         {
         }
 
-        void IAnsiDecoderClient.RestoreCursor(IAnsiDecoder _sender)
+        void IAnsiDecoderClient.RestoreCursor(IAnsiDecoder sender)
         {
         }
 
-        Size IAnsiDecoderClient.GetSize(IAnsiDecoder _sender)
+        Size IAnsiDecoderClient.GetSize(IAnsiDecoder sender)
         {
             if (GetSize != null)
             {

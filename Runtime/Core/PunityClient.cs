@@ -21,6 +21,7 @@ namespace HamerSoft.PuniTY.Core
         public Guid Id { get; private set; }
         public bool IsConnected => _stream != null;
         public bool HasExited { get; protected set; }
+        public event Action<byte[]> BytesReceived;
         public event Action Exited;
         public event Action<string> ResponseReceived;
 
@@ -126,9 +127,18 @@ namespace HamerSoft.PuniTY.Core
                 if (bytesRead > 0)
                 {
                     var output = _startArguments.Encoder.Read(buffer[..bytesRead]);
+// populate foo
+                    int i = buffer.Length - 1;
+                    while(buffer[i] == 0)
+                        --i;
+// now foo[i] is the last non-zero byte
+                    byte[] bar = new byte[i+1];
+                    Array.Copy(buffer, bar, i+1);
                     OnResponseReceived(output);
+                    OnBytesReceived(bar);
                 }
 
+                Array.Clear(buffer, 0, buffer.Length);
                 if (!HasExited && IsConnected)
                     _stream.BeginRead(buffer, 0, readSize, _callback, this);
             };
@@ -139,6 +149,10 @@ namespace HamerSoft.PuniTY.Core
         private void OnResponseReceived(string response)
         {
             ResponseReceived?.Invoke(response);
+        }
+        private void OnBytesReceived(byte[] response)
+        {
+            BytesReceived?.Invoke(response);
         }
 
         private void ProcessExited(object sender, EventArgs e)

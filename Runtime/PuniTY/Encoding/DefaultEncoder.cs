@@ -1,6 +1,4 @@
-﻿using libVT100;
-
-namespace HamerSoft.PuniTY.Encoding
+﻿namespace HamerSoft.PuniTY.Encoding
 {
     internal class DefaultEncoder : IEncoder
     {

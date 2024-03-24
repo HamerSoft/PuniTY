@@ -9,6 +9,8 @@ namespace libVT100
     {
         public const byte EscapeCharacter = 0x1B;
         public const byte LeftBracketCharacter = 0x5B;
+        public const byte RightBracketCharacter = 0x5D;
+        public const byte BellCharacter = 0x07;
         public const byte XonCharacter = 17;
         public const byte XoffCharacter = 19;
 
@@ -51,10 +53,10 @@ namespace libVT100
             m_outBuffer = new List<byte[]>();
         }
 
-        virtual protected bool IsValidParameterCharacter(char _c)
+        protected virtual bool IsValidParameterCharacter(char _c)
         {
             //return (Char.IsNumber( _c ) || _c == '(' || _c == ')' || _c == ';' || _c == '"' || _c == '?');
-            return (Char.IsNumber(_c) || _c == ';' || _c == '"' || _c == '?');
+            return (Char.IsNumber(_c) || _c == ';' || _c == '"' || _c == '?' || _c == ']');
         }
 
         protected void AddToCommandBuffer(byte _byte)
@@ -128,13 +130,24 @@ namespace libVT100
                 }
 
                 bool insideQuotes = false;
+                //https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences#window-title
+                bool isOSCCode = false;
                 int end = start;
                 while (end < m_commandBuffer.Count &&
-                       (IsValidParameterCharacter((char)m_commandBuffer[end]) || insideQuotes))
+                       (IsValidParameterCharacter((char)m_commandBuffer[end]) || insideQuotes || isOSCCode))
                 {
                     if (m_commandBuffer[end] == '"')
                     {
                         insideQuotes = !insideQuotes;
+                    }
+
+                    if (m_commandBuffer[end] == ']')
+                    {
+                        isOSCCode = true;
+                    }
+                    else if (m_commandBuffer[end] == 0x07)
+                    {
+                        isOSCCode = false;
                     }
 
                     end++;
@@ -150,23 +163,24 @@ namespace libVT100
                     // More data needed
                     return;
                 }
+                
 
-                Decoder decoder = (this as IDecoder).Encoding.GetDecoder();
-                byte[] parameterData = new byte[end - start];
-                for (int i = 0; i < parameterData.Length; i++)
-                {
-                    parameterData[i] = m_commandBuffer[start + i];
-                }
-
-                int parameterLength = decoder.GetCharCount(parameterData, 0, parameterData.Length);
-                char[] parameterChars = new char[parameterLength];
-                decoder.GetChars(parameterData, 0, parameterData.Length, parameterChars, 0);
-                String parameter = new String(parameterChars);
+                var parameter = GetParameterData(end, start);
 
                 byte command = m_commandBuffer[end];
 
                 try
                 {
+                    var character = (char)command;
+                    if (character == ']')
+                    {
+                        while (m_commandBuffer[end] != BellCharacter)
+                        {
+                            end++;
+                        }
+
+                        parameter = GetParameterData(end, start);
+                    }
                     ProcessCommand(command, parameter);
                 }
                 finally
@@ -206,6 +220,22 @@ namespace libVT100
                     }
                 }
             }
+        }
+
+        private string GetParameterData(int end, int start)
+        {
+            Decoder decoder = (this as IDecoder).Encoding.GetDecoder();
+            byte[] parameterData = new byte[end - start];
+            for (int i = 0; i < parameterData.Length; i++)
+            {
+                parameterData[i] = m_commandBuffer[start + i];
+            }
+
+            int parameterLength = decoder.GetCharCount(parameterData, 0, parameterData.Length);
+            char[] parameterChars = new char[parameterLength];
+            decoder.GetChars(parameterData, 0, parameterData.Length, parameterChars, 0);
+            String parameter = new String(parameterChars);
+            return parameter;
         }
 
         protected void ProcessNormalInput(byte _data)

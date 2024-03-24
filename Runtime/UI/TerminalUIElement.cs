@@ -33,6 +33,16 @@ namespace HamerSoft.PuniTY.UI
             _output.value += message;
         }
 
+        public void Print(byte[] message)
+        {
+          //  throw new NotImplementedException();
+        }
+
+        public void Close()
+        {
+            Closed?.Invoke();
+        }
+
         public void Focus()
         {
             _isFocused = true;
@@ -51,7 +61,7 @@ namespace HamerSoft.PuniTY.UI
         {
             if (keyboardEvent.keyCode == KeyCode.Return && !string.IsNullOrWhiteSpace(_input.text))
             {
-                Written?.Invoke(_input.text);
+                WrittenLine?.Invoke(_input.text);
                 _input.SetValueWithoutNotify("");
             }
         }

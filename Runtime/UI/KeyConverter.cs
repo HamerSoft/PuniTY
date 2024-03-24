@@ -6,367 +6,787 @@ namespace HamerSoft.PuniTY.UI
 {
     internal static class KeyConverter
     {
-        public static KeyCode Convert(Keys keys)
+        // public static KeyCode Convert(Keys keys)
+        // {
+        //     switch (keys)
+        //     {
+        //         case Keys.KeyCode:
+        //             throw new ArgumentException($"KeyCode unknown {keys}")
+        //             break;
+        //         case Keys.Modifiers:
+        //             break;
+        //         case Keys.None:
+        //             break;
+        //         case Keys.LButton:
+        //             break;
+        //         case Keys.RButton:
+        //             break;
+        //         case Keys.Cancel:
+        //             break;
+        //         case Keys.MButton:
+        //             break;
+        //         case Keys.XButton1:
+        //             break;
+        //         case Keys.XButton2:
+        //             break;
+        //         case Keys.Back:
+        //             break;
+        //         case Keys.Tab:
+        //             break;
+        //         case Keys.LineFeed:
+        //             break;
+        //         case Keys.Clear:
+        //             break;
+        //         case Keys.Return:
+        //             break;
+        //         case Keys.ShiftKey:
+        //             break;
+        //         case Keys.ControlKey:
+        //             break;
+        //         case Keys.Menu:
+        //             break;
+        //         case Keys.Pause:
+        //             break;
+        //         case Keys.Capital:
+        //             break;
+        //         case Keys.KanaMode:
+        //             break;
+        //         case Keys.JunjaMode:
+        //             break;
+        //         case Keys.FinalMode:
+        //             break;
+        //         case Keys.HanjaMode:
+        //             break;
+        //         case Keys.Escape:
+        //             break;
+        //         case Keys.IMEConvert:
+        //             break;
+        //         case Keys.IMENonconvert:
+        //             break;
+        //         case Keys.IMEAccept:
+        //             break;
+        //         case Keys.IMEModeChange:
+        //             break;
+        //         case Keys.Space:
+        //             break;
+        //         case Keys.Prior:
+        //             break;
+        //         case Keys.Next:
+        //             break;
+        //         case Keys.End:
+        //             break;
+        //         case Keys.Home:
+        //             break;
+        //         case Keys.Left:
+        //             break;
+        //         case Keys.Up:
+        //             break;
+        //         case Keys.Right:
+        //             break;
+        //         case Keys.Down:
+        //             break;
+        //         case Keys.Select:
+        //             break;
+        //         case Keys.Print:
+        //             break;
+        //         case Keys.Execute:
+        //             break;
+        //         case Keys.Snapshot:
+        //             break;
+        //         case Keys.Insert:
+        //             break;
+        //         case Keys.Delete:
+        //             break;
+        //         case Keys.Help:
+        //             break;
+        //         case Keys.D0:
+        //             break;
+        //         case Keys.D1:
+        //             break;
+        //         case Keys.D2:
+        //             break;
+        //         case Keys.D3:
+        //             break;
+        //         case Keys.D4:
+        //             break;
+        //         case Keys.D5:
+        //             break;
+        //         case Keys.D6:
+        //             break;
+        //         case Keys.D7:
+        //             break;
+        //         case Keys.D8:
+        //             break;
+        //         case Keys.D9:
+        //             break;
+        //         case Keys.A:
+        //             break;
+        //         case Keys.B:
+        //             break;
+        //         case Keys.C:
+        //             break;
+        //         case Keys.D:
+        //             break;
+        //         case Keys.E:
+        //             break;
+        //         case Keys.F:
+        //             break;
+        //         case Keys.G:
+        //             break;
+        //         case Keys.H:
+        //             break;
+        //         case Keys.I:
+        //             break;
+        //         case Keys.J:
+        //             break;
+        //         case Keys.K:
+        //             break;
+        //         case Keys.L:
+        //             break;
+        //         case Keys.M:
+        //             break;
+        //         case Keys.N:
+        //             break;
+        //         case Keys.O:
+        //             break;
+        //         case Keys.P:
+        //             break;
+        //         case Keys.Q:
+        //             break;
+        //         case Keys.R:
+        //             break;
+        //         case Keys.S:
+        //             break;
+        //         case Keys.T:
+        //             break;
+        //         case Keys.U:
+        //             break;
+        //         case Keys.V:
+        //             break;
+        //         case Keys.W:
+        //             break;
+        //         case Keys.X:
+        //             break;
+        //         case Keys.Y:
+        //             break;
+        //         case Keys.Z:
+        //             break;
+        //         case Keys.LWin:
+        //             break;
+        //         case Keys.RWin:
+        //             break;
+        //         case Keys.Apps:
+        //             break;
+        //         case Keys.Sleep:
+        //             break;
+        //         case Keys.NumPad0:
+        //             break;
+        //         case Keys.NumPad1:
+        //             break;
+        //         case Keys.NumPad2:
+        //             break;
+        //         case Keys.NumPad3:
+        //             break;
+        //         case Keys.NumPad4:
+        //             break;
+        //         case Keys.NumPad5:
+        //             break;
+        //         case Keys.NumPad6:
+        //             break;
+        //         case Keys.NumPad7:
+        //             break;
+        //         case Keys.NumPad8:
+        //             break;
+        //         case Keys.NumPad9:
+        //             break;
+        //         case Keys.Multiply:
+        //             break;
+        //         case Keys.Add:
+        //             break;
+        //         case Keys.Separator:
+        //             break;
+        //         case Keys.Subtract:
+        //             break;
+        //         case Keys.Decimal:
+        //             break;
+        //         case Keys.Divide:
+        //             break;
+        //         case Keys.F1:
+        //             break;
+        //         case Keys.F2:
+        //             break;
+        //         case Keys.F3:
+        //             break;
+        //         case Keys.F4:
+        //             break;
+        //         case Keys.F5:
+        //             break;
+        //         case Keys.F6:
+        //             break;
+        //         case Keys.F7:
+        //             break;
+        //         case Keys.F8:
+        //             break;
+        //         case Keys.F9:
+        //             break;
+        //         case Keys.F10:
+        //             break;
+        //         case Keys.F11:
+        //             break;
+        //         case Keys.F12:
+        //             break;
+        //         case Keys.F13:
+        //             break;
+        //         case Keys.F14:
+        //             break;
+        //         case Keys.F15:
+        //             break;
+        //         case Keys.F16:
+        //             break;
+        //         case Keys.F17:
+        //             break;
+        //         case Keys.F18:
+        //             break;
+        //         case Keys.F19:
+        //             break;
+        //         case Keys.F20:
+        //             break;
+        //         case Keys.F21:
+        //             break;
+        //         case Keys.F22:
+        //             break;
+        //         case Keys.F23:
+        //             break;
+        //         case Keys.F24:
+        //             break;
+        //         case Keys.NumLock:
+        //             break;
+        //         case Keys.Scroll:
+        //             break;
+        //         case Keys.LShiftKey:
+        //             break;
+        //         case Keys.RShiftKey:
+        //             break;
+        //         case Keys.LControlKey:
+        //             break;
+        //         case Keys.RControlKey:
+        //             break;
+        //         case Keys.LMenu:
+        //             break;
+        //         case Keys.RMenu:
+        //             break;
+        //         case Keys.BrowserBack:
+        //             break;
+        //         case Keys.BrowserForward:
+        //             break;
+        //         case Keys.BrowserRefresh:
+        //             break;
+        //         case Keys.BrowserStop:
+        //             break;
+        //         case Keys.BrowserSearch:
+        //             break;
+        //         case Keys.BrowserFavorites:
+        //             break;
+        //         case Keys.BrowserHome:
+        //             break;
+        //         case Keys.VolumeMute:
+        //             break;
+        //         case Keys.VolumeDown:
+        //             break;
+        //         case Keys.VolumeUp:
+        //             break;
+        //         case Keys.MediaNextTrack:
+        //             break;
+        //         case Keys.MediaPreviousTrack:
+        //             break;
+        //         case Keys.MediaStop:
+        //             break;
+        //         case Keys.MediaPlayPause:
+        //             break;
+        //         case Keys.LaunchMail:
+        //             break;
+        //         case Keys.SelectMedia:
+        //             break;
+        //         case Keys.LaunchApplication1:
+        //             break;
+        //         case Keys.LaunchApplication2:
+        //             break;
+        //         case Keys.OemSemicolon:
+        //             break;
+        //         case Keys.Oemplus:
+        //             break;
+        //         case Keys.Oemcomma:
+        //             break;
+        //         case Keys.OemMinus:
+        //             break;
+        //         case Keys.OemPeriod:
+        //             break;
+        //         case Keys.OemQuestion:
+        //             break;
+        //         case Keys.Oem3:
+        //             break;
+        //         case Keys.OemOpenBrackets:
+        //             break;
+        //         case Keys.OemPipe:
+        //             break;
+        //         case Keys.OemCloseBrackets:
+        //             break;
+        //         case Keys.Oem7:
+        //             break;
+        //         case Keys.Oem8:
+        //             break;
+        //         case Keys.Oem102:
+        //             break;
+        //         case Keys.ProcessKey:
+        //             break;
+        //         case Keys.Packet:
+        //             break;
+        //         case Keys.Attn:
+        //             break;
+        //         case Keys.Crsel:
+        //             break;
+        //         case Keys.Exsel:
+        //             break;
+        //         case Keys.EraseEof:
+        //             break;
+        //         case Keys.Play:
+        //             break;
+        //         case Keys.Zoom:
+        //             break;
+        //         case Keys.NoName:
+        //             break;
+        //         case Keys.Pa1:
+        //             break;
+        //         case Keys.OemClear:
+        //             break;
+        //         case Keys.Shift:
+        //             break;
+        //         case Keys.Control:
+        //             break;
+        //         case Keys.Alt:
+        //             break;
+        //         default:
+        //             throw new ArgumentOutOfRangeException(nameof(keys), keys, null);
+        //     }
+        // }
+
+        public static Keys ConvertKey(KeyCode keyCode)
         {
-            switch (keys)
+            switch (keyCode)
             {
-                case Keys.KeyCode:
+                case KeyCode.None:
+                    return Keys.None;
                     break;
-                case Keys.Modifiers:
+                case KeyCode.Backspace:
+                    return Keys.Back;
                     break;
-                case Keys.None:
+                case KeyCode.Delete:
+                    return Keys.Delete;
                     break;
-                case Keys.LButton:
+                case KeyCode.Tab:
+                    return Keys.Tab;
                     break;
-                case Keys.RButton:
+                case KeyCode.Clear:
+                    return Keys.Clear;
                     break;
-                case Keys.Cancel:
+                case KeyCode.Return:
+                    return Keys.Return;
                     break;
-                case Keys.MButton:
+                case KeyCode.Pause:
+                    return Keys.Pause;
                     break;
-                case Keys.XButton1:
+                case KeyCode.Escape:
+                    return Keys.Escape;
                     break;
-                case Keys.XButton2:
+                case KeyCode.Space:
+                    return Keys.Space;
                     break;
-                case Keys.Back:
+                case KeyCode.Keypad0:
+                    return Keys.NumPad0;
                     break;
-                case Keys.Tab:
+                case KeyCode.Keypad1:
+                    return Keys.NumPad1;
                     break;
-                case Keys.LineFeed:
+                case KeyCode.Keypad2:
+                    return Keys.NumPad2;
                     break;
-                case Keys.Clear:
+                case KeyCode.Keypad3:
+                    return Keys.NumPad3;
                     break;
-                case Keys.Return:
+                case KeyCode.Keypad4:
+                    return Keys.NumPad4;
                     break;
-                case Keys.ShiftKey:
+                case KeyCode.Keypad5:
+                    return Keys.NumPad5;
                     break;
-                case Keys.ControlKey:
+                case KeyCode.Keypad6:
+                    return Keys.NumPad6;
                     break;
-                case Keys.Menu:
+                case KeyCode.Keypad7:
+                    return Keys.NumPad7;
                     break;
-                case Keys.Pause:
+                case KeyCode.Keypad8:
+                    return Keys.NumPad8;
                     break;
-                case Keys.Capital:
+                case KeyCode.Keypad9:
+                    return Keys.NumPad9;
                     break;
-                case Keys.KanaMode:
+                case KeyCode.KeypadPeriod:
+                    return Keys.OemPeriod;
                     break;
-                case Keys.JunjaMode:
+                case KeyCode.KeypadDivide:
+                    return Keys.Divide;
                     break;
-                case Keys.FinalMode:
+                case KeyCode.KeypadMultiply:
+                    return Keys.Multiply;
                     break;
-                case Keys.HanjaMode:
+                case KeyCode.KeypadMinus:
+                    return Keys.OemMinus;
                     break;
-                case Keys.Escape:
+                case KeyCode.KeypadPlus:
+                    return Keys.Oemplus;
                     break;
-                case Keys.IMEConvert:
+                case KeyCode.KeypadEnter:
+                    return Keys.Enter;
                     break;
-                case Keys.IMENonconvert:
+                case KeyCode.KeypadEquals:
+                    return Keys.Oemplus;
                     break;
-                case Keys.IMEAccept:
+                case KeyCode.UpArrow:
+                    return Keys.Up;
                     break;
-                case Keys.IMEModeChange:
+                case KeyCode.DownArrow:
+                    return Keys.Down;
                     break;
-                case Keys.Space:
+                case KeyCode.RightArrow:
+                    return Keys.Right;
                     break;
-                case Keys.Prior:
+                case KeyCode.LeftArrow:
+                    return Keys.Left;
                     break;
-                case Keys.Next:
+                case KeyCode.Insert:
+                    return Keys.Insert;
                     break;
-                case Keys.End:
+                case KeyCode.Home:
+                    return Keys.Home;
                     break;
-                case Keys.Home:
+                case KeyCode.End:
+                    return Keys.End;
                     break;
-                case Keys.Left:
+                case KeyCode.PageUp:
+                    return Keys.PageUp;
                     break;
-                case Keys.Up:
+                case KeyCode.PageDown:
+                    return Keys.PageDown;
                     break;
-                case Keys.Right:
+                case KeyCode.F1:
+                    return Keys.F1;
                     break;
-                case Keys.Down:
+                case KeyCode.F2:
+                    return Keys.F2;
                     break;
-                case Keys.Select:
+                case KeyCode.F3:
+                    return Keys.F3;
                     break;
-                case Keys.Print:
+                case KeyCode.F4:
+                    return Keys.F4;
                     break;
-                case Keys.Execute:
+                case KeyCode.F5:
+                    return Keys.F5;
                     break;
-                case Keys.Snapshot:
+                case KeyCode.F6:
+                    return Keys.F6;
                     break;
-                case Keys.Insert:
+                case KeyCode.F7:
+                    return Keys.F7;
                     break;
-                case Keys.Delete:
+                case KeyCode.F8:
+                    return Keys.F8;
                     break;
-                case Keys.Help:
+                case KeyCode.F9:
+                    return Keys.F9;
                     break;
-                case Keys.D0:
+                case KeyCode.F10:
+                    return Keys.F10;
                     break;
-                case Keys.D1:
+                case KeyCode.F11:
+                    return Keys.F11;
                     break;
-                case Keys.D2:
+                case KeyCode.F12:
+                    return Keys.F12;
                     break;
-                case Keys.D3:
+                case KeyCode.F13:
+                    return Keys.F13;
                     break;
-                case Keys.D4:
+                case KeyCode.F14:
+                    return Keys.F14;
                     break;
-                case Keys.D5:
+                case KeyCode.F15:
+                    return Keys.F15;
                     break;
-                case Keys.D6:
+                case KeyCode.Alpha0:
+                    return Keys.D0;
                     break;
-                case Keys.D7:
+                case KeyCode.Alpha1:
+                    return Keys.D1;
                     break;
-                case Keys.D8:
+                case KeyCode.Alpha2:
+                    return Keys.D2;
                     break;
-                case Keys.D9:
+                case KeyCode.Alpha3:
+                    return Keys.D3;
                     break;
-                case Keys.A:
+                case KeyCode.Alpha4:
+                    return Keys.D4;
                     break;
-                case Keys.B:
+                case KeyCode.Alpha5:
+                    return Keys.D5;
                     break;
-                case Keys.C:
+                case KeyCode.Alpha6:
+                    return Keys.D6;
                     break;
-                case Keys.D:
+                case KeyCode.Alpha7:
+                    return Keys.D7;
                     break;
-                case Keys.E:
+                case KeyCode.Alpha8:
+                    return Keys.D8;
                     break;
-                case Keys.F:
+                case KeyCode.Alpha9:
+                    return Keys.D8;
                     break;
-                case Keys.G:
+                case KeyCode.Exclaim:
+                    return Keys.D1;
                     break;
-                case Keys.H:
+                case KeyCode.DoubleQuote:
+                    return Keys.D2;
                     break;
-                case Keys.I:
+                case KeyCode.Hash:
+                    return Keys.D3;
                     break;
-                case Keys.J:
+                case KeyCode.Dollar:
+                    return Keys.D4;
                     break;
-                case Keys.K:
+                case KeyCode.Percent:
+                    return Keys.D5;
                     break;
-                case Keys.L:
+                case KeyCode.Ampersand:
+                    return Keys.D6;
                     break;
-                case Keys.M:
+                case KeyCode.Quote:
+                    return Keys.OemQuotes;
                     break;
-                case Keys.N:
+                case KeyCode.LeftParen:
+                    return Keys.D8;
                     break;
-                case Keys.O:
+                case KeyCode.RightParen:
+                    return Keys.D0;
                     break;
-                case Keys.P:
+                case KeyCode.Asterisk:
+                    return Keys.D8;
                     break;
-                case Keys.Q:
+                case KeyCode.Plus:
+                    return Keys.Add;
                     break;
-                case Keys.R:
+                case KeyCode.Comma:
+                    return Keys.Oemcomma;
                     break;
-                case Keys.S:
+                case KeyCode.Minus:
+                    return Keys.OemMinus;
                     break;
-                case Keys.T:
+                case KeyCode.Period:
+                    return Keys.OemPeriod;
                     break;
-                case Keys.U:
+                case KeyCode.Slash:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.V:
+                case KeyCode.Colon:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.W:
+                case KeyCode.Semicolon:
+                    return Keys.OemSemicolon;
                     break;
-                case Keys.X:
+                case KeyCode.Less:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.Y:
+                case KeyCode.Equals:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.Z:
+                case KeyCode.Greater:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.LWin:
+                case KeyCode.Question:
+                    return Keys.OemQuestion;
                     break;
-                case Keys.RWin:
+                case KeyCode.At:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.Apps:
+                case KeyCode.LeftBracket:
+                    return Keys.OemOpenBrackets;
                     break;
-                case Keys.Sleep:
+                case KeyCode.Backslash:
+                    return Keys.OemBackslash;
                     break;
-                case Keys.NumPad0:
+                case KeyCode.RightBracket:
+                    return Keys.OemCloseBrackets;
                     break;
-                case Keys.NumPad1:
+                case KeyCode.Caret:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.NumPad2:
+                case KeyCode.Underscore:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.NumPad3:
+                case KeyCode.BackQuote:
+                    throw new ArgumentException($"Unknown keycode {keyCode}");
                     break;
-                case Keys.NumPad4:
+                case KeyCode.A:
+                    return Keys.A;
                     break;
-                case Keys.NumPad5:
+                case KeyCode.B:
+                    return Keys.B;
                     break;
-                case Keys.NumPad6:
+                case KeyCode.C:
+                    return Keys.C;
                     break;
-                case Keys.NumPad7:
+                case KeyCode.D:
+                    return Keys.D;
                     break;
-                case Keys.NumPad8:
+                case KeyCode.E:
+                    return Keys.E;
                     break;
-                case Keys.NumPad9:
+                case KeyCode.F:
+                    return Keys.F;
                     break;
-                case Keys.Multiply:
+                case KeyCode.G:
+                    return Keys.G;
                     break;
-                case Keys.Add:
+                case KeyCode.H:
+                    return Keys.H;
                     break;
-                case Keys.Separator:
+                case KeyCode.I:
+                    return Keys.I;
                     break;
-                case Keys.Subtract:
+                case KeyCode.J:
+                    return Keys.J;
                     break;
-                case Keys.Decimal:
+                case KeyCode.K:
+                    return Keys.K;
                     break;
-                case Keys.Divide:
+                case KeyCode.L:
+                    return Keys.L;
                     break;
-                case Keys.F1:
+                case KeyCode.M:
+                    return Keys.M;
                     break;
-                case Keys.F2:
+                case KeyCode.N:
+                    return Keys.N;
                     break;
-                case Keys.F3:
+                case KeyCode.O:
+                    return Keys.O;
                     break;
-                case Keys.F4:
+                case KeyCode.P:
+                    return Keys.P;
                     break;
-                case Keys.F5:
+                case KeyCode.Q:
+                    return Keys.Q;
                     break;
-                case Keys.F6:
+                case KeyCode.R:
+                    return Keys.R;
                     break;
-                case Keys.F7:
+                case KeyCode.S:
+                    return Keys.S;
                     break;
-                case Keys.F8:
+                case KeyCode.T:
+                    return Keys.T;
                     break;
-                case Keys.F9:
+                case KeyCode.U:
+                    return Keys.U;
                     break;
-                case Keys.F10:
+                case KeyCode.V:
+                    return Keys.V;
                     break;
-                case Keys.F11:
+                case KeyCode.W:
+                    return Keys.W;
                     break;
-                case Keys.F12:
+                case KeyCode.X:
+                    return Keys.X;
                     break;
-                case Keys.F13:
+                case KeyCode.Y:
+                    return Keys.Y;
                     break;
-                case Keys.F14:
+                case KeyCode.Z:
+                    return Keys.Z;
                     break;
-                case Keys.F15:
+                case KeyCode.LeftCurlyBracket:
+                    return Keys.OemOpenBrackets;
                     break;
-                case Keys.F16:
+                case KeyCode.Pipe:
+                    return Keys.OemPipe;
                     break;
-                case Keys.F17:
+                case KeyCode.RightCurlyBracket:
+                    return Keys.OemCloseBrackets;
                     break;
-                case Keys.F18:
+                case KeyCode.Tilde:
+                    return Keys.Oemtilde;
                     break;
-                case Keys.F19:
+                case KeyCode.Numlock:
+                    return Keys.NumLock;
                     break;
-                case Keys.F20:
+                case KeyCode.CapsLock:
+                    return Keys.CapsLock;
                     break;
-                case Keys.F21:
+                case KeyCode.ScrollLock:
+                    return Keys.Scroll;
                     break;
-                case Keys.F22:
+                case KeyCode.RightShift:
+                    return Keys.RShiftKey;
                     break;
-                case Keys.F23:
+                case KeyCode.LeftShift:
+                    return Keys.LShiftKey;
                     break;
-                case Keys.F24:
+                case KeyCode.RightControl:
+                    return Keys.RControlKey;
                     break;
-                case Keys.NumLock:
+                case KeyCode.LeftControl:
+                    return Keys.LControlKey;
                     break;
-                case Keys.Scroll:
+                case KeyCode.RightAlt:
+                    return Keys.Alt;
                     break;
-                case Keys.LShiftKey:
+                case KeyCode.LeftAlt:
+                    return Keys.Alt;
                     break;
-                case Keys.RShiftKey:
+                case KeyCode.LeftMeta:
+                    return Keys.LWin;
                     break;
-                case Keys.LControlKey:
+                case KeyCode.LeftWindows:
+                    return Keys.LWin;
                     break;
-                case Keys.RControlKey:
+                case KeyCode.RightMeta:
+                    return Keys.RWin;
                     break;
-                case Keys.LMenu:
+                case KeyCode.RightWindows:
+                    return Keys.RWin;
                     break;
-                case Keys.RMenu:
+                case KeyCode.AltGr:
+                    return Keys.Alt;
                     break;
-                case Keys.BrowserBack:
+                case KeyCode.Help:
                     break;
-                case Keys.BrowserForward:
+                case KeyCode.Print:
+                    return Keys.Print;
                     break;
-                case Keys.BrowserRefresh:
+                case KeyCode.SysReq:
                     break;
-                case Keys.BrowserStop:
+                case KeyCode.Break:
                     break;
-                case Keys.BrowserSearch:
-                    break;
-                case Keys.BrowserFavorites:
-                    break;
-                case Keys.BrowserHome:
-                    break;
-                case Keys.VolumeMute:
-                    break;
-                case Keys.VolumeDown:
-                    break;
-                case Keys.VolumeUp:
-                    break;
-                case Keys.MediaNextTrack:
-                    break;
-                case Keys.MediaPreviousTrack:
-                    break;
-                case Keys.MediaStop:
-                    break;
-                case Keys.MediaPlayPause:
-                    break;
-                case Keys.LaunchMail:
-                    break;
-                case Keys.SelectMedia:
-                    break;
-                case Keys.LaunchApplication1:
-                    break;
-                case Keys.LaunchApplication2:
-                    break;
-                case Keys.OemSemicolon:
-                    break;
-                case Keys.Oemplus:
-                    break;
-                case Keys.Oemcomma:
-                    break;
-                case Keys.OemMinus:
-                    break;
-                case Keys.OemPeriod:
-                    break;
-                case Keys.OemQuestion:
-                    break;
-                case Keys.Oem3:
-                    break;
-                case Keys.OemOpenBrackets:
-                    break;
-                case Keys.OemPipe:
-                    break;
-                case Keys.OemCloseBrackets:
-                    break;
-                case Keys.Oem7:
-                    break;
-                case Keys.Oem8:
-                    break;
-                case Keys.Oem102:
-                    break;
-                case Keys.ProcessKey:
-                    break;
-                case Keys.Packet:
-                    break;
-                case Keys.Attn:
-                    break;
-                case Keys.Crsel:
-                    break;
-                case Keys.Exsel:
-                    break;
-                case Keys.EraseEof:
-                    break;
-                case Keys.Play:
-                    break;
-                case Keys.Zoom:
-                    break;
-                case Keys.NoName:
-                    break;
-                case Keys.Pa1:
-                    break;
-                case Keys.OemClear:
-                    break;
-                case Keys.Shift:
-                    break;
-                case Keys.Control:
-                    break;
-                case Keys.Alt:
+                case KeyCode.Menu:
+                    return Keys.Menu;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(keys), keys, null);
+                    throw new ArgumentOutOfRangeException(nameof(keyCode), keyCode, null);
             }
+
+            return Keys.None;
         }
     }
 }
