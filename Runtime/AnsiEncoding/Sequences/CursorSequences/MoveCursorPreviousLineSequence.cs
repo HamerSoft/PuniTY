@@ -10,7 +10,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             var cells = 1;
             if (string.IsNullOrWhiteSpace(parameters) || int.TryParse(parameters, out cells))
-                screen.SetCursorPosition(new Vector2Int(0, screen.Cursor.Position.y - 1));
+                screen.SetCursorPosition(new Vector2Int(1, screen.Cursor.Position.y + cells));
             else
             {
                 Logger.Warning($"Failed to parse move cursor to beginning of the line {parameters} command.");
