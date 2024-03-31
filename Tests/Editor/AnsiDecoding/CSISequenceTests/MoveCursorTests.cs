@@ -203,15 +203,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
         }
 
-        private void SetCursorPosition(int row, int column)
+        private void SetCursorPosition(int row, int column, bool forceSeparator = false)
         {
             if (row == 1)
             {
-                Decode($"\x001b[;{column}H");    
+                Decode($"\x001b[;{column}H");
             }
-            
-            
-            Decode($"\x001b[{(x == 1 ? "" : $"{column}")}H");
+            else if (column == 1)
+            {
+                Decode($"\x001b[{row}{(forceSeparator ? ";" : "")}H");
+            }
+            else
+            {
+                Decode($"\x001b[{row};{column}H");
+            }
         }
 
         private void MoveToColumn(int column)
