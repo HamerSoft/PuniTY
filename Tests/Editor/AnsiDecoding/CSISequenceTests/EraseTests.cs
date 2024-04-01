@@ -1,20 +1,21 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.EraseSequences;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
     public class EraseTests : AnsiDecoderTest
     {
-        private const int rows = 10;
-        private const int columns = 5;
+        private const int ScreenRows = 10;
+        private const int ScreenColumns = 5;
+        private const char DefaultChar = 'a';
+        private const char EmptyCharacter = ' ';
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(rows, columns);
+            Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
                 new EraseDisplaySequence());
@@ -23,11 +24,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 
         private void PopulateScreen()
         {
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                    Screen.SetCharacter(new Character('a'), new Position(i + 1, j + 1));
-            }
+            for (int i = 0; i < ScreenRows; i++)
+            for (int j = 0; j < ScreenColumns; j++)
+                Screen.SetCharacter(new Character(DefaultChar), new Position(i + 1, j + 1));
         }
 
         [Test]
@@ -37,41 +36,40 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             var column = 3;
             Screen.SetCursorPosition(new Position(row, column));
             Decode($"{Escape}J");
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < columns; c++)
-                {
-                    if (r < row)
-                        Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo('a'));
-                    else if (r < row && c < column)
-                        Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo('a'));
-                    else
-                        Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo(' '));
-                }
-            }
+            AssertScreen(row, column, DefaultChar, EmptyCharacter);
         }
 
-        [Test]
-        public void When_Erase_Display_Clears_Rest_Of_Screen_Based_On_CursorPosition()
+        [TestCase(2,3)]
+        [TestCase(5,2)]
+        [TestCase(10,5)]
+        [TestCase(10,4)]
+        public void When_Erase_Display_Clears_Rest_Of_Screen_Based_On_CursorPosition(int row, int column)
         {
-            var row = 2;
-            var column = 3;
             Screen.SetCursorPosition(new Position(row, column));
             EraseScreen(0);
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < columns; c++)
-                {
-                    if (r < row)
-                        Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo('a'));
-                    else if (r < row && c < column)
-                        Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo('a'));
-                    else
-                        Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo(' '));
-                }
-            }
+            AssertScreen(row, column, DefaultChar, EmptyCharacter);
+        }
+        
+        [TestCase(2,3)]
+        [TestCase(5,2)]
+        [TestCase(10,5)]
+        [TestCase(10,4)]
+        public void When_Erase_Display_Clears_Before_Of_Screen_Based_On_CursorPosition(int row, int column)
+        {
+            Screen.SetCursorPosition(new Position(row, column));
+            EraseScreen(1);
+            AssertScreen(row, column, EmptyCharacter, DefaultChar);
         }
 
+        private void AssertScreen(int row, int column, char before, char after)
+        {
+            for (int r = 0; r < ScreenRows; r++)
+            for (int c = 0; c < ScreenColumns; c++)
+                if (r < row || (r < row && c < column))
+                    Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo(before));
+                else
+                    Assert.That(Screen.Character(new Position(r + 1, c + 1)).Char, Is.EqualTo(after));
+        }
 
         private void EraseScreen(int jArg)
         {

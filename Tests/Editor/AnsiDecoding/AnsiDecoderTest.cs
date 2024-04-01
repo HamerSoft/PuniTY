@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 
@@ -53,6 +54,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public virtual void TearDown()
         {
             EscapeCharacterDecoder.Dispose();
+        }
+
+        protected void PrintScreen()
+        {
+            var sb = new StringBuilder();
+            sb.Append(" ");
+            for (int i = 0; i < Screen.Columns; i++)
+                sb.Append($"|{i}|");
+
+            for (int i = 0; i < Screen.Rows; i++)
+            {
+                var line = new StringBuilder();
+                line.Append($"|{i}|");
+            }
         }
     }
 }
