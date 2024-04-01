@@ -14,9 +14,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 
         private class MockCursor : ICursor
         {
-            public Vector2Int Position { get; private set; }
+            public Position Position { get; private set; }
 
-            void ICursor.SetPosition(Vector2Int position)
+            void ICursor.SetPosition(Position position)
             {
                 Position = position;
             }
@@ -24,7 +24,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 
         private class MockScreen : Screen
         {
-            public MockScreen(int width, int height) : base(width, height, new MockCursor())
+            public MockScreen(int rows, int columns) : base(rows, columns, new MockCursor())
             {
             }
         }
@@ -50,157 +50,157 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void When_CursorMove_Up_Command_Is_Executed_CursorMovesUp()
         {
             MoveCursor(1, Direction.Up);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(2));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(2));
         }
 
         [Test]
         public void When_CursorMove_UpMultiple_Command_Is_Executed_CursorMovesUp()
         {
             MoveCursor(3, Direction.Up);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(4));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(4));
         }
 
         [Test]
         public void When_CursorMove_Up_Command_Is_Executed_AtEdge_NothingHappens()
         {
-            _screen.SetCursorPosition(new Vector2Int(1, 10));
+            _screen.SetCursorPosition(new Position(10,1));
             MoveCursor(1, Direction.Up);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(10));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(10));
         }
 
         [Test]
         public void When_CursorMove_Forward_Command_Is_Executed_CursorMovesForward()
         {
             MoveCursor(1, Direction.Forward);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(2));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(2));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_MultipleForward_Command_Is_Executed_CursorMovesForward()
         {
             MoveCursor(3, Direction.Forward);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(4));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(4));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_Forward_Command_Is_Executed_AtEdge_NothingHappens()
         {
-            _screen.SetCursorPosition(new Vector2Int(10, 1));
+            _screen.SetCursorPosition(new Position(1, 10));
             MoveCursor(1, Direction.Forward);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(10));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(10));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_Back_Command_Is_Executed_CursorMovesBack()
         {
-            _screen.SetCursorPosition(new Vector2Int(2, 1));
+            _screen.SetCursorPosition(new Position(1,2));
             MoveCursor(1, Direction.Back);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_MultipleBack_Command_Is_Executed_CursorMovesBack()
         {
-            _screen.SetCursorPosition(new Vector2Int(4, 1));
+            _screen.SetCursorPosition(new Position(2, 4));
             MoveCursor(3, Direction.Back);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(2));
         }
 
         [Test]
         public void When_CursorMove_Back_Command_Is_Executed_AtEdge_NothingHappens()
         {
             MoveCursor(1, Direction.Back);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_Down_Command_Is_Executed_CursorMovesDown()
         {
-            _screen.SetCursorPosition(new Vector2Int(1, 2));
+            _screen.SetCursorPosition(new Position(1, 1));
             MoveCursor(1, Direction.Down);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_MultipleDown_Command_Is_Executed_CursorMovesDown()
         {
-            _screen.SetCursorPosition(new Vector2Int(1, 4));
+            _screen.SetCursorPosition(new Position(4, 2));
             MoveCursor(3, Direction.Down);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(2));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_Down_Command_Is_Executed_AtEdge_NothingHappens()
         {
             MoveCursor(1, Direction.Down);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_NextLine_IsExecuted_Cursor_Moves_To_Start_Down()
         {
-            _screen.SetCursorPosition(new Vector2Int(2, 2));
+            _screen.SetCursorPosition(new Position(1, 2));
             MoveCursor(1, true);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(2));
         }
 
 
         [Test]
         public void When_CursorMove_NextLine_Multiple_IsExecuted_Cursor_Moves_To_Start_Down()
         {
-            _screen.SetCursorPosition(new Vector2Int(2, 3));
+            _screen.SetCursorPosition(new Position(2,5));
             MoveCursor(2, true);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(4));
         }
 
         [Test]
         public void When_CursorMove_PreviousLine_IsExecuted_Cursor_Moves_To_Start_Up()
         {
-            _screen.SetCursorPosition(new Vector2Int(2, 1));
+            _screen.SetCursorPosition(new Position(2,2));
             MoveCursor(1, false);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(2));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 
         [Test]
         public void When_CursorMove_PreviousLine_Multiple_IsExecuted_Cursor_Moves_To_Start_Up()
         {
-            _screen.SetCursorPosition(new Vector2Int(4, 1));
+            _screen.SetCursorPosition(new Position(4,4));
             MoveCursor(2, false);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(3));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(2));
         }
 
         [Test]
         public void When_CursorMove_ToColumn_IsExecuted_Cursor_Moves_To_Column_On_Same_Line()
         {
-            _screen.SetCursorPosition(new Vector2Int(5, 1));
+            _screen.SetCursorPosition(new Position(5, 5));
             MoveToColumn(1);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(1));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(5));
         }
 
         [Test]
         public void When_CursorMove_ToColumn_Multiple_IsExecuted_Cursor_Moves_To_Column_N_On_Same_Line()
         {
-            _screen.SetCursorPosition(new Vector2Int(5, 1));
-            MoveToColumn(2);
-            Assert.That(_screen.Cursor.Position.x, Is.EqualTo(2));
-            Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
+            _screen.SetCursorPosition(new Position(5, 3));
+            MoveToColumn(6);
+            Assert.That(_screen.Cursor.Position.Column, Is.EqualTo(6));
+            Assert.That(_screen.Cursor.Position.Row, Is.EqualTo(5));
         }
 
         [TestCase(1, 1, ExpectedResult = new[] { 1, 1 })]
@@ -215,7 +215,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public int[] When_CursorMove_ToPosition_IsExecuted_Cursor_Moves_To_Row_N_Column_M(int row, int column)
         {
             SetCursorPosition(row, column);
-            return new int[] { _screen.Cursor.Position.x, _screen.Cursor.Position.y };
+            return new int[] { _screen.Cursor.Position.Row, _screen.Cursor.Position.Column };
         }
 
 

@@ -1,14 +1,14 @@
-﻿using UnityEngine;
-
-namespace HamerSoft.PuniTY.AnsiEncoding
+﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public interface IScreen
     {
-        public int Width { get; }
-        public int Height { get; }
+        public int Rows { get; }
+        public int Columns { get; }
         public ICursor Cursor { get; }
 
-        public void SetCursorPosition(Vector2Int position);
+        public void SetCursorPosition(Position position);
         public void MoveCursor(int cells, Direction direction);
+        void Erase(Position? from = null, Position? to = null);
+        void ClearSaved();
     }
 }

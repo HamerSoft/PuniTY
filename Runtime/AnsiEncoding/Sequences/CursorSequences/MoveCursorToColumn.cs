@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace HamerSoft.PuniTY.AnsiEncoding
+﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class MoveCursorToColumn : Sequence
     {
@@ -9,7 +7,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             int column = 1;
             if (string.IsNullOrWhiteSpace(parameters) || int.TryParse(parameters, out column))
-                screen.SetCursorPosition(new Vector2Int(column, screen.Cursor.Position.y));
+                screen.SetCursorPosition(new Position(screen.Cursor.Position.Row, column));
             else
             {
                 Logger.Warning($"Failed to parse move cursor to column {parameters} command.");

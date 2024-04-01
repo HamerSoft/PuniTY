@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace HamerSoft.PuniTY.AnsiEncoding
+﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
     internal class MoveCursorNextLineSequence : Sequence
     {
@@ -10,7 +8,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             var cells = 1;
             if (string.IsNullOrWhiteSpace(parameters) || int.TryParse(parameters, out cells))
-                screen.SetCursorPosition(new Vector2Int(1, screen.Cursor.Position.y - cells));
+                screen.SetCursorPosition(new Position( screen.Cursor.Position.Row + cells, 1));
             else
             {
                 Logger.Warning($"Failed to parse move cursor to beginning of the line {parameters} command.");

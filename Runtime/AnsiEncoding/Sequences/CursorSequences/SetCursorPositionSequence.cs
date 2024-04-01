@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace HamerSoft.PuniTY.AnsiEncoding
+﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class SetCursorPositionSequence : Sequence
     {
@@ -9,7 +7,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public override void Execute(IScreen screen, string parameters)
         {
             var values = GetCommandArguments(parameters, 2, 1);
-            screen.SetCursorPosition(new Vector2Int(values[0], values[1]));
+            screen.SetCursorPosition(new Position(values[0], values[1]));
         }
     }
 }
