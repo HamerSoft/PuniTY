@@ -43,7 +43,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 new MoveCursorNextLineSequence(),
                 new MoveCursorPreviousLineSequence(),
                 new MoveCursorToColumn(),
-                new SetCursorPosition());
+                new SetCursorPositionSequence());
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [Test]
-        public void When_CursorMove_ToColumn_Multiple_IsExecuted_Cursor_Moves_To_Column_N_On_Same_LIne()
+        public void When_CursorMove_ToColumn_Multiple_IsExecuted_Cursor_Moves_To_Column_N_On_Same_Line()
         {
             _screen.SetCursorPosition(new Vector2Int(5, 1));
             MoveToColumn(2);
@@ -203,9 +203,29 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(_screen.Cursor.Position.y, Is.EqualTo(1));
         }
 
+        [TestCase(1, 1, ExpectedResult = new[] { 1, 1 })]
+        [TestCase(2, 1, ExpectedResult = new[] { 2, 1 })]
+        [TestCase(1, 2, ExpectedResult = new[] { 1, 2 })]
+        [TestCase(3, 3, ExpectedResult = new[] { 3, 3 })]
+        [TestCase(3, 3, ExpectedResult = new[] { 3, 3 })]
+        [TestCase(0, 1, ExpectedResult = new[] { 1, 1 })]
+        [TestCase(1, 0, ExpectedResult = new[] { 1, 1 })]
+        [TestCase(11, 1, ExpectedResult = new[] { 1, 1 })]
+        [TestCase(1, 11, ExpectedResult = new[] { 1, 1 })]
+        public int[] When_CursorMove_ToPosition_IsExecuted_Cursor_Moves_To_Row_N_Column_M(int row, int column)
+        {
+            SetCursorPosition(row, column);
+            return new int[] { _screen.Cursor.Position.x, _screen.Cursor.Position.y };
+        }
+
+
         private void SetCursorPosition(int row, int column, bool forceSeparator = false)
         {
-            if (row == 1)
+            if (row == 1 && column == 1)
+            {
+                Decode($"\x001b[H");
+            }
+            else if (row == 1)
             {
                 Decode($"\x001b[;{column}H");
             }

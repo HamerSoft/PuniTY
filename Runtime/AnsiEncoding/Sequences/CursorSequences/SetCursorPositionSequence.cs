@@ -2,7 +2,7 @@
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public class SetCursorPosition : Sequence
+    public class SetCursorPositionSequence : Sequence
     {
         public override char Command => 'H';
 

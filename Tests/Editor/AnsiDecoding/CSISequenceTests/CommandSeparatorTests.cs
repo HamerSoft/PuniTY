@@ -35,9 +35,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase("2", 2, 4, ExpectedResult = new[] { 2, 4 })]
         [TestCase(";;1", 3, 3, ExpectedResult = new[] { 3, 3, 1 })]
         [TestCase("1", 3, 3, ExpectedResult = new[] { 1, 3, 3 })]
+        [TestCase("", 2, 1, ExpectedResult = new[] { 1, 1 })]
+        [TestCase(";", 2, 1, ExpectedResult = new[] { 1, 1 })]
         public int[] Sequence_Can_Parse_All_Arguments(string parameters, int length, int defaultValue)
         {
-            return _sequence.GetCommandArguments(parameters, length, defaultValue);
+            var actual = _sequence.GetCommandArguments(parameters, length, defaultValue);
+            return actual;
         }
     }
 }
