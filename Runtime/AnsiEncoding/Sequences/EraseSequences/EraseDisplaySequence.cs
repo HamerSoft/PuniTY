@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
+﻿namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
 {
     public class EraseDisplaySequence : Sequence
     {

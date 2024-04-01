@@ -7,7 +7,27 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 {
     public abstract class AnsiDecoderTest
     {
+        protected class MockCursor : ICursor
+        {
+            public Position Position { get; private set; }
+
+            void ICursor.SetPosition(Position position)
+            {
+                Position = position;
+            }
+        }
+
+        protected class MockScreen : Screen
+        {
+            public MockScreen(int rows, int columns) : base(rows, columns, new MockCursor())
+            {
+            }
+        }
+
+        protected AnsiDecoder AnsiDecoder;
+        protected MockScreen Screen;
         internal EscapeCharacterDecoder EscapeCharacterDecoder;
+        protected const string Escape = "\x001b[";
 
         [SetUp]
         public virtual void SetUp()

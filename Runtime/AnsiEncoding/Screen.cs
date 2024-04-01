@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -39,13 +38,32 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void SetCursorPosition(Position position)
         {
-            if (position.Row >= 1
-                && position.Row <= Rows
-                && position.Column >= 1
-                && position.Column <= Columns)
+            if (IsValidPosition(position))
             {
                 Cursor.SetPosition(position);
             }
+        }
+
+        private bool IsValidPosition(Position position)
+        {
+            return position.Row >= 1
+                   && position.Row <= Rows
+                   && position.Column >= 1
+                   && position.Column <= Columns;
+        }
+
+        public ICharacter Character(Position position)
+        {
+            var isValid = IsValidPosition(position);
+            if (isValid)
+                return _characters[position.Row - 1][position.Column - 1];
+
+            return new InvalidCharacter();
+        }
+
+        public void SetCharacter(ICharacter character, Position position)
+        {
+            _characters[position.Row - 1][position.Column - 1] = character;
         }
 
         public void MoveCursor(int cells, Direction direction)
@@ -53,10 +71,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             switch (direction)
             {
                 case Direction.Up:
-                    SetCursorPosition(new Position(Cursor.Position.Row + cells, Cursor.Position.Column));
+                    SetCursorPosition(new Position(Cursor.Position.Row - cells, Cursor.Position.Column));
                     break;
                 case Direction.Down:
-                    SetCursorPosition(new Position(Cursor.Position.Row - cells, Cursor.Position.Column));
+                    SetCursorPosition(new Position(Cursor.Position.Row + cells, Cursor.Position.Column));
                     break;
                 case Direction.Forward:
                     SetCursorPosition(new Position(Cursor.Position.Row, Cursor.Position.Column + cells));
@@ -75,12 +93,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             to ??= new Position(Rows, Columns);
 
             for (int i = from.Value.Row; i < to.Value.Row; i++)
-            {
-                for (int j = from.Value.Column; j < to.Value.Column; i++)
-                {
-                }
-                
-            }
+                if (i < to.Value.Row)
+                    for (int j = 0; j < Columns; j++)
+                    {
+                        _characters[i][j] = new Character(' ');
+                    }
+                else
+                    for (int j = 0; j < to.Value.Column; j++)
+                    {
+                        _characters[i][j] = new Character(' ');
+                    }
         }
 
         public void ClearSaved()
