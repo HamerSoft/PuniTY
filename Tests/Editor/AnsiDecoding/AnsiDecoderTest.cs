@@ -3,6 +3,8 @@ using System.Linq;
 using System.Text;
 using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
+using UnityEngine;
+using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 {
@@ -60,14 +62,23 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             var sb = new StringBuilder();
             sb.Append(" ");
-            for (int i = 0; i < Screen.Columns; i++)
+            for (int i = 1; i <= Screen.Columns; i++)
                 sb.Append($"|{i}|");
 
-            for (int i = 0; i < Screen.Rows; i++)
+            sb.Append("\r\n");
+            for (int i = 1; i <= Screen.Rows; i++)
             {
                 var line = new StringBuilder();
                 line.Append($"|{i}|");
+                for (int j = 1; j <= Screen.Columns; j++)
+                {
+                    line.Append($"|{Screen.Character(new Position(i, j))}|");
+                }
+
+                sb.AppendLine(line.ToString());
             }
+
+            Debug.Log(sb.ToString());
         }
     }
 }

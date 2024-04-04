@@ -89,20 +89,39 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void Erase(Position? from = null, Position? to = null)
         {
+            // null == clear everything
+            // true == clear to end of screen
+            // false == clear to beginning of screen
+            bool? clearingForward = from == null ? true : (to == null ? false : null);
             from ??= new Position(1, 1);
             to ??= new Position(Rows, Columns);
 
-            for (int i = from.Value.Row; i < to.Value.Row; i++)
-                if (i < to.Value.Row)
-                    for (int j = 0; j < Columns; j++)
-                    {
-                        _characters[i][j] = new Character(' ');
-                    }
-                else
-                    for (int j = 0; j < to.Value.Column; j++)
-                    {
-                        _characters[i][j] = new Character(' ');
-                    }
+            if (clearingForward.HasValue == false)
+            {
+                for (int i = 0; i < Rows; i++)
+                for (int j = 0; j < Columns; j++)
+                    _characters[i][j] = new Character(' ');
+            }
+            else if (clearingForward.Value)
+            {
+                for (int i = from.Value.Row - 1; i <= to.Value.Row - 1; i++)
+                {
+                    if (i < to.Value.Row - 1)
+                        for (int j = 0; j < Columns; j++)
+                        {
+                            _characters[i][j] = new Character(' ');
+                        }
+                    else
+                        for (int j = 0; j < to.Value.Column; j++)
+                        {
+                            _characters[i][j] = new Character(' ');
+                        }
+                }
+            }
+            else
+            {
+               // fix me
+            }
         }
 
         public void ClearSaved()

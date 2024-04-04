@@ -10,6 +10,11 @@
             Char = c;
         }
 
+        public override string ToString()
+        {
+            return $"{Char}";
+        }
+
         public static implicit operator char(Character ic) => ic.Char;
     }
 }
