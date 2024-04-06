@@ -99,7 +99,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void ClearSaved()
         {
-            throw new NotImplementedException();
+          Debug.Log("ScrollBack buffer not implemented.");
         }
     }
 }

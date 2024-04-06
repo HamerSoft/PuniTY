@@ -1,6 +1,9 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System.Text.RegularExpressions;
+using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.EraseSequences;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
@@ -61,6 +64,29 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             EraseScreen(1);
             PrintScreen();
             AssertScreen(row, column, EmptyCharacter, DefaultChar, false);
+        }
+
+        [TestCase(2, 3)]
+        [TestCase(5, 2)]
+        [TestCase(10, 5)]
+        [TestCase(11, 4)]
+        public void When_Erase_Display_Clears_Everything_No_Matter_Row_Or_Column(int row, int column)
+        {
+            Screen.SetCursorPosition(new Position(row, column));
+            EraseScreen(2);
+            AssertScreen(ScreenRows, ScreenColumns, EmptyCharacter, DefaultChar, false);
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+        }
+
+        [TestCase(2, 3)]
+        [TestCase(5, 2)]
+        [TestCase(10, 5)]
+        [TestCase(11, 4)]
+        public void When_Erase_ScrollBuffer_On_Display_Logs_Not_Implemented(int row, int column)
+        {
+            Screen.SetCursorPosition(new Position(row, column));
+            EraseScreen(3);
+            LogAssert.Expect(LogType.Log, new Regex(""));
         }
 
         private void AssertScreen(int row, int column, char before, char after, bool toEnd)
