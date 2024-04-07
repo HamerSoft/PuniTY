@@ -29,7 +29,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             for (int i = 0; i < ScreenRows; i++)
             for (int j = 0; j < ScreenColumns; j++)
-                Screen.SetCharacter(new Character(DefaultChar), new Position(i + 1, j + 1));
+                Screen.AddCharacter(DefaultChar);
+            Screen.SetCursorPosition(new Position(1, 1));
         }
 
         [Test]
@@ -100,9 +101,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             for (int r = 1; r <= ScreenRows; r++)
             for (int c = 1; c <= ScreenColumns; c++)
                 if (r < row || (toEnd ? (r < row && c < column) : (r <= row && c <= column)))
-                    Assert.That(Screen.Character(new Position(r, c)).Char, Is.EqualTo(before));
+                    Assert.That(Screen.GetCharacter(new Position(r, c)).Char, Is.EqualTo(before));
                 else
-                    Assert.That(Screen.Character(new Position(r, c)).Char, Is.EqualTo(after));
+                    Assert.That(Screen.GetCharacter(new Position(r, c)).Char, Is.EqualTo(after));
         }
 
         private void EraseScreen(int jArg)

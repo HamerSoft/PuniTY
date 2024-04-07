@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -45,7 +47,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [Test]
-        public void When_CursorMove_Up_Command_Is_Executed_AtEdge_NothingHappens()
+        public void When_CursorMove_Up_Command_Is_Executed_At_Screen_Mac_Nothings_Happens()
         {
             MoveCursor(1, Direction.Up);
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(1));
@@ -69,12 +71,23 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [Test]
-        public void When_CursorMove_Forward_Command_Is_Executed_AtEdge_NothingHappens()
+        public void When_CursorMove_Forward_Command_Is_Executed_AtEdge_Moved_To_Next_Line()
         {
             Screen.SetCursorPosition(new Position(1, 10));
             MoveCursor(1, Direction.Forward);
+            Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(2));
+        }
+
+
+        [Test]
+        public void When_CursorMove_Forward_Command_Is_Executed_At_Screen_Max_Nothing_Happens()
+        {
+            Screen.SetCursorPosition(new Position(10, 10));
+            MoveCursor(1, Direction.Forward);
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(10));
-            Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(1));
+            Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(10));
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
         [Test]
@@ -96,10 +109,19 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [Test]
-        public void When_CursorMove_Back_Command_Is_Executed_AtEdge_NothingHappens()
+        public void When_CursorMove_Back_Command_Is_Executed_At_Screen_Minimum_NothingHappens()
         {
             MoveCursor(1, Direction.Back);
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(1));
+            Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void When_CursorMove_Back_Command_Is_Executed_AtEdge_Moves_to_Previous_Line()
+        {
+            SetCursorPosition(2, 1);
+            MoveCursor(1, Direction.Back);
+            Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(10));
             Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(1));
         }
 

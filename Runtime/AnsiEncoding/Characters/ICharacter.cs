@@ -4,6 +4,5 @@
     {
         public char Char { get; }
         public bool IsValid { get; }
-        
     }
 }

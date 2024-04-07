@@ -7,7 +7,7 @@
         public ICursor Cursor { get; }
 
         public void SetCursorPosition(Position position);
-        public ICharacter Character(Position position);
+        public ICharacter GetCharacter(Position position);
         public void MoveCursor(int cells, Direction direction);
         public void Erase(Position? from = null, Position? to = null);
         public void ClearSaved();

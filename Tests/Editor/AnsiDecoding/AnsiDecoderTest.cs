@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
 using UnityEngine;
 using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
@@ -22,7 +23,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 
         protected class MockScreen : Screen
         {
-            public MockScreen(int rows, int columns) : base(rows, columns, new MockCursor())
+            public MockScreen(int rows, int columns) : base(rows, columns, new MockCursor(), new EditorLogger())
             {
             }
         }
@@ -72,7 +73,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 line.Append($"|{i}|");
                 for (int j = 1; j <= Screen.Columns; j++)
                 {
-                    line.Append($"|{Screen.Character(new Position(i, j))}|");
+                    line.Append($"|{Screen.GetCharacter(new Position(i, j))}|");
                 }
 
                 sb.AppendLine(line.ToString());

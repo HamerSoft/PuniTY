@@ -2,7 +2,7 @@
 {
     internal struct InvalidCharacter : ICharacter
     {
-        public char Char => '¬';
+        public char Char => ' ';
         public bool IsValid => false;
 
         public override string ToString()
