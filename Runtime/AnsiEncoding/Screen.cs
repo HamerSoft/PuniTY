@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -26,7 +25,18 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             Cursor = cursor;
             Cursor.SetPosition(new Position(1, 1));
             _rowOffset = 0;
-            _characters = new List<List<ICharacter>>(rows) { new(GenerateNewRow()) };
+            PopulateScreen(Rows, Columns);
+        }
+
+        private void PopulateScreen(int rows, int columns)
+        {
+            _characters = new List<List<ICharacter>>(rows);
+            for (int i = 0; i < rows; i++)
+            {
+                _characters.Add(new List<ICharacter>(columns));
+                for (int j = 0; j < Columns; j++)
+                    _characters[i].Add(new Character());
+            }
         }
 
         public void SetCursorPosition(Position position)
@@ -48,34 +58,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 case '\n':
                 case '\r':
-                    if (_characters.Count == Cursor.Position.Row)
-                    {
-                        _characters.Add(new List<ICharacter>(GenerateNewRow()));
-                        _rowOffset++;
-                    }
-
                     SetCursorPosition(new Position(Cursor.Position.Row + 1, 0));
                     break;
                 default:
-                    while (Cursor.Position.Row > _characters.Count)
-                    {
-                        _characters.Add(new List<ICharacter>(GenerateNewRow()));
-                        if (Cursor.Position.Row > Rows)
-                            _rowOffset++;
-                    }
-
-                    if (_characters[Cursor.Position.Row - 1].Count < Cursor.Position.Column)
-                        _characters[Cursor.Position.Row - 1].Add(new Character(character));
-                    else
-                        _characters[Cursor.Position.Row - 1][Cursor.Position.Column - 1] = new Character(character);
+                    _characters[Cursor.Position.Row - 1][Cursor.Position.Column - 1] = new Character(character);
                     MoveCursor(1, Direction.Forward);
                     break;
             }
-        }
-
-        private IEnumerable<ICharacter> GenerateNewRow()
-        {
-            return Enumerable.Repeat<ICharacter>(new Character(), Columns);
         }
 
         public void MoveCursor(int cells, Direction direction)

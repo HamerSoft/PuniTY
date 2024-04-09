@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.EraseSequences;
 using NUnit.Framework;
 
@@ -34,6 +35,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void When_Adding_Character_GreaterThan_ScreenMax_New_Row_Is_Added_And_OffSet_Is_Increased()
         {
             Screen.SetCursorPosition(new Position(ScreenRows, ScreenColumns));
+            Scroll(1, Direction.Up);
             Screen.AddCharacter('g');
             Screen.AddCharacter('g');
             Screen.AddCharacter('g');
@@ -41,6 +43,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen.AddCharacter('g');
             PrintScreen();
             AssertScreen(10, 1, DefaultChar, 'g', true);
+        }
+
+        private void Scroll(int lines, Direction direction)
+        {
+            Decode(
+                $"{Escape}{(direction switch { Direction.Up => "S", Direction.Down => "T", _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null) })}");
         }
 
         private void AssertScreen(int row, int column, char before, char after, bool toEnd)
