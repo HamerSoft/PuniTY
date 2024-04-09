@@ -1,6 +1,7 @@
 ﻿using System;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.EraseSequences;
+using HamerSoft.PuniTY.AnsiEncoding.ScrollSequences;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -19,7 +20,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new EraseDisplaySequence());
+                new ScrollDownSequence(),
+                new ScrollUpSequence());
             PopulateScreen();
         }
 
@@ -31,24 +33,28 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen.SetCursorPosition(new Position(1, 1));
         }
 
-        [Test]
-        public void When_Adding_Character_GreaterThan_ScreenMax_New_Row_Is_Added_And_OffSet_Is_Increased()
+        [TestCase(1)]
+        [TestCase(2)]
+        public void When_Adding_Character_GreaterThan_ScreenMax_New_Row_Is_Added_And_OffSet_Is_Increased(
+            int linesToScroll)
         {
-            Screen.SetCursorPosition(new Position(ScreenRows, ScreenColumns));
-            Scroll(1, Direction.Up);
-            Screen.AddCharacter('g');
-            Screen.AddCharacter('g');
-            Screen.AddCharacter('g');
-            Screen.AddCharacter('g');
-            Screen.AddCharacter('g');
+            Scroll(linesToScroll, Direction.Up);
+            Screen.SetCursorPosition(new Position(ScreenRows + 1 - linesToScroll, 1));
+            for (int i = 0; i < linesToScroll; i++)
+            for (int j = 0; j < ScreenColumns; j++)
+                Screen.AddCharacter('g');
+
             PrintScreen();
-            AssertScreen(10, 1, DefaultChar, 'g', true);
+            AssertScreen(ScreenRows + 1 - linesToScroll, 1, DefaultChar, 'g', true);
+            Scroll(linesToScroll, Direction.Down);
+            PrintScreen();
+            AssertScreen(ScreenRows, ScreenColumns, DefaultChar, DefaultChar, true);
         }
 
         private void Scroll(int lines, Direction direction)
         {
             Decode(
-                $"{Escape}{(direction switch { Direction.Up => "S", Direction.Down => "T", _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null) })}");
+                $"{Escape}{lines}{(direction switch { Direction.Up => "S", Direction.Down => "T", _ => throw new ArgumentOutOfRangeException(nameof(direction), direction, null) })}");
         }
 
         private void AssertScreen(int row, int column, char before, char after, bool toEnd)

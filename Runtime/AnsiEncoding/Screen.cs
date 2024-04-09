@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -58,10 +59,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 case '\n':
                 case '\r':
-                    SetCursorPosition(new Position(Cursor.Position.Row + 1, 0));
+                    SetCursorPosition(new Position(Cursor.Position.Row + _rowOffset + 1, 0));
                     break;
                 default:
-                    _characters[Cursor.Position.Row - 1][Cursor.Position.Column - 1] = new Character(character);
+                    _characters[Cursor.Position.Row + _rowOffset - 1][Cursor.Position.Column - 1] =
+                        new Character(character);
                     MoveCursor(1, Direction.Forward);
                     break;
             }
@@ -109,6 +111,33 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             for (int j = 1; j <= (i < to.Value.Row ? Columns : to.Value.Column); j++)
                 if (i <= _characters.Count && j <= _characters[i - 1].Count)
                     _characters[i - 1][j - 1] = new InvalidCharacter();
+        }
+
+        public void Scroll(int lines, Direction direction)
+        {
+            int currentRows = _characters.Count;
+            switch (direction)
+            {
+                case Direction.Up:
+                    _rowOffset += lines;
+                    for (int i = currentRows; i < currentRows + _rowOffset; i++)
+                        _characters.Add(new List<ICharacter>(GenerateNewRow(Columns)));
+                    break;
+                case Direction.Down:
+                    _rowOffset -= lines;
+                    for (int i = currentRows; i < currentRows + _rowOffset; i++)
+                        _characters.Insert(0, new List<ICharacter>(GenerateNewRow(Columns)));
+                    break;
+                case Direction.Forward:
+                case Direction.Back:
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+            }
+        }
+
+        private IEnumerable<ICharacter> GenerateNewRow(int columns)
+        {
+            return Enumerable.Repeat<ICharacter>(new Character(), columns);
         }
 
         public void ClearSaved()
