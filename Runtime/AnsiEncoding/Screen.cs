@@ -141,6 +141,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
         }
 
+        void IScreen.Transmit(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
         {
             return Enumerable.Repeat<ICharacter>(new Character(), columns);

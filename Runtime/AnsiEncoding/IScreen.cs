@@ -12,5 +12,6 @@
         public void Erase(Position? from = null, Position? to = null);
         public void ClearSaved();
         void Scroll(int lines, Direction direction);
+        internal void Transmit(byte[] data);
     }
 }
