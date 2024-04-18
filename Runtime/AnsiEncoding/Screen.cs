@@ -125,8 +125,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     break;
                 case Direction.Down:
                     _rowOffset -= lines;
-                    for (int i = currentRows; i < currentRows + _rowOffset; i++)
-                        _characters.Insert(0, new List<ICharacter>(GenerateNewRow(Columns)));
+                    if (_rowOffset < 0)
+                    {
+                        var absolute = Math.Abs(_rowOffset);
+                        _rowOffset = 0;
+                        for (int i = 0; i < absolute; i++)
+                            _characters.Insert(0, new List<ICharacter>(GenerateNewRow(Columns)));
+                    }
+
                     break;
                 case Direction.Forward:
                 case Direction.Back:
