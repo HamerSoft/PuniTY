@@ -12,6 +12,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     public class Screen : IScreen
     {
         private readonly ILogger _logger;
+        public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
@@ -143,7 +144,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         void IScreen.Transmit(byte[] data)
         {
-            throw new NotImplementedException();
+            Output?.Invoke(data);
         }
 
         private IEnumerable<ICharacter> GenerateNewRow(int columns)

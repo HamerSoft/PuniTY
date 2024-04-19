@@ -1,7 +1,10 @@
-﻿namespace HamerSoft.PuniTY.AnsiEncoding
+﻿using System;
+
+namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public interface IScreen
     {
+        public event Action<byte[]> Output; 
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
