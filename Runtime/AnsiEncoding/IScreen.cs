@@ -15,6 +15,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void Erase(Position? from = null, Position? to = null);
         public void ClearSaved();
         void Scroll(int lines, Direction direction);
+        public void SaveCursor();
+        public void RestoreCursor();
+        
         internal void Transmit(byte[] data);
     }
 }

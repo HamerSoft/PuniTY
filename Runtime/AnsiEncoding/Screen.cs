@@ -18,6 +18,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public ICursor Cursor { get; }
         private List<List<ICharacter>> _characters;
         private int _rowOffset;
+        private Position? _savedCursorPosition;
 
         public Screen(int rows, int columns, ICursor cursor, ILogger logger)
         {
@@ -140,6 +141,18 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
+        }
+
+        public void RestoreCursor()
+        {
+            if (_savedCursorPosition.HasValue)
+                Cursor.SetPosition(_savedCursorPosition.Value);
+            _savedCursorPosition = null;
+        }
+
+        public void SaveCursor()
+        {
+            _savedCursorPosition = Cursor.Position;
         }
 
         void IScreen.Transmit(byte[] data)
