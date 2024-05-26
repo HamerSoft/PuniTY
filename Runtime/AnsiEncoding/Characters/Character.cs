@@ -4,9 +4,11 @@
     {
         public char Char { get; private set; }
         public bool IsValid => true;
+        public GraphicAttributes GraphicAttributes { get; }
 
-        public Character(char c = ' ')
+        public Character(GraphicAttributes graphicAttributes, char c = ' ')
         {
+            GraphicAttributes = graphicAttributes;
             Char = c;
         }
 

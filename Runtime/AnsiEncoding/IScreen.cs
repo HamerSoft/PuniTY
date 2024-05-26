@@ -4,7 +4,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public interface IScreen
     {
-        public event Action<byte[]> Output; 
+        public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
@@ -17,7 +17,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         void Scroll(int lines, Direction direction);
         public void SaveCursor();
         public void RestoreCursor();
-        
+        public void SetGraphicsRendition(params GraphicRendition[] _graphicRenditions);
+
         internal void Transmit(byte[] data);
     }
 }
