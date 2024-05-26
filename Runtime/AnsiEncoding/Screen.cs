@@ -110,7 +110,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             to ??= new Position(Rows, Columns);
 
             for (int i = from.Value.Row; i <= to.Value.Row; i++)
-            for (int j = 1; j <= (i < to.Value.Row ? Columns : to.Value.Column); j++)
+            for (int j = from.Value.Row == i ? from.Value.Column : 1;
+                 j <= (i < to.Value.Row ? Columns : to.Value.Column);
+                 j++)
                 if (i <= _characters.Count && j <= _characters[i - 1].Count)
                     _characters[i - 1][j - 1] = new InvalidCharacter();
         }

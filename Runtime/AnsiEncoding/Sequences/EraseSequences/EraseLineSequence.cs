@@ -1,8 +1,8 @@
 ﻿namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
 {
-    public class EraseDisplaySequence : Sequence
+    public class EraseLineSequence : Sequence
     {
-        public override char Command => 'J';
+        public override char Command => 'K';
 
         public override void Execute(IScreen screen, string parameters)
         {
@@ -13,28 +13,24 @@
 
             if (!int.TryParse(parameters, out var number))
             {
-                Logger.Warning($"Cannot Erase Display, failed to parse {parameters}");
+                Logger.Warning($"Cannot erase line, failed to parse {parameters}");
                 return;
             }
 
             switch (number)
             {
                 case 0:
-                    screen.Erase(screen.Cursor.Position);
+                    screen.Erase(screen.Cursor.Position, new Position(screen.Cursor.Position.Row, screen.Columns));
                     break;
                 case 1:
-                    screen.Erase(null, screen.Cursor.Position);
+                    screen.Erase(new Position(screen.Cursor.Position.Row, 1), screen.Cursor.Position);
                     break;
                 case 2:
-                    screen.Erase();
-                    screen.SetCursorPosition(new Position(1,1));
-                    break;
-                case 3:
-                    screen.Erase();
-                    screen.ClearSaved();
+                    screen.Erase(new Position(screen.Cursor.Position.Row, 1),
+                        new Position(screen.Cursor.Position.Row, screen.Columns));
                     break;
                 default:
-                    Logger.Error($"Cannot erase display, Argument Out of range {parameters}");
+                    Logger.Error($"Cannot Erase Display, Argument Out of range {parameters}");
                     break;
             }
         }

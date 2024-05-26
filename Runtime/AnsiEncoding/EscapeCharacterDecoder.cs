@@ -7,9 +7,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 {
     internal sealed class EscapeCharacterDecoder : IEscapeCharacterDecoder
     {
-        private const byte EscapeCharacter = 0x1B;
-        private const byte BellCharacter = 0x07;
-        private const byte LeftBracketCharacter_ControlSequenceIntroducer = 0x5B;
+        private const byte EscapeCharacter = 0x1B; // ESC
+        private const byte BellCharacter = 0x07; // BEL
+        private const byte LeftBracketCharacter_ControlSequenceIntroducer = 0x5B; // [
         private const byte XonCharacter = 17;
         private const byte XoffCharacter = 19;
 
@@ -55,7 +55,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         internal bool IsValidParameterCharacter(char c, bool isOscCommand, bool isCSI)
         {
-            //return (Char.IsNumber( _c ) || _c == '(' || _c == ')' || _c == ';' || _c == '"' || _c == '?');
             return isCSI && ((isOscCommand && c != BellCharacter) ||
                                         (Char.IsNumber(c) || c == ';' || c == '"' || c == '?' || c == ']'));
         }
