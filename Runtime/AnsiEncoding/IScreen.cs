@@ -17,7 +17,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         void Scroll(int lines, Direction direction);
         public void SaveCursor();
         public void RestoreCursor();
-        public void SetGraphicsRendition(params GraphicRendition[] _graphicRenditions);
+        public void SetGraphicsRendition(int?[] customColor, params GraphicRendition[] _graphicRenditions);
 
         internal void Transmit(byte[] data);
     }

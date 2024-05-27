@@ -16,11 +16,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             var arguments = parameters.Split(';');
             var graphicsParameters = new GraphicRendition[arguments.Length];
+            var customColor = new int?[3];
             for (int i = 0; i < arguments.Length; i++)
             {
                 if (int.TryParse(arguments[i], out var parsedInteger) &&
                     Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
                     graphicsParameters[i] = (GraphicRendition)parsedInteger;
+                else if (i >= 2 && int.TryParse(arguments[i], out var colorInt))
+                    customColor[i - 2] = colorInt;
                 else
                 {
                     Logger.Error(
@@ -29,7 +32,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
             }
 
-            screen.SetGraphicsRendition(graphicsParameters);
+            screen.SetGraphicsRendition(customColor, graphicsParameters);
         }
     }
 }
