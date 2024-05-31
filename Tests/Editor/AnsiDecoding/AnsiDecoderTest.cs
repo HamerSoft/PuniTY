@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using HamerSoft.PuniTY.AnsiEncoding;
-using HamerSoft.PuniTY.AnsiEncoding.ColorScheme;
 using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
 using UnityEngine;
@@ -28,7 +27,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 new EditorLogger())
             {
             }
-            
         }
 
         protected AnsiDecoder AnsiDecoder;

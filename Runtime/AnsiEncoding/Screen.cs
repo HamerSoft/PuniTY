@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HamerSoft.PuniTY.AnsiEncoding.ColorScheme;
-using UnityEngine;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -43,6 +41,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             Cursor = cursor;
             Cursor.SetPosition(new Position(1, 1));
             _rowOffset = 0;
+            _currentGraphicAttributes = new GraphicAttributes(AnsiColor.White, AnsiColor.Black);
             PopulateScreen(Rows, Columns);
         }
 
