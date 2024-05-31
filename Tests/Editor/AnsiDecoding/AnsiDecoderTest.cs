@@ -25,9 +25,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         protected class MockScreen : Screen
         {
             public MockScreen(int rows, int columns) : base(new Dimensions(rows, columns), new MockCursor(),
-                new EditorLogger(), new UbuntuColorScheme())
+                new EditorLogger())
             {
             }
+            
         }
 
         protected AnsiDecoder AnsiDecoder;

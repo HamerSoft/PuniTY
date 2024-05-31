@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.ColorScheme
 {
@@ -20,5 +21,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.ColorScheme
         public Color BrightMagenta { get; }
         public Color BrightCyan { get; }
         public Color BrightWhite { get; }
+
+        public Color GetColor(AnsiColor color, ILogger logger, int?[] customColor);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public enum AnsiColour
+    public enum AnsiColor
     {
         Black,
         Red,

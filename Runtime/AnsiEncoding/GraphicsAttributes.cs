@@ -30,10 +30,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public UnderlineMode UnderlineMode { get; set; }
         public BlinkSpeed BlinkSpeed { get; set; }
         public bool IsConcealed { get; set; }
-        public AnsiColour Foreground { get; set; }
-        public AnsiColour Background { get; set; }
+        public AnsiColor Foreground { get; set; }
+        public AnsiColor Background { get; set; }
 
-        public GraphicAttributes(AnsiColour foreground, AnsiColour backGround)
+        public GraphicAttributes(AnsiColor foreground, AnsiColor backGround)
         {
             IsBold = false;
             IsFaint = false;
@@ -53,8 +53,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             UnderlineMode = UnderlineMode.None;
             BlinkSpeed = BlinkSpeed.None;
             IsConcealed = false;
-            Foreground = AnsiColour.White;
-            Background = AnsiColour.Black;
+            Foreground = AnsiColor.White;
+            Background = AnsiColor.Black;
         }
     }
 }

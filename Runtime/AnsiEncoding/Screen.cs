@@ -224,112 +224,112 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         _currentGraphicAttributes.IsConcealed = false;
                         break;
                     case GraphicRendition.ForegroundNormalBlack:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Black;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Black;
                         break;
                     case GraphicRendition.ForegroundNormalRed:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Red;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Red;
                         break;
                     case GraphicRendition.ForegroundNormalGreen:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Green;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Green;
                         break;
                     case GraphicRendition.ForegroundNormalYellow:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Yellow;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Yellow;
                         break;
                     case GraphicRendition.ForegroundNormalBlue:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Blue;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Blue;
                         break;
                     case GraphicRendition.ForegroundNormalMagenta:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Magenta;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Magenta;
                         break;
                     case GraphicRendition.ForegroundNormalCyan:
-                        _currentGraphicAttributes.Foreground = AnsiColour.Cyan;
+                        _currentGraphicAttributes.Foreground = AnsiColor.Cyan;
                         break;
                     case GraphicRendition.ForegroundNormalWhite:
-                        _currentGraphicAttributes.Foreground = AnsiColour.White;
+                        _currentGraphicAttributes.Foreground = AnsiColor.White;
                         break;
                     case GraphicRendition.ForegroundNormalReset:
-                        _currentGraphicAttributes.Foreground = AnsiColour.White;
+                        _currentGraphicAttributes.Foreground = AnsiColor.White;
                         break;
                     case GraphicRendition.BackgroundNormalBlack:
-                        _currentGraphicAttributes.Background = AnsiColour.Black;
+                        _currentGraphicAttributes.Background = AnsiColor.Black;
                         break;
                     case GraphicRendition.BackgroundNormalRed:
-                        _currentGraphicAttributes.Background = AnsiColour.Red;
+                        _currentGraphicAttributes.Background = AnsiColor.Red;
                         break;
                     case GraphicRendition.BackgroundNormalGreen:
-                        _currentGraphicAttributes.Background = AnsiColour.Green;
+                        _currentGraphicAttributes.Background = AnsiColor.Green;
                         break;
                     case GraphicRendition.BackgroundNormalYellow:
-                        _currentGraphicAttributes.Background = AnsiColour.Yellow;
+                        _currentGraphicAttributes.Background = AnsiColor.Yellow;
                         break;
                     case GraphicRendition.BackgroundNormalBlue:
-                        _currentGraphicAttributes.Background = AnsiColour.Blue;
+                        _currentGraphicAttributes.Background = AnsiColor.Blue;
                         break;
                     case GraphicRendition.BackgroundNormalMagenta:
-                        _currentGraphicAttributes.Background = AnsiColour.Magenta;
+                        _currentGraphicAttributes.Background = AnsiColor.Magenta;
                         break;
                     case GraphicRendition.BackgroundNormalCyan:
-                        _currentGraphicAttributes.Background = AnsiColour.Cyan;
+                        _currentGraphicAttributes.Background = AnsiColor.Cyan;
                         break;
                     case GraphicRendition.BackgroundNormalWhite:
-                        _currentGraphicAttributes.Background = AnsiColour.White;
+                        _currentGraphicAttributes.Background = AnsiColor.White;
                         break;
                     case GraphicRendition.BackgroundNormalReset:
-                        _currentGraphicAttributes.Background = AnsiColour.Black;
+                        _currentGraphicAttributes.Background = AnsiColor.Black;
                         break;
                     case GraphicRendition.ForegroundBrightBlack:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightBlack;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightBlack;
                         break;
                     case GraphicRendition.ForegroundBrightRed:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightRed;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightRed;
                         break;
                     case GraphicRendition.ForegroundBrightGreen:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightGreen;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightGreen;
                         break;
                     case GraphicRendition.ForegroundBrightYellow:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightYellow;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightYellow;
                         break;
                     case GraphicRendition.ForegroundBrightBlue:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightBlue;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightBlue;
                         break;
                     case GraphicRendition.ForegroundBrightMagenta:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightMagenta;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightMagenta;
                         break;
                     case GraphicRendition.ForegroundBrightCyan:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightCyan;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightCyan;
                         break;
                     case GraphicRendition.ForegroundBrightWhite:
-                        _currentGraphicAttributes.Foreground = AnsiColour.BrightWhite;
+                        _currentGraphicAttributes.Foreground = AnsiColor.BrightWhite;
                         break;
                     case GraphicRendition.ForegroundBrightReset:
-                        _currentGraphicAttributes.Foreground = AnsiColour.White;
+                        _currentGraphicAttributes.Foreground = AnsiColor.White;
                         break;
                     case GraphicRendition.BackgroundBrightBlack:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightBlack;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightBlack;
                         break;
                     case GraphicRendition.BackgroundBrightRed:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightRed;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightRed;
                         break;
                     case GraphicRendition.BackgroundBrightGreen:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightGreen;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightGreen;
                         break;
                     case GraphicRendition.BackgroundBrightYellow:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightYellow;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightYellow;
                         break;
                     case GraphicRendition.BackgroundBrightBlue:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightBlue;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightBlue;
                         break;
                     case GraphicRendition.BackgroundBrightMagenta:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightMagenta;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightMagenta;
                         break;
                     case GraphicRendition.BackgroundBrightCyan:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightCyan;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightCyan;
                         break;
                     case GraphicRendition.BackgroundBrightWhite:
-                        _currentGraphicAttributes.Background = AnsiColour.BrightWhite;
+                        _currentGraphicAttributes.Background = AnsiColor.BrightWhite;
                         break;
                     case GraphicRendition.BackgroundBrightReset:
-                        _currentGraphicAttributes.Background = AnsiColour.Black;
+                        _currentGraphicAttributes.Background = AnsiColor.Black;
                         break;
                     case GraphicRendition.Font1:
                         _logger.LogWarning("Trying to set GraphicsRendition 'Font1' now what!?");
@@ -339,38 +339,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
             }
         }
-
-        private Color? ParseCustomColor(int?[] customColor)
-        {
-            if (customColor.Length == 0 || customColor[0] == null)
-                return null;
-
-            // check for eight bit color
-            if (customColor[1] == null)
-                return EightBitColorToRGB(customColor[0].Value);
-
-            // check if full RGB color
-            if (customColor[2] != null)
-                return new Color(customColor[0].Value, customColor[1].Value, customColor[2].Value);
-
-            _logger.LogWarning(
-                $"Failed to parse custom Color, its neither an 8 bit or an RGB color {string.Join(';', customColor)}.");
-            return null;
-        }
-
-        /// <summary>
-        /// Convert an 8bit color into RGB
-        /// </summary>
-        /// <param name="c">color number</param>
-        /// <returns>rgb color</returns>
-        private static Color EightBitColorToRGB(int c)
-        {
-            return new Color(((c >> 4) % 4) * 64,
-                ((c >> 2) % 4) * 64,
-                (c % 4) * 64,
-                (c >> 6) * 64);
-        }
-
+        
         void IScreen.Transmit(byte[] data)
         {
             Output?.Invoke(data);
