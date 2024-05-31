@@ -34,11 +34,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private int _rowOffset;
         private Position? _savedCursorPosition;
         private GraphicAttributes _currentGraphicAttributes;
-        private IColorScheme _colorScheme;
 
-        public Screen(Dimensions dimensions, ICursor cursor, ILogger logger, IColorScheme colorScheme)
+        public Screen(Dimensions dimensions, ICursor cursor, ILogger logger)
         {
-            _colorScheme = colorScheme;
             _logger = logger;
             Rows = dimensions.Rows;
             Columns = dimensions.Columns;
@@ -176,14 +174,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void SetGraphicsRendition(int?[] customColor, params GraphicRendition[] _graphicRenditions)
         {
-            var parsedCustomColor = ParseCustomColor(customColor);
-
-            Color GetColor(Color colorSchemeColor)
-            {
-                return parsedCustomColor ?? colorSchemeColor;
-            }
-
-
             foreach (GraphicRendition graphicRendition in _graphicRenditions)
             {
                 switch (graphicRendition)
@@ -234,112 +224,112 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         _currentGraphicAttributes.IsConcealed = false;
                         break;
                     case GraphicRendition.ForegroundNormalBlack:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Black);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Black;
                         break;
                     case GraphicRendition.ForegroundNormalRed:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Red);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Red;
                         break;
                     case GraphicRendition.ForegroundNormalGreen:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Green);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Green;
                         break;
                     case GraphicRendition.ForegroundNormalYellow:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Yellow);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Yellow;
                         break;
                     case GraphicRendition.ForegroundNormalBlue:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Blue);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Blue;
                         break;
                     case GraphicRendition.ForegroundNormalMagenta:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Magenta);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Magenta;
                         break;
                     case GraphicRendition.ForegroundNormalCyan:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.Cyan);
+                        _currentGraphicAttributes.Foreground = AnsiColour.Cyan;
                         break;
                     case GraphicRendition.ForegroundNormalWhite:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.White);
+                        _currentGraphicAttributes.Foreground = AnsiColour.White;
                         break;
                     case GraphicRendition.ForegroundNormalReset:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.White);
+                        _currentGraphicAttributes.Foreground = AnsiColour.White;
                         break;
                     case GraphicRendition.BackgroundNormalBlack:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Black);
+                        _currentGraphicAttributes.Background = AnsiColour.Black;
                         break;
                     case GraphicRendition.BackgroundNormalRed:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Red);
+                        _currentGraphicAttributes.Background = AnsiColour.Red;
                         break;
                     case GraphicRendition.BackgroundNormalGreen:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Green);
+                        _currentGraphicAttributes.Background = AnsiColour.Green;
                         break;
                     case GraphicRendition.BackgroundNormalYellow:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Yellow);
+                        _currentGraphicAttributes.Background = AnsiColour.Yellow;
                         break;
                     case GraphicRendition.BackgroundNormalBlue:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Blue);
+                        _currentGraphicAttributes.Background = AnsiColour.Blue;
                         break;
                     case GraphicRendition.BackgroundNormalMagenta:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Magenta);
+                        _currentGraphicAttributes.Background = AnsiColour.Magenta;
                         break;
                     case GraphicRendition.BackgroundNormalCyan:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Cyan);
+                        _currentGraphicAttributes.Background = AnsiColour.Cyan;
                         break;
                     case GraphicRendition.BackgroundNormalWhite:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.White);
+                        _currentGraphicAttributes.Background = AnsiColour.White;
                         break;
                     case GraphicRendition.BackgroundNormalReset:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Black);
+                        _currentGraphicAttributes.Background = AnsiColour.Black;
                         break;
                     case GraphicRendition.ForegroundBrightBlack:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightBlack);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightBlack;
                         break;
                     case GraphicRendition.ForegroundBrightRed:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightRed);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightRed;
                         break;
                     case GraphicRendition.ForegroundBrightGreen:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightGreen);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightGreen;
                         break;
                     case GraphicRendition.ForegroundBrightYellow:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightYellow);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightYellow;
                         break;
                     case GraphicRendition.ForegroundBrightBlue:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightBlue);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightBlue;
                         break;
                     case GraphicRendition.ForegroundBrightMagenta:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightMagenta);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightMagenta;
                         break;
                     case GraphicRendition.ForegroundBrightCyan:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightCyan);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightCyan;
                         break;
                     case GraphicRendition.ForegroundBrightWhite:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.BrightWhite);
+                        _currentGraphicAttributes.Foreground = AnsiColour.BrightWhite;
                         break;
                     case GraphicRendition.ForegroundBrightReset:
-                        _currentGraphicAttributes.Foreground = GetColor(_colorScheme.White);
+                        _currentGraphicAttributes.Foreground = AnsiColour.White;
                         break;
                     case GraphicRendition.BackgroundBrightBlack:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightBlack);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightBlack;
                         break;
                     case GraphicRendition.BackgroundBrightRed:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightRed);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightRed;
                         break;
                     case GraphicRendition.BackgroundBrightGreen:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightGreen);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightGreen;
                         break;
                     case GraphicRendition.BackgroundBrightYellow:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightYellow);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightYellow;
                         break;
                     case GraphicRendition.BackgroundBrightBlue:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightBlue);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightBlue;
                         break;
                     case GraphicRendition.BackgroundBrightMagenta:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightMagenta);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightMagenta;
                         break;
                     case GraphicRendition.BackgroundBrightCyan:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightCyan);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightCyan;
                         break;
                     case GraphicRendition.BackgroundBrightWhite:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.BrightWhite);
+                        _currentGraphicAttributes.Background = AnsiColour.BrightWhite;
                         break;
                     case GraphicRendition.BackgroundBrightReset:
-                        _currentGraphicAttributes.Background = GetColor(_colorScheme.Black);
+                        _currentGraphicAttributes.Background = AnsiColour.Black;
                         break;
                     case GraphicRendition.Font1:
                         _logger.LogWarning("Trying to set GraphicsRendition 'Font1' now what!?");
