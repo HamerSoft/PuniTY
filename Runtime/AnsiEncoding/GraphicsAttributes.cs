@@ -27,6 +27,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public bool IsFaint { get; set; }
 
         public bool IsItalic { get; set; }
+        public bool IsStrikeThrough { get; set; }
         public UnderlineMode UnderlineMode { get; set; }
         public BlinkSpeed BlinkSpeed { get; set; }
         public bool IsConcealed { get; set; }
@@ -39,6 +40,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             IsFaint = false;
             IsItalic = false;
             IsConcealed = false;
+            IsStrikeThrough = false;
             Foreground = foreground;
             Background = backGround;
             UnderlineMode = UnderlineMode.None;

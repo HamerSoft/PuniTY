@@ -189,6 +189,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.Italic:
                         _currentGraphicAttributes.IsItalic = true;
                         break;
+                    case GraphicRendition.StrikeThrough:
+                        _currentGraphicAttributes.IsStrikeThrough = true;
+                        break;
                     case GraphicRendition.Underline:
                         _currentGraphicAttributes.UnderlineMode = UnderlineMode.Single;
                         break;
@@ -330,8 +333,17 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.BackgroundBrightReset:
                         _currentGraphicAttributes.Background = AnsiColor.Black;
                         break;
+                    case GraphicRendition.AlternativeFont0:
+                    case GraphicRendition.AlternativeFont1:
+                    case GraphicRendition.AlternativeFont2:
+                    case GraphicRendition.AlternativeFont3:
+                    case GraphicRendition.AlternativeFont4:
+                    case GraphicRendition.AlternativeFont5:
+                    case GraphicRendition.AlternativeFont6:
+                    case GraphicRendition.AlternativeFont7:
+                    case GraphicRendition.AlternativeFont8:
                     case GraphicRendition.Font1:
-                        _logger.LogWarning("Trying to set GraphicsRendition 'Font1' now what!?");
+                        _logger.LogWarning($"Trying to set GraphicsRendition Font {graphicRendition} now what!?");
                         break;
                     default:
                         throw new Exception("Unknown rendition command");

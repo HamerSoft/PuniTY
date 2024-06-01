@@ -28,9 +28,49 @@
 
         /// Conceal     not widely supported
         Conceal = 8,
+        
+        //StrikeThrough
+        StrikeThrough = 9,
 
         /// Font selection (not sure which)
         Font1 = 10,
+        
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont0 = 11,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont1 = 12,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont2= 13,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont3 = 14,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont4 = 15,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont5 = 16,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont6 = 17,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont7 = 18,
+        /// <summary>
+        /// Not Implemented!
+        /// </summary>
+        AlternativeFont8 = 19,
 
         /// Underline: Double
         UnderlineDouble = 21,
