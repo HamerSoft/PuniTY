@@ -38,39 +38,44 @@
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont0 = 11,
+        AlternativeFont1 = 11,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont1 = 12,
+        AlternativeFont2 = 12,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont2= 13,
+        AlternativeFont3= 13,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont3 = 14,
+        AlternativeFont4 = 14,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont4 = 15,
+        AlternativeFont5 = 15,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont5 = 16,
+        AlternativeFont6 = 16,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont6 = 17,
+        AlternativeFont7 = 17,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont7 = 18,
+        AlternativeFont8 = 18,
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont8 = 19,
+        AlternativeFont9 = 19,
+        
+        /// <summary>
+        /// Not implemented (Gothic font)
+        /// </summary>
+        Fraktur = 20,
 
         /// Underline: Double
         UnderlineDouble = 21,

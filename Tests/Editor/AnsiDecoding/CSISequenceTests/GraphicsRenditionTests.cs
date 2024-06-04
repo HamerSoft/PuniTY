@@ -1,6 +1,8 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System.Text.RegularExpressions;
+using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
@@ -106,7 +108,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
         }
 
-        [TestCase(GraphicRendition.AlternativeFont0)]
         [TestCase(GraphicRendition.AlternativeFont1)]
         [TestCase(GraphicRendition.AlternativeFont2)]
         [TestCase(GraphicRendition.AlternativeFont3)]
@@ -115,11 +116,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(GraphicRendition.AlternativeFont6)]
         [TestCase(GraphicRendition.AlternativeFont7)]
         [TestCase(GraphicRendition.AlternativeFont8)]
-        public void When_SGR_11_Attributes_Are_StrikeThrough(GraphicRendition rendition)
+        [TestCase(GraphicRendition.AlternativeFont9)]
+        public void When_SGR_Alternative_Fonts_Are_NotImplemented(GraphicRendition rendition)
         {
-            Decode($"{Escape}{rendition}m");
+            Decode($"{Escape}{((int)rendition)}m");
             Assert.That(GetGraphicsAttributes(),
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+        }
+        
+        [Test]
+        public void When_SGR_Fraktur_Font_Is_NotImplemented()
+        {
+            Decode($"{Escape}{20}m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
         private GraphicAttributes GetGraphicsAttributes()

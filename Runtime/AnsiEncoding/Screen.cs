@@ -333,7 +333,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.BackgroundBrightReset:
                         _currentGraphicAttributes.Background = AnsiColor.Black;
                         break;
-                    case GraphicRendition.AlternativeFont0:
                     case GraphicRendition.AlternativeFont1:
                     case GraphicRendition.AlternativeFont2:
                     case GraphicRendition.AlternativeFont3:
@@ -342,6 +341,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.AlternativeFont6:
                     case GraphicRendition.AlternativeFont7:
                     case GraphicRendition.AlternativeFont8:
+                    case GraphicRendition.AlternativeFont9:
+                    case GraphicRendition.Fraktur:
                     case GraphicRendition.Font1:
                         _logger.LogWarning($"Trying to set GraphicsRendition Font {graphicRendition} now what!?");
                         break;
@@ -350,7 +351,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
             }
         }
-        
+
         void IScreen.Transmit(byte[] data)
         {
             Output?.Invoke(data);
