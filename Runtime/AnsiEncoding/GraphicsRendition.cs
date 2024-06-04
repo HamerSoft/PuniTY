@@ -82,6 +82,11 @@
 
         /// Intensity: Normal     not bold and not faint
         NormalIntensity = 22,
+        
+        /// <summary>
+        /// Disable Italic
+        /// </summary>
+        NoItalic = 23,
 
         /// Underline: None     
         NoUnderline = 24,

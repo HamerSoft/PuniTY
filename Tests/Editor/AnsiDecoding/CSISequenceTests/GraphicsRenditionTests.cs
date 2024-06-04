@@ -168,6 +168,41 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsFaint = false }));
         }
 
+        [Test]
+        public void When_SGR_23_Attributes_Are_Resetting_Italic()
+        {
+            Decode($"{Escape}3m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsItalic = true }));
+            Decode($"{Escape}23m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsItalic = false }));
+        }
+
+        [Test]
+        public void When_SGR_24_Attributes_Are_Resetting_Underline()
+        {
+            Decode($"{Escape}4m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { UnderlineMode = UnderlineMode.Single }));
+            Decode($"{Escape}24m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { UnderlineMode = UnderlineMode.None }));
+        }
+
+        [Test]
+        public void When_SGR_25_Attributes_Are_Resetting_Blink()
+        {
+            Decode($"{Escape}5m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { BlinkSpeed = BlinkSpeed.Slow }));
+            Decode($"{Escape}25m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { BlinkSpeed = BlinkSpeed.None }));
+        }
+
         private GraphicAttributes GetGraphicsAttributes()
         {
             Screen.AddCharacter('a');

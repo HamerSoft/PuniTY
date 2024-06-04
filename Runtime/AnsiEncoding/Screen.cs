@@ -216,6 +216,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         _currentGraphicAttributes.IsBold = false;
                         _currentGraphicAttributes.IsFaint = false;
                         break;
+                    case GraphicRendition.NoItalic:
+                        _currentGraphicAttributes.IsItalic = false;
+                        break;
                     case GraphicRendition.NoUnderline:
                         _currentGraphicAttributes.UnderlineMode = UnderlineMode.None;
                         break;
