@@ -93,6 +93,11 @@
 
         /// Blink: off     
         NoBlink = 25,
+        
+        /// <summary>
+        /// not sure what this means :D
+        /// </summary>
+        ProportionalSpacing = 26,
 
         /// Image: Positive
         ///

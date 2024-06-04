@@ -82,8 +82,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void When_SGR_7_Attributes_Are_InvertColors()
         {
             Decode($"{Escape}7m");
-            Assert.That(GetGraphicsAttributes(),
-                Is.EqualTo(new GraphicAttributes(AnsiColor.Black, AnsiColor.White))); // <-- inverted colors
+            var actual = GetGraphicsAttributes();
+            var expected = new GraphicAttributes(AnsiColor.Black, AnsiColor.White);
+            Assert.That(actual, Is.EqualTo(expected)); // <-- inverted colors
         }
 
         [Test]
@@ -202,6 +203,27 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(GetGraphicsAttributes(),
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { BlinkSpeed = BlinkSpeed.None }));
         }
+
+        [Test]
+        public void When_SGR_26_Attributes_Are_ProportionallySpaced()
+        {
+            Decode($"{Escape}26m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsProportionalSpaced = true }));
+        }
+
+        [Test]
+        public void When_SGR_27_Attributes_Are_Resetting_Inverse()
+        {
+            Decode($"{Escape}7m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.Black, AnsiColor.White)));
+            Decode($"{Escape}27m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+        }
+
 
         private GraphicAttributes GetGraphicsAttributes()
         {
