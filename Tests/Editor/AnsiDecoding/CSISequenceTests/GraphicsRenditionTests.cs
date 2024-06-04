@@ -134,6 +134,14 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
+        [Test]
+        public void When_SGR_21_Attributes_Are_DoubleUnderlined()
+        {
+            Decode($"{Escape}21m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black){UnderlineMode = UnderlineMode.Double}));
+        }
+        
         private GraphicAttributes GetGraphicsAttributes()
         {
             Screen.AddCharacter('a');
