@@ -82,9 +82,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void When_SGR_7_Attributes_Are_InvertColors()
         {
             Decode($"{Escape}7m");
-            var actual = GetGraphicsAttributes();
-            var expected = new GraphicAttributes(AnsiColor.Black, AnsiColor.White);
-            Assert.That(actual, Is.EqualTo(expected)); // <-- inverted colors
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.Black, AnsiColor.White))); // <-- inverted colors
         }
 
         [Test]
@@ -224,6 +223,16 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
         }
 
+        [Test]
+        public void When_SGR_28_Attributes_Are_Resetting_Concealed()
+        {
+            Decode($"{Escape}8m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsConcealed = true }));
+            Decode($"{Escape}28m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsConcealed = false }));
+        }
 
         private GraphicAttributes GetGraphicsAttributes()
         {
