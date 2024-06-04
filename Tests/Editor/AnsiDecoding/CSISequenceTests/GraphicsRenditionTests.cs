@@ -8,10 +8,13 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
     public class GraphicsRenditionTests : AnsiDecoderTest
     {
+        private int _currentCharacterColumn;
+
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
+            _currentCharacterColumn = 1;
             Screen = new MockScreen(10, 10);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
@@ -124,7 +127,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
             LogAssert.Expect(LogType.Warning, new Regex(""));
         }
-        
+
         [Test]
         public void When_SGR_Fraktur_Font_Is_NotImplemented()
         {
@@ -139,13 +142,42 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             Decode($"{Escape}21m");
             Assert.That(GetGraphicsAttributes(),
-                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black){UnderlineMode = UnderlineMode.Double}));
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { UnderlineMode = UnderlineMode.Double }));
         }
-        
+
+        [Test]
+        public void When_SGR_22_Attributes_Are_Resetting_Bold()
+        {
+            Decode($"{Escape}1m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsBold = true }));
+            Decode($"{Escape}22m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsBold = false }));
+        }
+
+        [Test]
+        public void When_SGR_22_Attributes_Are_Resetting_Faint()
+        {
+            Decode($"{Escape}2m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsFaint = true }));
+            Decode($"{Escape}22m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsFaint = false }));
+        }
+
         private GraphicAttributes GetGraphicsAttributes()
         {
             Screen.AddCharacter('a');
-            return Screen.GetCharacter(new Position(1, 1)).GraphicAttributes;
+            return Screen.GetCharacter(new Position(1, _currentCharacterColumn++)).GraphicAttributes;
+        }
+
+        public override void TearDown()
+        {
+            _currentCharacterColumn = 1;
+            base.TearDown();
         }
     }
 }
