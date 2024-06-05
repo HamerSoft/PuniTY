@@ -233,6 +233,17 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(GetGraphicsAttributes(),
                 Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsConcealed = false }));
         }
+        
+        [Test]
+        public void When_SGR_29_Attributes_Are_Resetting_Strikethrough()
+        {
+            Decode($"{Escape}9m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsStrikeThrough = true }));
+            Decode($"{Escape}29m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black) { IsStrikeThrough = false }));
+        }
 
         private GraphicAttributes GetGraphicsAttributes()
         {

@@ -228,6 +228,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.Reveal:
                         _currentGraphicAttributes.IsConcealed = false;
                         break;
+                    case GraphicRendition.NoStrikeThrough:
+                        _currentGraphicAttributes.IsStrikeThrough = false;
+                        break;
                     case GraphicRendition.ProportionalSpacing:
                         _currentGraphicAttributes.IsProportionalSpaced = true;
                         break;

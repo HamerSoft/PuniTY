@@ -106,6 +106,11 @@
 
         /// Reveal,     conceal off
         Reveal = 28,
+        
+        /// <summary>
+        /// Disable strikethrough mode
+        /// </summary>
+        NoStrikeThrough = 29,
 
         /// Set foreground color, normal intensity
         ForegroundNormalBlack = 30,
