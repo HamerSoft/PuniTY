@@ -157,10 +157,5 @@
         BackgroundBrightCyan = 106,
         BackgroundBrightWhite = 107,
         BackgroundBrightReset = 109,
-
-        CustomForeground8Bit = 200,
-        CustomBackground8Bit = 201,
-        CustomForegroundRGB = 202,
-        CustomBackgroundRGB = 203
     }
 }

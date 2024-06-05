@@ -1,7 +1,4 @@
-﻿using System;
-using UnityEngine;
-
-namespace HamerSoft.PuniTY.AnsiEncoding
+﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public enum BlinkSpeed
     {
@@ -15,6 +12,23 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         None,
         Single,
         Double,
+    }
+
+    public struct RgbColor
+    {
+        public int R, G, B;
+
+        public RgbColor(int r, int g, int b)
+        {
+            R = r;
+            G = g;
+            B = b;
+        }
+
+        public override string ToString()
+        {
+            return $"R:{R}, G:{G}, B:{B}";
+        }
     }
 
     public struct GraphicAttributes
@@ -36,6 +50,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public bool IsConcealed { get; set; }
         public AnsiColor Foreground { get; set; }
         public AnsiColor Background { get; set; }
+        public RgbColor ForegroundRGBColor { get; set; }
+        public RgbColor BackgroundRGBColor { get; set; }
 
         public GraphicAttributes(AnsiColor foreground, AnsiColor backGround)
         {
@@ -51,6 +67,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             UnderlineMode = UnderlineMode.None;
             Foreground = _foreground;
             Background = _backGround;
+            ForegroundRGBColor = default;
+            BackgroundRGBColor = default;
         }
 
         public void Reset()
@@ -65,6 +83,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             UnderlineMode = UnderlineMode.None;
             Foreground = _foreground;
             Background = _backGround;
+            ForegroundRGBColor = default;
+            BackgroundRGBColor = default;
         }
 
         public override bool Equals(object obj)
@@ -79,13 +99,15 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                    && other.IsItalic == IsItalic
                    && other.IsProportionalSpaced == IsProportionalSpaced
                    && other.BlinkSpeed == BlinkSpeed
-                   && other.UnderlineMode == UnderlineMode;
+                   && other.UnderlineMode == UnderlineMode
+                   && other.ForegroundRGBColor.Equals(ForegroundRGBColor)
+                   && other.BackgroundRGBColor.Equals(BackgroundRGBColor);
         }
 
         public override int GetHashCode()
         {
             return (BlinkSpeed, Foreground, IsConcealed, IsBold, IsFaint, IsStrikeThrough, IsItalic,
-                IsProportionalSpaced, BlinkSpeed, UnderlineMode).GetHashCode();
+                IsProportionalSpaced, BlinkSpeed, UnderlineMode, ForegroundRGBColor, BackgroundRGBColor).GetHashCode();
         }
     }
 }

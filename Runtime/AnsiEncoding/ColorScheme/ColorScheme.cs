@@ -59,45 +59,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding.ColorScheme
                 case AnsiColor.BrightWhite:
                     return BrightWhite;
                 case AnsiColor.Rgb:
-                    return ParseCustomColor(logger, customColor);
+                    return new Color(customColor[0].Value, customColor[1].Value, customColor[3].Value);
             }
 
             logger.LogWarning($"Color {color} cannot be found in AnsiColor enum. Returning Black...");
             return Black;
-        }
-
-        private Color ParseCustomColor(ILogger logger, int?[] customColor)
-        {
-            if (customColor.Length == 0 || customColor[0] == null)
-            {
-                logger.LogWarning($"Custom color given without any identifiable RGB params. Returning Black.");
-                return Black;
-            }
-
-            // check for eight bit color
-            if (customColor[1] == null)
-                return EightBitColorToRGB(customColor[0].Value);
-
-            // check if full RGB color
-            if (customColor[2] != null)
-                return new Color(customColor[0].Value, customColor[1].Value, customColor[2].Value);
-
-            logger.LogWarning(
-                $"Failed to parse custom Color, its neither an 8 bit or an RGB color {string.Join(';', customColor)}. Returning Black!");
-            return Black;
-        }
-
-        /// <summary>
-        /// Convert an 8bit color into RGB
-        /// </summary>
-        /// <param name="c">color number</param>
-        /// <returns>rgb color</returns>
-        private static Color EightBitColorToRGB(int c)
-        {
-            return new Color(((c >> 4) % 4) * 64,
-                ((c >> 2) % 4) * 64,
-                (c % 4) * 64,
-                (c >> 6) * 64);
         }
     }
 }

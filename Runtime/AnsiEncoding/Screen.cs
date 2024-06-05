@@ -342,6 +342,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.BackgroundBrightReset:
                         _currentGraphicAttributes.Background = AnsiColor.Black;
                         break;
+                    case GraphicRendition.ForegroundColor:
+                        _currentGraphicAttributes.Foreground = AnsiColor.Rgb;
+                        _currentGraphicAttributes.ForegroundRGBColor = new RgbColor(customColor[0].Value,
+                            customColor[1].Value, customColor[2].Value);
+                        break;
+                    case GraphicRendition.BackgroundColor:
+                        _currentGraphicAttributes.Background = AnsiColor.Rgb;
+                        _currentGraphicAttributes.BackgroundRGBColor = new RgbColor(customColor[0].Value,
+                            customColor[1].Value, customColor[2].Value);
+                        break;
                     case GraphicRendition.AlternativeFont1:
                     case GraphicRendition.AlternativeFont2:
                     case GraphicRendition.AlternativeFont3:

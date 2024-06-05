@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -15,15 +16,23 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
 
             var arguments = parameters.Split(';');
-            var graphicsParameters = new GraphicRendition[arguments.Length];
-            var customColor = new int?[3];
+            var graphicsParameters = new List<GraphicRendition>();
+            var customColor = new int?[4];
+            var customColorIndex = 0;
+            var isCustomColor = false;
             for (int i = 0; i < arguments.Length; i++)
             {
-                if (int.TryParse(arguments[i], out var parsedInteger) &&
+                if (!isCustomColor && int.TryParse(arguments[i], out var parsedInteger) &&
                     Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
-                    graphicsParameters[i] = (GraphicRendition)parsedInteger;
-                else if (i >= 2 && int.TryParse(arguments[i], out var colorInt))
-                    customColor[i - 2] = colorInt;
+                {
+                    graphicsParameters.Add((GraphicRendition)parsedInteger);
+                    isCustomColor = parsedInteger is 38 or 48;
+                }
+                else if (isCustomColor && int.TryParse(arguments[i], out var colorInt))
+                {
+                    customColor[customColorIndex] = colorInt;
+                    customColorIndex++;
+                }
                 else
                 {
                     Logger.Error(
@@ -32,7 +41,50 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
             }
 
-            screen.SetGraphicsRendition(customColor, graphicsParameters);
+            if (isCustomColor)
+            {
+                if (customColor[0] == 2)
+                    customColor = Parse24BitColor(customColor);
+                else if (customColor[0] == 5)
+                    customColor = Parse8BitColor(customColor);
+
+                if (customColor == null)
+                {
+                    Logger.Error(
+                        $"Failed to parse GraphicsRendition parameters {parameters}, invalid custom color {string.Join(';', customColor)}. Skipping command...");
+                    return;
+                }
+            }
+
+            screen.SetGraphicsRendition(customColor, graphicsParameters.ToArray());
+        }
+
+        private int?[] Parse8BitColor(int?[] customColor)
+        {
+            if (!customColor[1].HasValue)
+                return null;
+
+            int colorId = customColor[1].Value;
+            return new int?[]
+            {
+                ((colorId >> 4) % 4) * 64,
+                ((colorId >> 2) % 4) * 64,
+                (colorId % 4) * 64
+            };
+        }
+
+        private int?[] Parse24BitColor(int?[] customColor)
+        {
+            for (var i = 0; i < customColor.Length; i++)
+                if (!customColor[i].HasValue)
+                    return null;
+
+            return new int?[]
+            {
+                Math.Clamp(customColor[1].Value, 0, 255),
+                Math.Clamp(customColor[2].Value, 0, 255),
+                Math.Clamp(customColor[3].Value, 0, 255)
+            };
         }
     }
 }
