@@ -258,12 +258,18 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo(new GraphicAttributes(color, AnsiColor.Black)));
         }
 
-        [TestCase(196)] // red
-        public void When_SGR_38_Attributes_Is_Setting_CustomColor(int colorId)
+        [TestCase(196, new[] { 255, 0, 0 }), Description("Ansi 196 to Red")] // red
+        [TestCase(21, new[] { 0, 0, 255 })] // blue
+        [TestCase(46, new[] { 0, 255, 0 })] // blue
+        [TestCase(133, new[] { 153, 51, 153 })] // pink'ish color
+        [TestCase(16, new[] { 0, 0, 0 })] // black
+        [TestCase(231, new[] { 255, 255, 255 })] // black
+        [TestCase(0, new[] { 0, 0, 0 })] // default black
+        public void When_SGR_38_Attributes_Is_Setting_CustomColor(int colorId, int[] rgb)
         {
             Decode($"{Escape}38;5;{colorId}m");
             Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
-            Assert.That(GetGraphicsAttributes().ForegroundRGBColor, Is.EqualTo(new RgbColor(255, 0, 0)));
+            Assert.That(GetGraphicsAttributes().ForegroundRGBColor, Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
         }
 
         private GraphicAttributes GetGraphicsAttributes(int columnNumber = 1)

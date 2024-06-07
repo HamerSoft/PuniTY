@@ -59,18 +59,32 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             screen.SetGraphicsRendition(customColor, graphicsParameters.ToArray());
         }
 
-        private int?[] Parse8BitColor(int?[] customColor)
+        private int?[] Parse8BitColor(int?[] customColor, out AnsiColor? defaultColor)
         {
+            int?[] AnsiToRgb(int colorId)
+            {
+                // handle greyscale
+                if (colorId >= 232)
+                {
+                    var c = (colorId - 232) * 10 + 8;
+                    return new int?[] { c, c, c };
+                }
+
+                colorId -= 16;
+
+                int rem;
+                var r = (int)(Math.Floor(colorId / 36d) / 5d * 255d);
+                var g = (int)(Math.Floor((rem = colorId % 36) / 6d) / 5d * 255d);
+                var b = (int)(rem % 6d / 5d * 255d);
+
+                return new int?[] { r, g, b };
+            }
+
+
             if (!customColor[1].HasValue)
                 return null;
-
-            int colorId = customColor[1].Value;
-            return new int?[]
-            {
-                ((colorId >> 4) % 4) * 64,
-                ((colorId >> 2) % 4) * 64,
-                (colorId % 4) * 64
-            };
+            var colorId = customColor[1].Value;
+            return AnsiToRgb(colorId);
         }
 
         private int?[] Parse24BitColor(int?[] customColor)
