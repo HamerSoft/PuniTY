@@ -113,6 +113,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private int?[] Parse24BitColor(int?[] customColor)
         {
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // ReSharper disable once LoopCanBeConvertedToQuery
             for (var i = 0; i < customColor.Length; i++)
                 if (!customColor[i].HasValue)
                     return null;
@@ -127,17 +129,18 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private GraphicRendition? AnsiColorToGraphicRendition(GraphicRendition oldRendition, AnsiColor color)
         {
-            int colorOffset = oldRendition == GraphicRendition.ForegroundColor ? 0 : 10;
-            if ((int)color is >= 0 and <= 7)
-            {
-                return (GraphicRendition)(30 + color + colorOffset);
-            }
-            else if ((int)color is >= 8 and <= 15)
-            {
-                return (GraphicRendition)(82 + color + colorOffset);
-            }
+            // See the GraphicsRendition enum numbers for details.
+            // Indexes are used to map ansi colors to default graphics rendition commands.
+            var colorOffset = oldRendition == GraphicRendition.ForegroundColor ? 0 : 10;
+            const int foregroundColorStartIndex = 30;
+            const int backgroundColorStartIndex = 82;
 
-            return null;
+            return (int)color switch
+            {
+                >= 0 and <= 7 => (GraphicRendition)(foregroundColorStartIndex + color + colorOffset),
+                >= 8 and <= 15 => (GraphicRendition)(backgroundColorStartIndex + color + colorOffset),
+                _ => null
+            };
         }
     }
 }

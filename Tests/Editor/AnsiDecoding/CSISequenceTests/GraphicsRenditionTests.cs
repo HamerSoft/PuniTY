@@ -263,13 +263,19 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(true, 46, new[] { 0, 255, 0 })] // blue
         [TestCase(true, 133, new[] { 153, 51, 153 })] // pink'ish color
         [TestCase(true, 16, new[] { 0, 0, 0 })] // black
-        [TestCase(true, 231, new[] { 255, 255, 255 })] // black
+        [TestCase(true, 231, new[] { 255, 255, 255 })] // white
+        [TestCase(true, 232, new[] { 8, 8, 8 })] // dark gray scale
+        [TestCase(true, 244, new[] { 128, 128, 128 })] // mid gray scale
+        [TestCase(true, 255, new[] { 238, 238, 238 })] // light gray scale
         [TestCase(false, 196, new[] { 255, 0, 0 })] // red
         [TestCase(false, 21, new[] { 0, 0, 255 })] // blue
         [TestCase(false, 46, new[] { 0, 255, 0 })] // blue
         [TestCase(false, 133, new[] { 153, 51, 153 })] // pink'ish color
         [TestCase(false, 16, new[] { 0, 0, 0 })] // black
-        [TestCase(false, 231, new[] { 255, 255, 255 })] // black
+        [TestCase(false, 231, new[] { 255, 255, 255 })] // white
+        [TestCase(false, 232, new[] { 8, 8, 8 })] // dark gray scale
+        [TestCase(false, 244, new[] { 128, 128, 128 })] // mid gray scale
+        [TestCase(false, 255, new[] { 238, 238, 238 })] // light gray scale
         public void When_SGR_38_Attributes_Is_Setting_CustomColor(bool isForeground, int colorId, int[] rgb)
         {
             Decode($"{Escape}{(isForeground ? "38" : "48")};5;{colorId}m");
