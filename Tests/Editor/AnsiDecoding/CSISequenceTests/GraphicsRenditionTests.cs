@@ -258,18 +258,57 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo(new GraphicAttributes(color, AnsiColor.Black)));
         }
 
-        [TestCase(196, new[] { 255, 0, 0 }), Description("Ansi 196 to Red")] // red
-        [TestCase(21, new[] { 0, 0, 255 })] // blue
-        [TestCase(46, new[] { 0, 255, 0 })] // blue
-        [TestCase(133, new[] { 153, 51, 153 })] // pink'ish color
-        [TestCase(16, new[] { 0, 0, 0 })] // black
-        [TestCase(231, new[] { 255, 255, 255 })] // black
-        [TestCase(0, new[] { 0, 0, 0 })] // default black
-        public void When_SGR_38_Attributes_Is_Setting_CustomColor(int colorId, int[] rgb)
+        [TestCase(true, 196, new[] { 255, 0, 0 })] // red
+        [TestCase(true, 21, new[] { 0, 0, 255 })] // blue
+        [TestCase(true, 46, new[] { 0, 255, 0 })] // blue
+        [TestCase(true, 133, new[] { 153, 51, 153 })] // pink'ish color
+        [TestCase(true, 16, new[] { 0, 0, 0 })] // black
+        [TestCase(true, 231, new[] { 255, 255, 255 })] // black
+        [TestCase(false, 196, new[] { 255, 0, 0 })] // red
+        [TestCase(false, 21, new[] { 0, 0, 255 })] // blue
+        [TestCase(false, 46, new[] { 0, 255, 0 })] // blue
+        [TestCase(false, 133, new[] { 153, 51, 153 })] // pink'ish color
+        [TestCase(false, 16, new[] { 0, 0, 0 })] // black
+        [TestCase(false, 231, new[] { 255, 255, 255 })] // black
+        public void When_SGR_38_Attributes_Is_Setting_CustomColor(bool isForeground, int colorId, int[] rgb)
         {
-            Decode($"{Escape}38;5;{colorId}m");
-            Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
-            Assert.That(GetGraphicsAttributes().ForegroundRGBColor, Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            Decode($"{Escape}{(isForeground ? "38" : "48")};5;{colorId}m");
+            if (isForeground)
+            {
+                Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
+                Assert.That(GetGraphicsAttributes().ForegroundRGBColor,
+                    Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            }
+            else
+            {
+                Assert.That(GetGraphicsAttributes().Background, Is.EqualTo(AnsiColor.Rgb));
+                Assert.That(GetGraphicsAttributes().BackgroundRGBColor,
+                    Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            }
+        }
+
+        [TestCase(true, 0, AnsiColor.Black)] // default black
+        [TestCase(true, 7, AnsiColor.White)] // default white
+        [TestCase(true, 8, AnsiColor.BrightBlack)] // default white
+        [TestCase(true, 15, AnsiColor.BrightWhite)] // default white
+        [TestCase(false, 0, AnsiColor.Black)] // default black
+        [TestCase(false, 7, AnsiColor.White)] // default white
+        [TestCase(false, 8, AnsiColor.BrightBlack)] // default white
+        [TestCase(false, 15, AnsiColor.BrightWhite)] // default white
+        public void When_SGR_38_Attributes_Is_Setting_DefaultColors_When_In_DefaultRange_0_15(bool isForeground,
+            int colorId, AnsiColor color)
+        {
+            Decode($"{Escape}{(isForeground ? "38" : "48")};5;{colorId}m");
+            if (isForeground)
+            {
+                Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(color));
+                Assert.That(GetGraphicsAttributes().ForegroundRGBColor, Is.EqualTo((RgbColor)default));
+            }
+            else
+            {
+                Assert.That(GetGraphicsAttributes().Background, Is.EqualTo(color));
+                Assert.That(GetGraphicsAttributes().BackgroundRGBColor, Is.EqualTo((RgbColor)default));
+            }
         }
 
         private GraphicAttributes GetGraphicsAttributes(int columnNumber = 1)

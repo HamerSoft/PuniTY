@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -43,12 +44,27 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             if (isCustomColor)
             {
+                AnsiColor? parsedColor = null;
                 if (customColor[0] == 2)
                     customColor = Parse24BitColor(customColor);
                 else if (customColor[0] == 5)
-                    customColor = Parse8BitColor(customColor);
+                {
+                    customColor = Parse8BitColor(customColor, out parsedColor);
+                    if (parsedColor.HasValue)
+                    {
+                        GraphicRendition coloring = graphicsParameters.Last();
+                        graphicsParameters.Remove(coloring);
+                        var newColorRendition = AnsiColorToGraphicRendition(coloring, parsedColor.Value);
+                        if (newColorRendition.HasValue)
+                            graphicsParameters.Add(newColorRendition.Value);
+                        else
+                        {
+                            parsedColor = null;
+                        }
+                    }
+                }
 
-                if (customColor == null)
+                if (customColor == null && parsedColor == null)
                 {
                     Logger.Error(
                         $"Failed to parse GraphicsRendition parameters {parameters}, invalid custom color {string.Join(';', customColor)}. Skipping command...");
@@ -61,8 +77,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private int?[] Parse8BitColor(int?[] customColor, out AnsiColor? defaultColor)
         {
-            int?[] AnsiToRgb(int colorId)
+            defaultColor = null;
+
+            int?[] AnsiToRgb(int colorId, out AnsiColor? defaultAnsiColor)
             {
+                defaultAnsiColor = null;
+                if (colorId is >= 0 and <= 15)
+                {
+                    defaultAnsiColor = (AnsiColor)colorId;
+                }
+
                 // handle greyscale
                 if (colorId >= 232)
                 {
@@ -84,7 +108,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             if (!customColor[1].HasValue)
                 return null;
             var colorId = customColor[1].Value;
-            return AnsiToRgb(colorId);
+            return AnsiToRgb(colorId, out defaultColor);
         }
 
         private int?[] Parse24BitColor(int?[] customColor)
@@ -99,6 +123,21 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 Math.Clamp(customColor[2].Value, 0, 255),
                 Math.Clamp(customColor[3].Value, 0, 255)
             };
+        }
+
+        private GraphicRendition? AnsiColorToGraphicRendition(GraphicRendition oldRendition, AnsiColor color)
+        {
+            int colorOffset = oldRendition == GraphicRendition.ForegroundColor ? 0 : 10;
+            if ((int)color is >= 0 and <= 7)
+            {
+                return (GraphicRendition)(30 + color + colorOffset);
+            }
+            else if ((int)color is >= 8 and <= 15)
+            {
+                return (GraphicRendition)(82 + color + colorOffset);
+            }
+
+            return null;
         }
     }
 }
