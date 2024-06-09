@@ -16,7 +16,9 @@
 
     public struct RgbColor
     {
-        public int R, G, B;
+        public readonly int R;
+        public readonly int G;
+        public readonly int B;
 
         public RgbColor(int r, int g, int b)
         {
@@ -51,7 +53,11 @@
         public AnsiColor Foreground { get; set; }
         public AnsiColor Background { get; set; }
         public RgbColor ForegroundRGBColor { get; set; }
+        public RgbColor UnderLineColorRGBColor { get; set; }
         public RgbColor BackgroundRGBColor { get; set; }
+        public bool IsFramed { get; set; }
+        public bool IsEncircled { get; set; }
+        public bool IsOverLined { get; set; }
 
         public GraphicAttributes(AnsiColor foreground, AnsiColor backGround)
         {
@@ -60,7 +66,10 @@
             IsBold = false;
             IsFaint = false;
             IsItalic = false;
+            IsFramed = false;
+            IsEncircled = false;
             IsConcealed = false;
+            IsOverLined = false;
             IsStrikeThrough = false;
             IsProportionalSpaced = false;
             BlinkSpeed = BlinkSpeed.None;
@@ -68,6 +77,7 @@
             Foreground = _foreground;
             Background = _backGround;
             ForegroundRGBColor = default;
+            UnderLineColorRGBColor = default;
             BackgroundRGBColor = default;
         }
 
@@ -76,7 +86,10 @@
             IsBold = false;
             IsFaint = false;
             IsItalic = false;
+            IsFramed = false;
+            IsEncircled = false;
             IsConcealed = false;
+            IsOverLined = false;
             IsStrikeThrough = false;
             IsProportionalSpaced = false;
             BlinkSpeed = BlinkSpeed.None;
@@ -85,6 +98,7 @@
             Background = _backGround;
             ForegroundRGBColor = default;
             BackgroundRGBColor = default;
+            UnderLineColorRGBColor = default;
         }
 
         public override bool Equals(object obj)
@@ -93,21 +107,39 @@
                    && other.Background == Background
                    && other.Foreground == Foreground
                    && other.IsConcealed == IsConcealed
+                   && other.IsEncircled == IsEncircled
+                   && other.IsOverLined == IsOverLined
                    && other.IsBold == IsBold
                    && other.IsFaint == IsFaint
+                   && other.IsFramed == IsFramed
                    && other.IsStrikeThrough == IsStrikeThrough
                    && other.IsItalic == IsItalic
                    && other.IsProportionalSpaced == IsProportionalSpaced
                    && other.BlinkSpeed == BlinkSpeed
                    && other.UnderlineMode == UnderlineMode
                    && other.ForegroundRGBColor.Equals(ForegroundRGBColor)
+                   && other.UnderLineColorRGBColor.Equals(UnderLineColorRGBColor)
                    && other.BackgroundRGBColor.Equals(BackgroundRGBColor);
         }
 
         public override int GetHashCode()
         {
-            return (BlinkSpeed, Foreground, IsConcealed, IsBold, IsFaint, IsStrikeThrough, IsItalic,
-                IsProportionalSpaced, BlinkSpeed, UnderlineMode, ForegroundRGBColor, BackgroundRGBColor).GetHashCode();
+            return (BlinkSpeed,
+                Foreground,
+                IsConcealed,
+                IsEncircled,
+                IsOverLined,
+                IsBold,
+                IsFaint,
+                IsFramed,
+                IsStrikeThrough,
+                IsItalic,
+                IsProportionalSpaced,
+                BlinkSpeed,
+                UnderlineMode,
+                ForegroundRGBColor,
+                UnderLineColorRGBColor,
+                BackgroundRGBColor).GetHashCode();
         }
     }
 }

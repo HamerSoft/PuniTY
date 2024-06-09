@@ -189,6 +189,22 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.Italic:
                         _currentGraphicAttributes.IsItalic = true;
                         break;
+                    case GraphicRendition.Framed:
+                        _currentGraphicAttributes.IsFramed = true;
+                        break;
+                    case GraphicRendition.OverLined:
+                        _currentGraphicAttributes.IsOverLined = true;
+                        break;
+                    case GraphicRendition.NoOverLined:
+                        _currentGraphicAttributes.IsOverLined = false;
+                        break;
+                    case GraphicRendition.Encircled:
+                        _currentGraphicAttributes.IsEncircled = true;
+                        break;
+                    case GraphicRendition.NotFramedOrEncircled:
+                        _currentGraphicAttributes.IsFramed = false;
+                        _currentGraphicAttributes.IsEncircled = false;
+                        break;
                     case GraphicRendition.StrikeThrough:
                         _currentGraphicAttributes.IsStrikeThrough = true;
                         break;
@@ -205,6 +221,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.Inverse:
                         (_currentGraphicAttributes.Foreground, _currentGraphicAttributes.Background) = (
                             _currentGraphicAttributes.Background, _currentGraphicAttributes.Foreground);
+                        (_currentGraphicAttributes.ForegroundRGBColor, _currentGraphicAttributes.BackgroundRGBColor) = (
+                            _currentGraphicAttributes.BackgroundRGBColor, _currentGraphicAttributes.ForegroundRGBColor);
+                        _currentGraphicAttributes.UnderLineColorRGBColor = _currentGraphicAttributes.ForegroundRGBColor;
                         break;
                     case GraphicRendition.Conceal:
                         _currentGraphicAttributes.IsConcealed = true;
@@ -233,6 +252,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         break;
                     case GraphicRendition.ProportionalSpacing:
                         _currentGraphicAttributes.IsProportionalSpaced = true;
+                        break;
+                    case GraphicRendition.NoProportionalSpacing:
+                        _currentGraphicAttributes.IsProportionalSpaced = false;
                         break;
                     case GraphicRendition.ForegroundNormalBlack:
                         _currentGraphicAttributes.Foreground = AnsiColor.Black;
@@ -344,8 +366,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         break;
                     case GraphicRendition.ForegroundColor:
                         _currentGraphicAttributes.Foreground = AnsiColor.Rgb;
-                        _currentGraphicAttributes.ForegroundRGBColor = new RgbColor(customColor[0].Value,
-                            customColor[1].Value, customColor[2].Value);
+                        _currentGraphicAttributes.ForegroundRGBColor =
+                            _currentGraphicAttributes.UnderLineColorRGBColor = new RgbColor(customColor[0].Value,
+                                customColor[1].Value, customColor[2].Value);
                         break;
                     case GraphicRendition.BackgroundColor:
                         _currentGraphicAttributes.Background = AnsiColor.Rgb;

@@ -84,6 +84,29 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [Test]
+        public void When_SGR_7_Attributes_Are_InvertColors_Including_Custom_RGB_Colors()
+        {
+            int[] rgb = { 255, 0, 0 };
+            Decode($"{Escape}38;5;{196}m"); // <- 8bit red color
+            var attributes = GetGraphicsAttributes();
+            Assert.That(attributes.Foreground, Is.EqualTo(AnsiColor.Rgb));
+            Assert.That(attributes.ForegroundRGBColor,
+                Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            Assert.That(attributes.UnderLineColorRGBColor,
+                Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            Assert.That(attributes.Background, Is.EqualTo(AnsiColor.Black));
+
+            Decode($"{Escape}7m");
+            attributes = GetGraphicsAttributes(2);
+            Assert.That(attributes.Background, Is.EqualTo(AnsiColor.Rgb));
+            Assert.That(attributes.BackgroundRGBColor,
+                Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            Assert.That(attributes.Foreground, Is.EqualTo(AnsiColor.Black));
+            Assert.That(attributes.ForegroundRGBColor, Is.EqualTo((RgbColor)default));
+            Assert.That(attributes.UnderLineColorRGBColor, Is.EqualTo((RgbColor)default));
+        }
+
+        [Test]
         public void When_SGR_8_Attributes_Are_Concealed()
         {
             Decode($"{Escape}8m");
@@ -250,6 +273,14 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(GraphicRendition.ForegroundNormalMagenta, AnsiColor.Magenta)]
         [TestCase(GraphicRendition.ForegroundNormalCyan, AnsiColor.Cyan)]
         [TestCase(GraphicRendition.ForegroundNormalWhite, AnsiColor.White)]
+        [TestCase(GraphicRendition.ForegroundBrightBlack, AnsiColor.BrightBlack)]
+        [TestCase(GraphicRendition.ForegroundBrightRed, AnsiColor.BrightRed)]
+        [TestCase(GraphicRendition.ForegroundBrightGreen, AnsiColor.BrightGreen)]
+        [TestCase(GraphicRendition.ForegroundBrightYellow, AnsiColor.BrightYellow)]
+        [TestCase(GraphicRendition.ForegroundBrightBlue, AnsiColor.BrightBlue)]
+        [TestCase(GraphicRendition.ForegroundBrightMagenta, AnsiColor.BrightMagenta)]
+        [TestCase(GraphicRendition.ForegroundBrightCyan, AnsiColor.BrightCyan)]
+        [TestCase(GraphicRendition.ForegroundBrightWhite, AnsiColor.BrightWhite)]
         public void When_SGR_ForeGroundColor_Attributes_Are_Setting_AnsiColours(GraphicRendition graphicRendition,
             AnsiColor color)
         {
@@ -315,6 +346,138 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Assert.That(GetGraphicsAttributes().Background, Is.EqualTo(color));
                 Assert.That(GetGraphicsAttributes().BackgroundRGBColor, Is.EqualTo((RgbColor)default));
             }
+        }
+
+        [Test]
+        public void When_SGR_39_ForeGroundColor_Attributes_Are_Setting_DefaultColor()
+        {
+            Decode($"{Escape}{(int)GraphicRendition.ForegroundBrightBlue}m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.BrightBlue, AnsiColor.Black)));
+            Decode($"{Escape}39m");
+            Assert.That(GetGraphicsAttributes(2),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+        }
+
+        [TestCase(GraphicRendition.BackgroundNormalBlack, AnsiColor.Black)]
+        [TestCase(GraphicRendition.BackgroundNormalRed, AnsiColor.Red)]
+        [TestCase(GraphicRendition.BackgroundNormalGreen, AnsiColor.Green)]
+        [TestCase(GraphicRendition.BackgroundNormalYellow, AnsiColor.Yellow)]
+        [TestCase(GraphicRendition.BackgroundNormalBlue, AnsiColor.Blue)]
+        [TestCase(GraphicRendition.BackgroundNormalMagenta, AnsiColor.Magenta)]
+        [TestCase(GraphicRendition.BackgroundNormalCyan, AnsiColor.Cyan)]
+        [TestCase(GraphicRendition.BackgroundNormalWhite, AnsiColor.White)]
+        [TestCase(GraphicRendition.BackgroundBrightBlack, AnsiColor.BrightBlack)]
+        [TestCase(GraphicRendition.BackgroundBrightRed, AnsiColor.BrightRed)]
+        [TestCase(GraphicRendition.BackgroundBrightGreen, AnsiColor.BrightGreen)]
+        [TestCase(GraphicRendition.BackgroundBrightYellow, AnsiColor.BrightYellow)]
+        [TestCase(GraphicRendition.BackgroundBrightBlue, AnsiColor.BrightBlue)]
+        [TestCase(GraphicRendition.BackgroundBrightMagenta, AnsiColor.BrightMagenta)]
+        [TestCase(GraphicRendition.BackgroundBrightCyan, AnsiColor.BrightCyan)]
+        [TestCase(GraphicRendition.BackgroundBrightWhite, AnsiColor.BrightWhite)]
+        public void When_SGR_BackGroundColor_Attributes_Are_Setting_AnsiColours(GraphicRendition graphicRendition,
+            AnsiColor color)
+        {
+            Decode($"{Escape}{(int)graphicRendition}m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, color)));
+        }
+
+        [Test]
+        public void When_SGR_49_BackGroundColor_Attributes_Are_Setting_DefaultColor()
+        {
+            Decode($"{Escape}{(int)GraphicRendition.BackgroundBrightCyan}m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.BrightCyan)));
+            Decode($"{Escape}49m");
+            Assert.That(GetGraphicsAttributes(2),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+        }
+
+        [Test]
+        public void When_SGR_50_Attributes_Are_Disabling_ProportionallySpaced()
+        {
+            Decode($"{Escape}26m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsProportionalSpaced = true }));
+
+            Decode($"{Escape}50m");
+            Assert.That(GetGraphicsAttributes(2),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+        }
+
+        [Test]
+        public void When_SGR_51_Attributes_Are_Framed()
+        {
+            Decode($"{Escape}51m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsFramed = true }));
+        }
+
+        [Test]
+        public void When_SGR_52_Attributes_Are_Encircled()
+        {
+            Decode($"{Escape}52m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsEncircled = true }));
+        }
+
+        [Test]
+        public void When_SGR_53_Attributes_Are_Overlined()
+        {
+            Decode($"{Escape}53m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsOverLined = true }));
+        }
+
+        [Test]
+        public void When_SGR_54_Attributes_Are_NotFramedOrEncircled()
+        {
+            Decode($"{Escape}51m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsFramed = true }));
+
+            Decode($"{Escape}52m");
+            Assert.That(GetGraphicsAttributes(2),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsFramed = true, IsEncircled = true }));
+
+            Decode($"{Escape}54m");
+            Assert.That(GetGraphicsAttributes(3),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+        }
+
+        [Test]
+        public void When_SGR_55_Attributes_Are_NoLonger_Overlined()
+        {
+            Decode($"{Escape}53m");
+            Assert.That(GetGraphicsAttributes(),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)
+                    { IsOverLined = true }));
+            Decode($"{Escape}55m");
+            Assert.That(GetGraphicsAttributes(2),
+                Is.EqualTo(new GraphicAttributes(AnsiColor.White, AnsiColor.Black)));
+        }
+
+        [TestCase(196, new[] { 255, 0, 0 })] // red
+        [TestCase(21, new[] { 0, 0, 255 })] // blue
+        [TestCase(46, new[] { 0, 255, 0 })] // blue
+        [TestCase(133, new[] { 153, 51, 153 })] // pink'ish color
+        [TestCase(16, new[] { 0, 0, 0 })] // black
+        [TestCase(231, new[] { 255, 255, 255 })] // white
+        [TestCase(232, new[] { 8, 8, 8 })] // dark gray scale
+        [TestCase(244, new[] { 128, 128, 128 })] // mid gray scale
+        [TestCase(255, new[] { 238, 238, 238 })] // light gray scale
+        public void When_SGR_58_Attributes_Is_Setting_Custom_UnderLine_Color(int colorId, int[] rgb)
+        {
+            Decode($"{Escape}58;5;{colorId}m");
+            Assert.That(GetGraphicsAttributes().UnderLineColorRGBColor,
+                Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
         }
 
         private GraphicAttributes GetGraphicsAttributes(int columnNumber = 1)

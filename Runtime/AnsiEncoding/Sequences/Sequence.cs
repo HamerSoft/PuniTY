@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using ILogger = NUnit.Framework.Internal.ILogger;
+﻿using ILogger = NUnit.Framework.Internal.ILogger;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {

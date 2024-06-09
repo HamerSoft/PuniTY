@@ -16,7 +16,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
-            var arguments = parameters.Split(';');
+            var arguments = parameters.Split(';') ?? Array.Empty<string>();
             var graphicsParameters = new List<GraphicRendition>();
             var customColor = new int?[4];
             var customColorIndex = 0;
@@ -36,7 +36,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
                 else
                 {
-                    Logger.Error(
+                    Logger?.Error(
                         $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
                     return;
                 }
@@ -66,7 +66,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
                 if (customColor == null && parsedColor == null)
                 {
-                    Logger.Error(
+                    Logger?.Error(
                         $"Failed to parse GraphicsRendition parameters {parameters}, invalid custom color {string.Join(';', customColor)}. Skipping command...");
                     return;
                 }

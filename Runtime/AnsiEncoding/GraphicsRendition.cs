@@ -28,50 +28,58 @@
 
         /// Conceal     not widely supported
         Conceal = 8,
-        
+
         //StrikeThrough
         StrikeThrough = 9,
 
         /// Font selection (not sure which)
         Font1 = 10,
-        
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont1 = 11,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont2 = 12,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
-        AlternativeFont3= 13,
+        AlternativeFont3 = 13,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont4 = 14,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont5 = 15,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont6 = 16,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont7 = 17,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont8 = 18,
+
         /// <summary>
         /// Not Implemented!
         /// </summary>
         AlternativeFont9 = 19,
-        
+
         /// <summary>
         /// Not implemented (Gothic font)
         /// </summary>
@@ -82,7 +90,7 @@
 
         /// Intensity: Normal     not bold and not faint
         NormalIntensity = 22,
-        
+
         /// <summary>
         /// Disable Italic
         /// </summary>
@@ -93,7 +101,7 @@
 
         /// Blink: off     
         NoBlink = 25,
-        
+
         /// <summary>
         /// not sure what this means :D
         /// </summary>
@@ -106,7 +114,7 @@
 
         /// Reveal,     conceal off
         Reveal = 28,
-        
+
         /// <summary>
         /// Disable strikethrough mode
         /// </summary>
@@ -135,6 +143,18 @@
         BackgroundNormalWhite = 47,
         BackgroundColor = 48,
         BackgroundNormalReset = 49,
+
+        
+        /// <summary>
+        /// not sure what this means :D
+        /// </summary>
+        NoProportionalSpacing = 50,
+        Framed = 51,
+        Encircled = 52,
+        OverLined = 53,
+        NotFramedOrEncircled = 54,
+        NoOverLined = 55,
+        
 
         /// Set foreground color, high intensity (aixtem)
         ForegroundBrightBlack = 90,
