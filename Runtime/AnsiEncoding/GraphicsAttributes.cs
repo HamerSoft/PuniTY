@@ -14,7 +14,7 @@
         Double,
     }
 
-    public struct RgbColor
+    public readonly struct RgbColor
     {
         public readonly int R;
         public readonly int G;
@@ -31,6 +31,9 @@
         {
             return $"R:{R}, G:{G}, B:{B}";
         }
+
+        public static bool operator ==(RgbColor a, object b) => a.Equals(b);
+        public static bool operator !=(RgbColor a, object b) => !(a == b);
     }
 
     public struct GraphicAttributes

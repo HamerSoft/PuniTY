@@ -6,6 +6,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class GraphicsRenditionSequence : Sequence
     {
+        private const int ForegroundTextColor = 38;
+        private const int BackgroundTextColor = 48;
+        private const int UnderlineColor = 58;
+        
         public override char Command => 'm';
 
         public override void Execute(IScreen screen, string parameters)
@@ -27,7 +31,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
                 {
                     graphicsParameters.Add((GraphicRendition)parsedInteger);
-                    isCustomColor = parsedInteger is 38 or 48;
+                    isCustomColor = parsedInteger is ForegroundTextColor or BackgroundTextColor or UnderlineColor;
                 }
                 else if (isCustomColor && int.TryParse(arguments[i], out var colorInt))
                 {
@@ -138,6 +142,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             return (int)color switch
             {
                 >= 0 and <= 7 => (GraphicRendition)(foregroundColorStartIndex + color + colorOffset),
+                // ReSharper disable once PatternIsRedundant
                 >= 8 and <= 15 => (GraphicRendition)(backgroundColorStartIndex + color + colorOffset),
                 _ => null
             };

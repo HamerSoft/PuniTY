@@ -154,7 +154,8 @@
         OverLined = 53,
         NotFramedOrEncircled = 54,
         NoOverLined = 55,
-        
+        UnderLineColor = 58,
+        ResetUnderLineColor = 59,
 
         /// Set foreground color, high intensity (aixtem)
         ForegroundBrightBlack = 90,

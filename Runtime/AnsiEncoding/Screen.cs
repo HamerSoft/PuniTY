@@ -366,14 +366,25 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         break;
                     case GraphicRendition.ForegroundColor:
                         _currentGraphicAttributes.Foreground = AnsiColor.Rgb;
-                        _currentGraphicAttributes.ForegroundRGBColor =
-                            _currentGraphicAttributes.UnderLineColorRGBColor = new RgbColor(customColor[0].Value,
-                                customColor[1].Value, customColor[2].Value);
+                        var hasCustomUnderline = _currentGraphicAttributes.ForegroundRGBColor !=
+                                                 _currentGraphicAttributes.UnderLineColorRGBColor;
+                        _currentGraphicAttributes.ForegroundRGBColor = new RgbColor(customColor[0].Value,
+                            customColor[1].Value, customColor[2].Value);
+                        if (!hasCustomUnderline)
+                            _currentGraphicAttributes.UnderLineColorRGBColor =
+                                _currentGraphicAttributes.ForegroundRGBColor;
                         break;
                     case GraphicRendition.BackgroundColor:
                         _currentGraphicAttributes.Background = AnsiColor.Rgb;
                         _currentGraphicAttributes.BackgroundRGBColor = new RgbColor(customColor[0].Value,
                             customColor[1].Value, customColor[2].Value);
+                        break;
+                    case GraphicRendition.UnderLineColor:
+                        _currentGraphicAttributes.UnderLineColorRGBColor = new RgbColor(customColor[0].Value,
+                            customColor[1].Value, customColor[2].Value);
+                        break;
+                    case GraphicRendition.ResetUnderLineColor:
+                        _currentGraphicAttributes.UnderLineColorRGBColor = _currentGraphicAttributes.ForegroundRGBColor;
                         break;
                     case GraphicRendition.AlternativeFont1:
                     case GraphicRendition.AlternativeFont2:
