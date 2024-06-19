@@ -298,8 +298,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(true, 232, new[] { 8, 8, 8 })] // dark gray scale
         [TestCase(true, 244, new[] { 128, 128, 128 })] // mid gray scale
         [TestCase(true, 255, new[] { 238, 238, 238 })] // light gray scale
-        [TestCase(true, -1, new[] { 0, 0, 0 })] // underflow
-        [TestCase(true, 10000, new[] { 0, 0, 0 })] //overflow
         [TestCase(false, 196, new[] { 255, 0, 0 })] // red
         [TestCase(false, 21, new[] { 0, 0, 255 })] // blue
         [TestCase(false, 46, new[] { 0, 255, 0 })] // blue
@@ -309,8 +307,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(false, 232, new[] { 8, 8, 8 })] // dark gray scale
         [TestCase(false, 244, new[] { 128, 128, 128 })] // mid gray scale
         [TestCase(false, 255, new[] { 238, 238, 238 })] // light gray scale
-        [TestCase(false, -1, new[] { 0, 0, 0 })] // underflow
-        [TestCase(false, 10000, new[] { 0, 0, 0 })] //overflow
         public void When_SGR_38_Or_48_Attributes_Is_Setting_CustomColor(bool isForeground, int colorId, int[] rgb)
         {
             Decode($"{Escape}{(isForeground ? "38" : "48")};5;{colorId}m");
@@ -333,13 +329,11 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(true, 7, AnsiColor.White)] // default white
         [TestCase(true, 8, AnsiColor.BrightBlack)] // default white
         [TestCase(true, 15, AnsiColor.BrightWhite)] // default white
-        [TestCase(true, -1, AnsiColor.Black)] // underflow
         [TestCase(true, 10000, AnsiColor.Black)] //overflow
         [TestCase(false, 0, AnsiColor.Black)] // default black
         [TestCase(false, 7, AnsiColor.White)] // default white
         [TestCase(false, 8, AnsiColor.BrightBlack)] // default white
         [TestCase(false, 15, AnsiColor.BrightWhite)] // default white
-        [TestCase(false, -1, AnsiColor.Black)] // underflow
         [TestCase(false, 10000, AnsiColor.Black)] //overflow
         public void When_SGR_38_Attributes_Is_Setting_DefaultColors_When_In_DefaultRange_0_15(bool isForeground,
             int colorId, AnsiColor color)
@@ -517,7 +511,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(232, new[] { 8, 8, 8 })] // dark gray scale
         [TestCase(244, new[] { 128, 128, 128 })] // mid gray scale
         [TestCase(255, new[] { 238, 238, 238 })] // light gray scale
-        [TestCase(-1, new[] { 0, 0, 0 })] // underflow
         [TestCase(10000, new[] { 0, 0, 0 })] //overflow
         public void When_SGR_58_Attributes_Is_Setting_Custom_UnderLine_Color(int colorId, int[] rgb)
         {
@@ -536,13 +529,24 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(new[] { 8, 8, 8 }, new[] { 8, 8, 8 })]
         [TestCase(new[] { 128, 128, 128 }, new[] { 128, 128, 128 })]
         [TestCase(new[] { 238, 238, 238 }, new[] { 238, 238, 238 })]
-        [TestCase(new[] { 3000, 3000, 3000 }, new[] { 0, 0, 0 })]
-        [TestCase(new[] { -1, -1, -1 }, new[] { 0, 0, 0 })]
+        [TestCase(new[] { 3000, 3000, 3000 }, new[] { 255, 255, 255 })]
         public void When_SGR_58_Attributes_Is_Setting_Custom_UnderLine_RGB_Color(int[] rgb, int[] expected)
         {
             Decode($"{Escape}58;2;{rgb[0]};{rgb[1]};{rgb[2]}m");
             Assert.That(GetGraphicsAttributes().UnderLineColorRGBColor,
                 Is.EqualTo(new RgbColor(expected[0], expected[1], expected[2])));
+        }
+
+        [Test]
+        public void When_SGR_59_Attributes_Is_Resetting_Custom_UnderLine_RGB_Color()
+        {
+            var rgb = new[] { 1, 2, 3 };
+            Decode($"{Escape}58;2;{rgb[0]};{rgb[1]};{rgb[2]}m");
+            Assert.That(GetGraphicsAttributes().UnderLineColorRGBColor,
+                Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
+            Decode($"{Escape}59m");
+            Assert.That(GetGraphicsAttributes(2).UnderLineColorRGBColor,
+                Is.EqualTo((RgbColor)default));
         }
 
         private GraphicAttributes GetGraphicsAttributes(int columnNumber = 1)

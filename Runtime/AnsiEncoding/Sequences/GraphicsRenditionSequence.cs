@@ -9,7 +9,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private const int ForegroundTextColor = 38;
         private const int BackgroundTextColor = 48;
         private const int UnderlineColor = 58;
-        
+
         public override char Command => 'm';
 
         public override void Execute(IScreen screen, string parameters)
@@ -86,9 +86,17 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             int?[] AnsiToRgb(int colorId, out AnsiColor? defaultAnsiColor)
             {
                 defaultAnsiColor = null;
+
+                if (colorId > 255)
+                {
+                    defaultAnsiColor = AnsiColor.Black;
+                    return null;
+                }
+
                 if (colorId is >= 0 and <= 15)
                 {
                     defaultAnsiColor = (AnsiColor)colorId;
+                    return null;
                 }
 
                 // handle greyscale
