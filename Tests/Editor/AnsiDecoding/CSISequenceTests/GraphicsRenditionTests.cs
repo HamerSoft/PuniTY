@@ -549,6 +549,48 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Is.EqualTo((RgbColor)default));
         }
 
+        [Test]
+        public void When_SGR_60_Attributes_Is_Logging_Not_Supported()
+        {
+            Decode($"{Escape}60m");
+            LogAssert.Expect(LogType.Warning, "SGR command 60 not supported.");
+        }
+
+        [Test]
+        public void When_SGR_61_Attributes_Is_Logging_Not_Supported()
+        {
+            Decode($"{Escape}61m");
+            LogAssert.Expect(LogType.Warning, "SGR command 61 not supported.");
+        }
+
+        [Test]
+        public void When_SGR_62_Attributes_Is_Logging_Not_Supported()
+        {
+            Decode($"{Escape}62m");
+            LogAssert.Expect(LogType.Warning, "SGR command 62 not supported.");
+        }
+
+        [Test]
+        public void When_SGR_63_Attributes_Is_Logging_Not_Supported()
+        {
+            Decode($"{Escape}63m");
+            LogAssert.Expect(LogType.Warning, "SGR command 63 not supported.");
+        }
+
+        [Test]
+        public void When_SGR_64_Attributes_Is_Logging_Not_Supported()
+        {
+            Decode($"{Escape}64m");
+            LogAssert.Expect(LogType.Warning, "SGR command 64 not supported.");
+        }
+
+        [Test]
+        public void When_SGR_65_Attributes_Is_Logging_Not_Supported()
+        {
+            Decode($"{Escape}65m");
+            LogAssert.Expect(LogType.Warning, "SGR command 65 not supported.");
+        }
+
         private GraphicAttributes GetGraphicsAttributes(int columnNumber = 1)
         {
             Screen.AddCharacter('a');

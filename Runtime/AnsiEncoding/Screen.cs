@@ -399,6 +399,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.Font1:
                         _logger.LogWarning($"Trying to set GraphicsRendition Font {graphicRendition} now what!?");
                         break;
+                    case GraphicRendition.RightSideLine:
+                    case GraphicRendition.DoubleRightSideLine:
+                    case GraphicRendition.LeftSideLine:
+                    case GraphicRendition.DoubleLeftSideLine:
+                    case GraphicRendition.IdeogramStressMarking:
+                    case GraphicRendition.NoIdeogram:
+                        _logger.LogWarning($"SGR command {(int)graphicRendition} not supported.");
+                        break;
                     default:
                         throw new Exception("Unknown rendition command");
                 }

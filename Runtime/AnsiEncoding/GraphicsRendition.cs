@@ -156,6 +156,12 @@
         NoOverLined = 55,
         UnderLineColor = 58,
         ResetUnderLineColor = 59,
+        RightSideLine = 60,
+        DoubleRightSideLine = 61,
+        LeftSideLine = 62,
+        DoubleLeftSideLine = 63,
+        IdeogramStressMarking = 64,
+        NoIdeogram = 65,
 
         /// Set foreground color, high intensity (aixtem)
         ForegroundBrightBlack = 90,
