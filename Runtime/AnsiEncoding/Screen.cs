@@ -386,6 +386,15 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.ResetUnderLineColor:
                         _currentGraphicAttributes.UnderLineColorRGBColor = _currentGraphicAttributes.ForegroundRGBColor;
                         break;
+                    case GraphicRendition.SuperScript:
+                        _currentGraphicAttributes.ScriptMode = ScriptMode.SuperScript;
+                        break;
+                    case GraphicRendition.Subscript:
+                        _currentGraphicAttributes.ScriptMode = ScriptMode.SubScript;
+                        break;
+                    case GraphicRendition.NoSuperOrSubScript:
+                        _currentGraphicAttributes.ScriptMode = ScriptMode.None;
+                        break;
                     case GraphicRendition.AlternativeFont1:
                     case GraphicRendition.AlternativeFont2:
                     case GraphicRendition.AlternativeFont3:

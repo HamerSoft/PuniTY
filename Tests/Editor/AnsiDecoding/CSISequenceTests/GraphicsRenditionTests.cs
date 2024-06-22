@@ -591,6 +591,33 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             LogAssert.Expect(LogType.Warning, "SGR command 65 not supported.");
         }
 
+        [Test]
+        public void When_SGR_73_Attributes_Is_Setting_SuperScript()
+        {
+            Decode($"{Escape}73m");
+            Assert.That(GetGraphicsAttributes().ScriptMode,
+                Is.EqualTo(ScriptMode.SuperScript));
+        }
+
+        [Test]
+        public void When_SGR_74_Attributes_Is_Setting_SuperScript()
+        {
+            Decode($"{Escape}74m");
+            Assert.That(GetGraphicsAttributes().ScriptMode,
+                Is.EqualTo(ScriptMode.SubScript));
+        }
+
+        [Test]
+        public void When_SGR_75_Attributes_Is_Resetting_ScriptMode()
+        {
+            Decode($"{Escape}74m");
+            Assert.That(GetGraphicsAttributes().ScriptMode,
+                Is.EqualTo(ScriptMode.SubScript));
+            Decode($"{Escape}75m");
+            Assert.That(GetGraphicsAttributes(2).ScriptMode,
+                Is.EqualTo(ScriptMode.None));
+        }
+
         private GraphicAttributes GetGraphicsAttributes(int columnNumber = 1)
         {
             Screen.AddCharacter('a');

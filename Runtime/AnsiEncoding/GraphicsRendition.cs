@@ -162,6 +162,9 @@
         DoubleLeftSideLine = 63,
         IdeogramStressMarking = 64,
         NoIdeogram = 65,
+        SuperScript = 73,
+        Subscript = 74,
+        NoSuperOrSubScript = 75,
 
         /// Set foreground color, high intensity (aixtem)
         ForegroundBrightBlack = 90,

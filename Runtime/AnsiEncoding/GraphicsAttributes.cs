@@ -14,6 +14,13 @@
         Double,
     }
 
+    public enum ScriptMode
+    {
+        None,
+        SuperScript,
+        SubScript
+    }
+
     public readonly struct RgbColor
     {
         public readonly int R;
@@ -52,6 +59,7 @@
         public bool IsProportionalSpaced { get; set; }
         public UnderlineMode UnderlineMode { get; set; }
         public BlinkSpeed BlinkSpeed { get; set; }
+        public ScriptMode ScriptMode { get; set; }
         public bool IsConcealed { get; set; }
         public AnsiColor Foreground { get; set; }
         public AnsiColor Background { get; set; }
@@ -77,6 +85,7 @@
             IsProportionalSpaced = false;
             BlinkSpeed = BlinkSpeed.None;
             UnderlineMode = UnderlineMode.None;
+            ScriptMode = ScriptMode.None;
             Foreground = _foreground;
             Background = _backGround;
             ForegroundRGBColor = default;
@@ -97,6 +106,7 @@
             IsProportionalSpaced = false;
             BlinkSpeed = BlinkSpeed.None;
             UnderlineMode = UnderlineMode.None;
+            ScriptMode = ScriptMode.None;
             Foreground = _foreground;
             Background = _backGround;
             ForegroundRGBColor = default;
@@ -120,6 +130,7 @@
                    && other.IsProportionalSpaced == IsProportionalSpaced
                    && other.BlinkSpeed == BlinkSpeed
                    && other.UnderlineMode == UnderlineMode
+                   && other.ScriptMode == ScriptMode
                    && other.ForegroundRGBColor.Equals(ForegroundRGBColor)
                    && other.UnderLineColorRGBColor.Equals(UnderLineColorRGBColor)
                    && other.BackgroundRGBColor.Equals(BackgroundRGBColor);
@@ -140,6 +151,7 @@
                 IsProportionalSpaced,
                 BlinkSpeed,
                 UnderlineMode,
+                ScriptMode,
                 ForegroundRGBColor,
                 UnderLineColorRGBColor,
                 BackgroundRGBColor).GetHashCode();
