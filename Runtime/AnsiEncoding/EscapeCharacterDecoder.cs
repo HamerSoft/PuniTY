@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -10,6 +10,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private const byte EscapeCharacter = 0x1B; // ESC
         private const byte BellCharacter = 0x07; // BEL
         private const byte LeftBracketCharacter_ControlSequenceIntroducer = 0x5B; // [
+        private const byte RightBracketCharacter_OperatingSystemCommandIntroducer = 0x5D; // ]
         private const byte XonCharacter = 17;
         private const byte XoffCharacter = 19;
 
@@ -53,10 +54,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _outBuffer = new List<byte[]>();
         }
 
+
         internal bool IsValidParameterCharacter(char c, bool isOscCommand, bool isCSI)
         {
-            return isCSI && ((isOscCommand && c != BellCharacter) ||
-                                        (Char.IsNumber(c) || c == ';' || c == '"' || c == '?' || c == ']'));
+            if (isOscCommand)
+            {
+                return c != BellCharacter || Char.IsNumber(c) || c == ';' || c == '"' || c == '?';
+            }
+            else if (isCSI)
+                return Char.IsNumber(c) || c == ';' || c == '"' || c == '?';
+            return false;
         }
 
         internal void AddToCommandBuffer(byte data)
@@ -109,11 +116,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
                 int start = 1;
                 bool isESC_CSI = false;
+                bool isOscCommand = false;
                 // Is this a one or two byte escape code?
-                if (_commandBuffer[start] == LeftBracketCharacter_ControlSequenceIntroducer)
+                if ((isESC_CSI = _commandBuffer[start] == LeftBracketCharacter_ControlSequenceIntroducer)
+                    ||
+                    (isOscCommand = _commandBuffer[start] == RightBracketCharacter_OperatingSystemCommandIntroducer))
                 {
                     start++;
-                    isESC_CSI = true;
                     // It is a two byte escape code, but we still need more data
                     if (_commandBuffer.Count < 3)
                     {
@@ -121,8 +130,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     }
                 }
 
+
                 bool insideQuotes = false;
-                bool isOscCommand = false;
                 int end = start;
                 while (end < _commandBuffer.Count &&
                        (IsValidParameterCharacter((char)_commandBuffer[end], isOscCommand, isESC_CSI) || insideQuotes))

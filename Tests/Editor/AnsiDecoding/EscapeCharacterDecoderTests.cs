@@ -78,8 +78,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             string command = "\x001b]0;MINGW64:/c/Users/ruben/Projects/Unity/PuniTY";
             Decode(command, 0x07);
-            Assert.That('\a', Is.EqualTo(_decoder.Command));
-            Assert.That("0;MINGW64:/c/Users/ruben/Projects/Unity/PuniTY", Is.EqualTo(_decoder.Parameters));
+            Assert.That(_decoder.Command, Is.EqualTo('\a'));
+            Assert.That(_decoder.Parameters, Is.EqualTo("0;MINGW64:/c/Users/ruben/Projects/Unity/PuniTY"));
         }
 
         [Test]
