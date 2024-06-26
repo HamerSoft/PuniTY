@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 using UnityEngine;
@@ -384,6 +386,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 Assert.That(GetGraphicsAttributes().BackgroundRGBColor,
                     Is.EqualTo(new RgbColor(rgb[0], rgb[1], rgb[2])));
             }
+        }
+
+        [Test]
+        public void Can_Set_SGR_Colors_In_Sequence()
+        {
+            var foreGroundColor = new[] { 38, 5, 133 };
+            var backgroundColor = new[] { 48, 2, 8, 8, 8 };
+            var commandString = string.Join(';', foreGroundColor.Concat(backgroundColor));
+            Decode($"{Escape}{commandString}m");
+
+            Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
+            Assert.That(GetGraphicsAttributes().ForegroundRGBColor,
+                Is.EqualTo(new RgbColor(5, 5, 5)));
+            Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
+            Assert.That(GetGraphicsAttributes().ForegroundRGBColor,
+                Is.EqualTo(new RgbColor(153, 51, 153)));
         }
 
         [Test]

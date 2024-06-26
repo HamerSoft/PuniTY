@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class GraphicsRenditionSequence : Sequence
     {
+        public struct GraphicsPair
+        {
+            [CanBeNull] public int[] Color;
+            public GraphicRendition GraphicRendition;
+        }
+
         private const int ForegroundTextColor = 38;
         private const int BackgroundTextColor = 48;
         private const int UnderlineColor = 58;
+        private const int AnsiColorTableMarker = 5;
+        private const int RgbColorMarker = 2;
 
         public override char Command => 'm';
 
@@ -21,6 +30,73 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
 
             var arguments = parameters.Split(';') ?? Array.Empty<string>();
+            var graphicsRenditions = new List<GraphicsPair>();
+            for (int i = 0; i < arguments.Length; i++)
+            {
+                if (int.TryParse(arguments[i], out var parsedInteger) &&
+                    Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
+                {
+                    if (parsedInteger is ForegroundTextColor or BackgroundTextColor or UnderlineColor)
+                    {
+                        if (int.TryParse(arguments[++i], out var parsedColorMarker) &&
+                            parsedColorMarker is AnsiColorTableMarker)
+                        {
+                            if (int.TryParse(arguments[++i], out var ansiColorTable))
+                            {
+                                var rgb = Parse8BitColor(new int?[]{5,ansiColorTable}, out var ansiColor)
+                                graphicsRenditions.Add(new GraphicsPair()
+                                {
+                                    GraphicRendition = (GraphicRendition)parsedInteger, Color = Parse8BitColor()
+                                });
+                            }
+                            else
+                            {
+                                Logger?.Error(
+                                    $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...");
+                                return;
+                            }
+                        }
+                        else if (parsedColorMarker is RgbColorMarker)
+                        {
+                            if (int.TryParse(arguments[++i], out var r) &&
+                                int.TryParse(arguments[++i], out var g) &&
+                                int.TryParse(arguments[++i], out var b))
+                            {
+                                graphicsRenditions.Add(new GraphicsPair()
+                                {
+                                    GraphicRendition = (GraphicRendition)parsedInteger, Color = Parse24BitColor(r, g, b)
+                                });
+                            }
+                            else
+                            {
+                                Logger?.Error(
+                                    $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...");
+                                return;
+                            }
+                        }
+                        else // setting color, yet the marker is not set -> 2/5
+                        {
+                            Logger?.Error(
+                                $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        graphicsRenditions.Add(
+                            new GraphicsPair() { GraphicRendition = (GraphicRendition)parsedInteger });
+                    }
+                }
+
+                else
+                {
+                    Logger?.Error(
+                        $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
+                    return;
+                }
+            }
+
+
             var graphicsParameters = new List<GraphicRendition>();
             var customColor = new int?[4];
             var customColorIndex = 0;
@@ -123,19 +199,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             return AnsiToRgb(colorId, out defaultColor);
         }
 
-        private int?[] Parse24BitColor(int?[] customColor)
+        private int[] Parse24BitColor(int r, int g, int b)
         {
-            // ReSharper disable once ForCanBeConvertedToForeach
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            for (var i = 0; i < customColor.Length; i++)
-                if (!customColor[i].HasValue)
-                    return null;
-
-            return new int?[]
+            return new int[]
             {
-                Math.Clamp(customColor[1].Value, 0, 255),
-                Math.Clamp(customColor[2].Value, 0, 255),
-                Math.Clamp(customColor[3].Value, 0, 255)
+                Math.Clamp(r, 0, 255),
+                Math.Clamp(g, 0, 255),
+                Math.Clamp(b, 0, 255)
             };
         }
 
