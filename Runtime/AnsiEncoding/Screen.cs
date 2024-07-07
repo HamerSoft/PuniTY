@@ -171,11 +171,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _savedCursorPosition = Cursor.Position;
         }
 
-        public void SetGraphicsRendition(int?[] customColor, params GraphicRendition[] _graphicRenditions)
+        public void SetGraphicsRendition(params GraphicsRenditionSequence.GraphicsPair[] _graphicRenditions)
         {
-            foreach (GraphicRendition graphicRendition in _graphicRenditions)
+            foreach (GraphicsRenditionSequence.GraphicsPair graphicRendition in _graphicRenditions)
             {
-                switch (graphicRendition)
+                switch (graphicRendition.GraphicRendition)
                 {
                     case GraphicRendition.Reset:
                         _currentGraphicAttributes.Reset();
@@ -368,20 +368,20 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         _currentGraphicAttributes.Foreground = AnsiColor.Rgb;
                         var hasCustomUnderline = _currentGraphicAttributes.ForegroundRGBColor !=
                                                  _currentGraphicAttributes.UnderLineColorRGBColor;
-                        _currentGraphicAttributes.ForegroundRGBColor = new RgbColor(customColor[0].Value,
-                            customColor[1].Value, customColor[2].Value);
+                        _currentGraphicAttributes.ForegroundRGBColor = new RgbColor(graphicRendition.Color[0].Value,
+                            graphicRendition.Color[1].Value, graphicRendition.Color[2].Value);
                         if (!hasCustomUnderline)
                             _currentGraphicAttributes.UnderLineColorRGBColor =
                                 _currentGraphicAttributes.ForegroundRGBColor;
                         break;
                     case GraphicRendition.BackgroundColor:
                         _currentGraphicAttributes.Background = AnsiColor.Rgb;
-                        _currentGraphicAttributes.BackgroundRGBColor = new RgbColor(customColor[0].Value,
-                            customColor[1].Value, customColor[2].Value);
+                        _currentGraphicAttributes.BackgroundRGBColor = new RgbColor(graphicRendition.Color[0].Value,
+                            graphicRendition.Color[1].Value, graphicRendition.Color[2].Value);
                         break;
                     case GraphicRendition.UnderLineColor:
-                        _currentGraphicAttributes.UnderLineColorRGBColor = new RgbColor(customColor[0].Value,
-                            customColor[1].Value, customColor[2].Value);
+                        _currentGraphicAttributes.UnderLineColorRGBColor = new RgbColor(graphicRendition.Color[0].Value,
+                            graphicRendition.Color[1].Value, graphicRendition.Color[2].Value);
                         break;
                     case GraphicRendition.ResetUnderLineColor:
                         _currentGraphicAttributes.UnderLineColorRGBColor = _currentGraphicAttributes.ForegroundRGBColor;
@@ -414,7 +414,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     case GraphicRendition.DoubleLeftSideLine:
                     case GraphicRendition.IdeogramStressMarking:
                     case GraphicRendition.NoIdeogram:
-                        _logger.LogWarning($"SGR command {(int)graphicRendition} not supported.");
+                        _logger.LogWarning($"SGR command {(int)graphicRendition.GraphicRendition} not supported.");
                         break;
                     default:
                         throw new Exception("Unknown rendition command");

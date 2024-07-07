@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -9,7 +7,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     {
         public struct GraphicsPair
         {
-            [CanBeNull] public int[] Color;
+            public int?[] Color;
             public GraphicRendition GraphicRendition;
         }
 
@@ -31,6 +29,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             var arguments = parameters.Split(';') ?? Array.Empty<string>();
             var graphicsRenditions = new List<GraphicsPair>();
+            var graphicsParameters = new List<GraphicRendition>();
             for (int i = 0; i < arguments.Length; i++)
             {
                 if (int.TryParse(arguments[i], out var parsedInteger) &&
@@ -43,11 +42,23 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         {
                             if (int.TryParse(arguments[++i], out var ansiColorTable))
                             {
-                                var rgb = Parse8BitColor(new int?[]{5,ansiColorTable}, out var ansiColor)
-                                graphicsRenditions.Add(new GraphicsPair()
+                                var rgb = Parse8BitColor(new int?[] { 5, ansiColorTable }, out var ansiColor);
+                                if (ansiColor.HasValue)
                                 {
-                                    GraphicRendition = (GraphicRendition)parsedInteger, Color = Parse8BitColor()
-                                });
+                                    var newColorRendition = AnsiColorToGraphicRendition((GraphicRendition)parsedInteger,
+                                        ansiColor.Value);
+                                    if (newColorRendition.HasValue)
+                                        graphicsRenditions.Add(new GraphicsPair
+                                            { GraphicRendition = newColorRendition.Value });
+                                }
+                                else
+                                {
+                                    graphicsRenditions.Add(new GraphicsPair
+                                    {
+                                        GraphicRendition = (GraphicRendition)parsedInteger,
+                                        Color = rgb
+                                    });
+                                }
                             }
                             else
                             {
@@ -62,7 +73,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                                 int.TryParse(arguments[++i], out var g) &&
                                 int.TryParse(arguments[++i], out var b))
                             {
-                                graphicsRenditions.Add(new GraphicsPair()
+                                graphicsRenditions.Add(new GraphicsPair
                                 {
                                     GraphicRendition = (GraphicRendition)parsedInteger, Color = Parse24BitColor(r, g, b)
                                 });
@@ -84,35 +95,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     else
                     {
                         graphicsRenditions.Add(
-                            new GraphicsPair() { GraphicRendition = (GraphicRendition)parsedInteger });
+                            new GraphicsPair { GraphicRendition = (GraphicRendition)parsedInteger });
                     }
-                }
-
-                else
-                {
-                    Logger?.Error(
-                        $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
-                    return;
-                }
-            }
-
-
-            var graphicsParameters = new List<GraphicRendition>();
-            var customColor = new int?[4];
-            var customColorIndex = 0;
-            var isCustomColor = false;
-            for (int i = 0; i < arguments.Length; i++)
-            {
-                if (!isCustomColor && int.TryParse(arguments[i], out var parsedInteger) &&
-                    Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
-                {
-                    graphicsParameters.Add((GraphicRendition)parsedInteger);
-                    isCustomColor = parsedInteger is ForegroundTextColor or BackgroundTextColor or UnderlineColor;
-                }
-                else if (isCustomColor && int.TryParse(arguments[i], out var colorInt))
-                {
-                    customColor[customColorIndex] = colorInt;
-                    customColorIndex++;
                 }
                 else
                 {
@@ -122,37 +106,61 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
             }
 
-            if (isCustomColor)
-            {
-                AnsiColor? parsedColor = null;
-                if (customColor[0] == 2)
-                    customColor = Parse24BitColor(customColor);
-                else if (customColor[0] == 5)
-                {
-                    customColor = Parse8BitColor(customColor, out parsedColor);
-                    if (parsedColor.HasValue)
-                    {
-                        GraphicRendition coloring = graphicsParameters.Last();
-                        graphicsParameters.Remove(coloring);
-                        var newColorRendition = AnsiColorToGraphicRendition(coloring, parsedColor.Value);
-                        if (newColorRendition.HasValue)
-                            graphicsParameters.Add(newColorRendition.Value);
-                        else
-                        {
-                            parsedColor = null;
-                        }
-                    }
-                }
+            // var customColor = new int?[4];
+            // var customColorIndex = 0;
+            // var isCustomColor = false;
+            // for (int i = 0; i < arguments.Length; i++)
+            // {
+            //     if (!isCustomColor && int.TryParse(arguments[i], out var parsedInteger) &&
+            //         Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
+            //     {
+            //         graphicsParameters.Add((GraphicRendition)parsedInteger);
+            //         isCustomColor = parsedInteger is ForegroundTextColor or BackgroundTextColor or UnderlineColor;
+            //     }
+            //     else if (isCustomColor && int.TryParse(arguments[i], out var colorInt))
+            //     {
+            //         customColor[customColorIndex] = colorInt;
+            //         customColorIndex++;
+            //     }
+            //     else
+            //     {
+            //         Logger?.Error(
+            //             $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
+            //         return;
+            //     }
+            // }
+            //
+            // if (isCustomColor)
+            // {
+            //     AnsiColor? parsedColor = null;
+            //     if (customColor[0] == 2)
+            //         customColor = Parse24BitColor(customColor);
+            //     else if (customColor[0] == 5)
+            //     {
+            //         customColor = Parse8BitColor(customColor, out parsedColor);
+            //         if (parsedColor.HasValue)
+            //         {
+            //             GraphicRendition coloring = graphicsParameters.Last();
+            //             graphicsParameters.Remove(coloring);
+            //             var newColorRendition = AnsiColorToGraphicRendition(coloring, parsedColor.Value);
+            //             if (newColorRendition.HasValue)
+            //                 graphicsParameters.Add(newColorRendition.Value);
+            //             else
+            //             {
+            //                 parsedColor = null;
+            //             }
+            //         }
+            //     }
+            //
+            //     if (customColor == null && parsedColor == null)
+            //     {
+            //         Logger?.Error(
+            //             $"Failed to parse GraphicsRendition parameters {parameters}, invalid custom color {string.Join(';', customColor)}. Skipping command...");
+            //         return;
+            //     }
+            // }
 
-                if (customColor == null && parsedColor == null)
-                {
-                    Logger?.Error(
-                        $"Failed to parse GraphicsRendition parameters {parameters}, invalid custom color {string.Join(';', customColor)}. Skipping command...");
-                    return;
-                }
-            }
-
-            screen.SetGraphicsRendition(customColor, graphicsParameters.ToArray());
+            screen.SetGraphicsRendition(graphicsRenditions.ToArray());
         }
 
         private int?[] Parse8BitColor(int?[] customColor, out AnsiColor? defaultColor)
@@ -199,9 +207,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             return AnsiToRgb(colorId, out defaultColor);
         }
 
-        private int[] Parse24BitColor(int r, int g, int b)
+        private int?[] Parse24BitColor(int r, int g, int b)
         {
-            return new int[]
+            return new int?[]
             {
                 Math.Clamp(r, 0, 255),
                 Math.Clamp(g, 0, 255),

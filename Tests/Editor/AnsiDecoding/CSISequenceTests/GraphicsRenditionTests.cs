@@ -398,10 +398,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 
             Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
             Assert.That(GetGraphicsAttributes().ForegroundRGBColor,
-                Is.EqualTo(new RgbColor(5, 5, 5)));
-            Assert.That(GetGraphicsAttributes().Foreground, Is.EqualTo(AnsiColor.Rgb));
-            Assert.That(GetGraphicsAttributes().ForegroundRGBColor,
                 Is.EqualTo(new RgbColor(153, 51, 153)));
+            Assert.That(GetGraphicsAttributes().Background, Is.EqualTo(AnsiColor.Rgb));
+            Assert.That(GetGraphicsAttributes().BackgroundRGBColor,
+                Is.EqualTo(new RgbColor(8, 8, 8)));
         }
 
         [Test]
