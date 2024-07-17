@@ -171,9 +171,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _savedCursorPosition = Cursor.Position;
         }
 
-        public void SetGraphicsRendition(params GraphicsRenditionSequence.GraphicsPair[] _graphicRenditions)
+        public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions)
         {
-            foreach (GraphicsRenditionSequence.GraphicsPair graphicRendition in _graphicRenditions)
+            foreach (GraphicsPair graphicRendition in _graphicRenditions)
             {
                 switch (graphicRendition.GraphicRendition)
                 {

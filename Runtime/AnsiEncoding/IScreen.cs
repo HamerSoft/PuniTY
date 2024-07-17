@@ -2,6 +2,12 @@
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
+    public struct GraphicsPair
+    {
+        public int?[] Color;
+        public GraphicRendition GraphicRendition;
+    }
+
     public interface IScreen
     {
         public event Action<byte[]> Output;
@@ -17,7 +23,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         void Scroll(int lines, Direction direction);
         public void SaveCursor();
         public void RestoreCursor();
-        public void SetGraphicsRendition(params GraphicsRenditionSequence.GraphicsPair[] _graphicRenditions);
+        public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions);
 
         internal void Transmit(byte[] data);
     }

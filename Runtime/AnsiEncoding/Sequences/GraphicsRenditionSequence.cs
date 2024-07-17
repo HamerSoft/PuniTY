@@ -1,16 +1,11 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class GraphicsRenditionSequence : Sequence
     {
-        public struct GraphicsPair
-        {
-            public int?[] Color;
-            public GraphicRendition GraphicRendition;
-        }
-
         private const int ForegroundTextColor = 38;
         private const int BackgroundTextColor = 48;
         private const int UnderlineColor = 58;
@@ -27,9 +22,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
+            string errorMessage = null;
             var arguments = parameters.Split(';') ?? Array.Empty<string>();
             var graphicsRenditions = new List<GraphicsPair>();
-            var graphicsParameters = new List<GraphicRendition>();
             for (int i = 0; i < arguments.Length; i++)
             {
                 if (int.TryParse(arguments[i], out var parsedInteger) &&
@@ -62,9 +57,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                             }
                             else
                             {
-                                Logger?.Error(
-                                    $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...");
-                                return;
+                                errorMessage =
+                                    $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...";
                             }
                         }
                         else if (parsedColorMarker is RgbColorMarker)
@@ -80,16 +74,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                             }
                             else
                             {
-                                Logger?.Error(
-                                    $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...");
-                                return;
+                                errorMessage =
+                                    $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...";
                             }
                         }
                         else // setting color, yet the marker is not set -> 2/5
                         {
-                            Logger?.Error(
-                                $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...");
-                            return;
+                            errorMessage =
+                                $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Invalid Color, skipping command...";
                         }
                     }
                     else
@@ -106,59 +98,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
             }
 
-            // var customColor = new int?[4];
-            // var customColorIndex = 0;
-            // var isCustomColor = false;
-            // for (int i = 0; i < arguments.Length; i++)
-            // {
-            //     if (!isCustomColor && int.TryParse(arguments[i], out var parsedInteger) &&
-            //         Enum.IsDefined(typeof(GraphicRendition), parsedInteger))
-            //     {
-            //         graphicsParameters.Add((GraphicRendition)parsedInteger);
-            //         isCustomColor = parsedInteger is ForegroundTextColor or BackgroundTextColor or UnderlineColor;
-            //     }
-            //     else if (isCustomColor && int.TryParse(arguments[i], out var colorInt))
-            //     {
-            //         customColor[customColorIndex] = colorInt;
-            //         customColorIndex++;
-            //     }
-            //     else
-            //     {
-            //         Logger?.Error(
-            //             $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
-            //         return;
-            //     }
-            // }
-            //
-            // if (isCustomColor)
-            // {
-            //     AnsiColor? parsedColor = null;
-            //     if (customColor[0] == 2)
-            //         customColor = Parse24BitColor(customColor);
-            //     else if (customColor[0] == 5)
-            //     {
-            //         customColor = Parse8BitColor(customColor, out parsedColor);
-            //         if (parsedColor.HasValue)
-            //         {
-            //             GraphicRendition coloring = graphicsParameters.Last();
-            //             graphicsParameters.Remove(coloring);
-            //             var newColorRendition = AnsiColorToGraphicRendition(coloring, parsedColor.Value);
-            //             if (newColorRendition.HasValue)
-            //                 graphicsParameters.Add(newColorRendition.Value);
-            //             else
-            //             {
-            //                 parsedColor = null;
-            //             }
-            //         }
-            //     }
-            //
-            //     if (customColor == null && parsedColor == null)
-            //     {
-            //         Logger?.Error(
-            //             $"Failed to parse GraphicsRendition parameters {parameters}, invalid custom color {string.Join(';', customColor)}. Skipping command...");
-            //         return;
-            //     }
-            // }
+            if (!string.IsNullOrWhiteSpace(errorMessage))
+            {
+                Logger?.Error(errorMessage);
+                return;
+            }
 
             screen.SetGraphicsRendition(graphicsRenditions.ToArray());
         }
