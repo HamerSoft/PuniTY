@@ -14,8 +14,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
+        internal IScreenConfiguration ScreenConfiguration { get; }
 
         public void SetCursorPosition(Position position);
+        public void AddCharacter(char character);
         public ICharacter GetCharacter(Position position);
         public void MoveCursor(int cells, Direction direction);
         public void Erase(Position? from = null, Position? to = null);
@@ -26,6 +28,5 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions);
 
         internal void Transmit(byte[] data);
-        public void AddCharacter(char character);
     }
 }

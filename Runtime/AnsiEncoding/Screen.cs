@@ -11,6 +11,19 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     /// </summary>
     public class Screen : IScreen
     {
+        /// <summary>
+        /// Default configuration for the screen
+        /// </summary>
+        public readonly struct DefaultScreenConfiguration : IScreenConfiguration
+        {
+            public int TabStopSize { get; }
+
+            public DefaultScreenConfiguration(int tabStopSize = 8)
+            {
+                TabStopSize = tabStopSize;
+            }
+        }
+
         public readonly struct Dimensions
         {
             public readonly int Rows;
@@ -28,13 +41,17 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
+        IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
+
         private List<List<ICharacter>> _characters;
         private int _rowOffset;
         private Position? _savedCursorPosition;
         private GraphicAttributes _currentGraphicAttributes;
+        private IScreenConfiguration _screenConfiguration;
 
-        public Screen(Dimensions dimensions, ICursor cursor, ILogger logger)
+        public Screen(Dimensions dimensions, ICursor cursor, ILogger logger, IScreenConfiguration screenConfiguration)
         {
+            _screenConfiguration = screenConfiguration;
             _logger = logger;
             Rows = dimensions.Rows;
             Columns = dimensions.Columns;
