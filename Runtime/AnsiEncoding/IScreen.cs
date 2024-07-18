@@ -26,5 +26,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions);
 
         internal void Transmit(byte[] data);
+        public void AddCharacter(char character);
     }
 }
