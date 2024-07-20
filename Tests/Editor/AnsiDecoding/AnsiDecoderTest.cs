@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
 using UnityEngine;
+using ILogger = NUnit.Framework.Internal.ILogger;
+using Object = System.Object;
 using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -24,7 +27,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         protected class MockScreen : Screen
         {
             public MockScreen(int rows, int columns) : base(new Dimensions(rows, columns), new MockCursor(),
-                new EditorLogger())
+                new EditorLogger(), new DefaultScreenConfiguration())
             {
             }
         }
@@ -33,11 +36,29 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         protected MockScreen Screen;
         internal EscapeCharacterDecoder EscapeCharacterDecoder;
         protected const string Escape = "\x001b[";
+        protected HamerSoft.PuniTY.Logging.ILogger Logger;
 
         [SetUp]
         public virtual void SetUp()
         {
+            Logger = new EditorLogger();
             EscapeCharacterDecoder = new EscapeCharacterDecoder();
+        }
+
+        /// <summary>
+        /// Create new instance(s) of sequence(s), using reflection (tests only!)
+        /// </summary>
+        /// <returns>instance(s) with logger injected</returns>
+        protected Sequence[] CreateSequence(params Type[] types)
+        {
+            var sequences = new List<Sequence>();
+            foreach (var type in types)
+                if (type.IsSubclassOf(typeof(Sequence)))
+                    sequences.Add((Sequence)Activator.CreateInstance(type, new object[] { Logger }));
+                else
+                    throw new ArgumentException($"Invalid Sequence Type: {type.FullName}");
+
+            return sequences.ToArray();
         }
 
         protected void Decode(string input, params byte[] trailingBytes)

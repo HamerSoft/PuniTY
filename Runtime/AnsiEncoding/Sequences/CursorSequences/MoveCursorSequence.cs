@@ -1,4 +1,6 @@
-﻿namespace HamerSoft.PuniTY.AnsiEncoding
+﻿using ILogger = HamerSoft.PuniTY.Logging;
+
+namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public enum Direction
     {
@@ -13,6 +15,10 @@
         public abstract override char Command { get; }
         protected abstract Direction Direction { get; }
 
+        protected MoveCursorSequence(ILogger.ILogger logger) : base(logger)
+        {
+        }
+
         public override void Execute(IScreen screen, string parameters)
         {
             var cells = 1;
@@ -20,7 +26,7 @@
                 screen.MoveCursor(cells, Direction);
             else
             {
-                Logger.Warning($"Failed to parse move cursor command {Direction} => {parameters}");
+                Logger.LogWarning($"Failed to parse move cursor command {Direction} => {parameters}");
             }
         }
     }

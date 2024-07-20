@@ -13,10 +13,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(10, 10);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new SaveCursor(),
-                new SaveCursorDec(),
-                new RestoreCursor(),
-                new RestoreCursorDec());
+                CreateSequence(typeof(SaveCursor),
+                    typeof(SaveCursorDec),
+                    typeof(RestoreCursor),
+                    typeof(RestoreCursorDec)));
         }
 
         [Test]

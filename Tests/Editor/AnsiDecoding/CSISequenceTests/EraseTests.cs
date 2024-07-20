@@ -21,8 +21,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new EraseDisplaySequence(),
-                new EraseLineSequence());
+                CreateSequence(typeof(EraseDisplaySequence),
+                    typeof(EraseLineSequence)));
             PopulateScreen();
         }
 

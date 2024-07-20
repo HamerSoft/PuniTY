@@ -1,8 +1,14 @@
-﻿namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
+﻿using ILogger = HamerSoft.PuniTY.Logging;
+
+namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
 {
     public class EraseLineSequence : Sequence
     {
         public override char Command => 'K';
+
+        public EraseLineSequence(ILogger.ILogger logger) : base(logger)
+        {
+        }
 
         public override void Execute(IScreen screen, string parameters)
         {
@@ -13,7 +19,7 @@
 
             if (!int.TryParse(parameters, out var number))
             {
-                Logger.Warning($"Cannot erase line, failed to parse {parameters}");
+                Logger.LogWarning($"Cannot erase line, failed to parse {parameters}");
                 return;
             }
 
@@ -30,7 +36,7 @@
                         new Position(screen.Cursor.Position.Row, screen.Columns));
                     break;
                 default:
-                    Logger.Error($"Cannot Erase Display, Argument Out of range {parameters}");
+                    Logger.LogError($"Cannot Erase Display, Argument Out of range {parameters}");
                     break;
             }
         }

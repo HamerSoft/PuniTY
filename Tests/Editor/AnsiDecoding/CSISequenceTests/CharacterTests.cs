@@ -19,14 +19,14 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new InsertCharacterSequence());
+                CreateSequence(typeof(InsertCharacterSequence)));
             PopulateScreen();
         }
 
         private void PopulateScreen()
         {
-            for (int i = 0; i < ScreenRows; i++)
             for (int j = 0; j < ScreenColumns; j++)
+            for (int i = 0; i < ScreenRows; i++)
                 Screen.AddCharacter(DefaultChar);
             Screen.SetCursorPosition(new Position(1, 1));
         }

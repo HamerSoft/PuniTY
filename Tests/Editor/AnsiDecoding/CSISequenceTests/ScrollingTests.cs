@@ -20,8 +20,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new ScrollDownSequence(),
-                new ScrollUpSequence());
+                CreateSequence(typeof(ScrollDownSequence),
+                    typeof(ScrollUpSequence)));
             PopulateScreen();
         }
 
@@ -50,24 +50,24 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             PrintScreen();
             AssertScreen(ScreenRows, ScreenColumns, DefaultChar, DefaultChar, true);
         }
-        
-          [TestCase(1)]
-                [TestCase(2)]
-                public void When_Adding_Character_SmallerThan_ScreenMax_New_Row_Is_Added_And_OffSet_Is_Increased(
-                    int linesToScroll)
-                {
-                    Scroll(linesToScroll, Direction.Down);
-                    Screen.SetCursorPosition(new Position(1,1));
-                    for (int i = 0; i < linesToScroll; i++)
-                    for (int j = 0; j < ScreenColumns; j++)
-                        Screen.AddCharacter('g');
-        
-                    PrintScreen();
-                    AssertScreen( linesToScroll+1, ScreenColumns, 'g', DefaultChar, true);
-                    Scroll(linesToScroll, Direction.Up);
-                    PrintScreen();
-                    AssertScreen(ScreenRows, ScreenColumns, DefaultChar, DefaultChar, true);
-                }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        public void When_Adding_Character_SmallerThan_ScreenMax_New_Row_Is_Added_And_OffSet_Is_Increased(
+            int linesToScroll)
+        {
+            Scroll(linesToScroll, Direction.Down);
+            Screen.SetCursorPosition(new Position(1, 1));
+            for (int i = 0; i < linesToScroll; i++)
+            for (int j = 0; j < ScreenColumns; j++)
+                Screen.AddCharacter('g');
+
+            PrintScreen();
+            AssertScreen(linesToScroll + 1, ScreenColumns, 'g', DefaultChar, true);
+            Scroll(linesToScroll, Direction.Up);
+            PrintScreen();
+            AssertScreen(ScreenRows, ScreenColumns, DefaultChar, DefaultChar, true);
+        }
 
         private void Scroll(int lines, Direction direction)
         {

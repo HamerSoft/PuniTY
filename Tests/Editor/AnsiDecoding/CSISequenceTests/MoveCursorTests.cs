@@ -18,14 +18,14 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(10, 10);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new MoveCursorBackSequence(),
-                new MoveCursorForwardSequence(),
-                new MoveCursorUpSequence(),
-                new MoveCursorDownSequence(),
-                new MoveCursorNextLineSequence(),
-                new MoveCursorPreviousLineSequence(),
-                new MoveCursorToColumn(),
-                new SetCursorPositionSequence());
+                CreateSequence(typeof(MoveCursorBackSequence),
+                    typeof(MoveCursorForwardSequence),
+                    typeof(MoveCursorUpSequence),
+                    typeof(MoveCursorDownSequence),
+                    typeof(MoveCursorNextLineSequence),
+                    typeof(MoveCursorPreviousLineSequence),
+                    typeof(MoveCursorToColumn),
+                    typeof(SetCursorPositionSequence)));
         }
 
         [Test]

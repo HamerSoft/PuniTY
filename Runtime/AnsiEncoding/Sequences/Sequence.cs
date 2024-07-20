@@ -1,4 +1,4 @@
-﻿using ILogger = NUnit.Framework.Internal.ILogger;
+﻿using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -7,7 +7,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private const char DefaultSeparator = ';';
         private readonly IScreen _screen;
         public abstract char Command { get; }
-        protected ILogger Logger;
+        protected ILogger.ILogger Logger;
+
+        public Sequence(ILogger.ILogger logger)
+        {
+            Logger = logger;
+        }
 
         public abstract void Execute(IScreen screen, string parameters);
 
@@ -28,7 +33,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
                 else
                 {
-                    Logger.Warning(
+                    Logger.LogWarning(
                         $"{GetType().Name} failed to parse parameters: {parameters}. Invalid integer {arguments[i]}.");
                     output[i] = defaultValue;
                 }

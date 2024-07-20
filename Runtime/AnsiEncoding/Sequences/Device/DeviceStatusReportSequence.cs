@@ -1,4 +1,6 @@
-﻿namespace HamerSoft.PuniTY.AnsiEncoding.Device
+﻿using ILogger = HamerSoft.PuniTY.Logging;
+
+namespace HamerSoft.PuniTY.AnsiEncoding.Device
 {
     public class DeviceStatusReportSequence : TransmitSequence
     {
@@ -9,6 +11,10 @@
 
         public override char Command => 'n';
 
+        public DeviceStatusReportSequence(ILogger.ILogger logger) : base(logger)
+        {
+        }
+
         public override void Execute(IScreen screen, string parameters)
         {
             if (int.TryParse(parameters, out var six) && six == Six)
@@ -17,7 +23,7 @@
             }
             else
             {
-                Logger.Warning(
+                Logger.LogWarning(
                     $"Failed to get DeviceStatusReport, parameter: {parameters} is not an integer, or not equal to 6");
             }
         }

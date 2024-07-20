@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -14,11 +15,15 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public override char Command => 'm';
 
+        public GraphicsRenditionSequence(ILogger.ILogger logger) : base(logger)
+        {
+        }
+
         public override void Execute(IScreen screen, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                Logger.Warning("Invalid GraphicsRendition, no parameters given!");
+                Logger.LogWarning("Invalid GraphicsRendition, no parameters given!");
                 return;
             }
 
@@ -92,7 +97,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
                 else
                 {
-                    Logger?.Error(
+                    Logger?.LogError(
                         $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
                     return;
                 }
@@ -100,7 +105,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                Logger?.Error(errorMessage);
+                Logger?.LogError(errorMessage);
                 return;
             }
 

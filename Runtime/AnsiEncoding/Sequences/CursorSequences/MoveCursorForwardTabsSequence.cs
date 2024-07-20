@@ -1,25 +1,43 @@
-﻿namespace HamerSoft.PuniTY.AnsiEncoding
+﻿using ILogger = HamerSoft.PuniTY.Logging;
+
+namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class MoveCursorForwardTabsSequence : Sequence
     {
         public override char Command => 'I';
+
+        public MoveCursorForwardTabsSequence(ILogger.ILogger logger) : base(logger)
+        {
+        }
 
         public override void Execute(IScreen screen, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
                 parameters = "1";
 
-            var maxTabs = screen.Columns / screen.ScreenConfiguration.TabStopSize;
-            var currentTabStop = screen.Cursor.Position.Column / screen.ScreenConfiguration.TabStopSize;
+            if (!int.TryParse(parameters, out var desiredTabStop))
+                return;
 
-            if (currentTabStop < maxTabs)
+            var maxTabs = screen.Columns / screen.ScreenConfiguration.TabStopSize;
+            if (desiredTabStop > maxTabs)
             {
-                var cells = (currentTabStop + 1) * screen.ScreenConfiguration.TabStopSize -
-                            screen.Cursor.Position.Column;
-                screen.MoveCursor(
-                    cells,
-                    Direction.Forward);
+                Logger.LogWarning(
+                    $"Cannot move to tab stop greater than max! Max: {maxTabs}, Desired: {desiredTabStop}");
+                return;
             }
+
+            var currentTabStop = screen.Cursor.Position.Column / screen.ScreenConfiguration.TabStopSize;
+            var desiredPosition = desiredTabStop * screen.ScreenConfiguration.TabStopSize;
+            if (currentTabStop > desiredTabStop || desiredPosition < screen.Cursor.Position.Column)
+            {
+                Logger.LogWarning("Cannot move cursor backward, with forward tab command.");
+                return;
+            }
+
+            var cells = desiredPosition - screen.Cursor.Position.Column;
+            screen.MoveCursor(
+                cells,
+                Direction.Forward);
         }
     }
 }

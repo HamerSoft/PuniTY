@@ -19,7 +19,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen.Output += ScreenOnOutput;
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                new DeviceStatusReportSequence());
+                CreateSequence(typeof(DeviceStatusReportSequence)));
         }
 
         [Test]

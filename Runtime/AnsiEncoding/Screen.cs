@@ -16,11 +16,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// </summary>
         public readonly struct DefaultScreenConfiguration : IScreenConfiguration
         {
-            public int TabStopSize { get; }
+            private const int DefaultTabStopSize = 8;
+            private readonly int _customTabStopSize;
 
-            public DefaultScreenConfiguration(int tabStopSize = 8)
+            public int TabStopSize => _customTabStopSize > 0 ? _customTabStopSize : DefaultTabStopSize;
+
+            public DefaultScreenConfiguration(int tabStopSize)
             {
-                TabStopSize = tabStopSize;
+                _customTabStopSize = tabStopSize;
             }
         }
 
