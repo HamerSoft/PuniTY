@@ -447,6 +447,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             Output?.Invoke(data);
         }
 
+        public void InsertLines(int linesToInsert = 1)
+        {
+            var lines = linesToInsert.Repeat(()=> GenerateNewRow(Columns));
+        }
+
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
         {
             return Enumerable.Repeat<ICharacter>(new Character(), columns);
@@ -455,6 +460,23 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void ClearSaved()
         {
             _logger.Log("ScrollBack buffer not implemented.");
+        }
+    }
+
+    internal static class IntExtensions
+    {
+        public static List<T> Repeat<T>(this int amount, Func<T> generator)
+        {
+            if (generator == null)
+                return default;
+
+            var collection = new List<T>();
+            for (var i = 0; i < amount; i++)
+            {
+                collection.Add(generator());
+            }
+
+            return collection;
         }
     }
 }
