@@ -3,11 +3,11 @@ using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public class MoveCursorForwardTabsSequence : Sequence
+    public class MoveCursorBackwardTabsSequence : Sequence
     {
-        public override char Command => 'I';
+        public override char Command => 'Z';
 
-        public MoveCursorForwardTabsSequence(ILogger.ILogger logger) : base(logger)
+        public MoveCursorBackwardTabsSequence(ILogger.ILogger logger) : base(logger)
         {
         }
 
@@ -21,14 +21,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             var tabStopSize = screen.ScreenConfiguration.TabStopSize;
             var currentTabStop = screen.Cursor.Position.Column / screen.ScreenConfiguration.TabStopSize;
-            if (offset > screen.Columns - currentTabStop)
+            if (offset > currentTabStop)
             {
                 Logger.LogWarning(
-                    $"Cannot move tabstops greater than max tabstops");
+                    $"Cannot move tabstops smaller than 0");
                 return;
             }
 
-            var targetColumn = Math.Clamp(Math.Abs((currentTabStop + offset) * tabStopSize), 1, screen.Columns);
+            var targetColumn = Math.Clamp(Math.Abs((currentTabStop - offset) * tabStopSize), 1, screen.Columns);
             screen.SetCursorPosition(new Position(screen.Cursor.Position.Row, targetColumn));
         }
     }
