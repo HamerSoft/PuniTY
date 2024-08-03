@@ -6,7 +6,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Characters
     public class InsertCharacterSequence : Sequence
     {
         public override char Command => '@';
-        private const char EmptyCharacter = ' ';
+        private const char EmptyCharacter = '\0';
 
         public InsertCharacterSequence(ILogger.ILogger logger) : base(logger)
         {

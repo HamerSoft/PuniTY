@@ -1,5 +1,6 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.Characters;
+using HamerSoft.PuniTY.AnsiEncoding.Line;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -10,7 +11,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         private const int ScreenRows = 10;
         private const int ScreenColumns = 5;
         private const char DefaultChar = 'a';
-        private const char EmptyCharacter = ' ';
+        private const char EmptyCharacter = '\0';
 
         [SetUp]
         public override void SetUp()
@@ -19,7 +20,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                CreateSequence(typeof(InsertCharacterSequence)));
+                CreateSequence(typeof(InsertCharacterSequence), typeof(InsertLineSequence)));
             PopulateScreen();
         }
 
@@ -63,6 +64,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void InsertCharacterSequence_Stops_InsertingCharacters_Once_GreaterThan_Buffer()
         {
             Assert.DoesNotThrow(() => { Decode($"{Escape}10000@"); });
+        }
+
+        [TestCase(1, 1)]
+        [TestCase(1, 3)]
+        [TestCase(10, 3)]
+        public void InsertLineSequence_Inserts_Line_From_Cursor_Starting_Down(int startRow, int linesToInsert)
+        {
+            Screen.Cursor.SetPosition(new Position(startRow, 1));
+            Decode($"{Escape}{linesToInsert}L");
+            PrintScreen();
+            for (int i = 1; i <= ScreenColumns; i++)
+            for (int j = startRow; j <= linesToInsert; j++)
+            {
+                var actual = Screen.GetCharacter(new Position(j, i));
+                Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
+            }
         }
     }
 }

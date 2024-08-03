@@ -12,7 +12,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         private const int ScreenRows = 10;
         private const int ScreenColumns = 5;
         private const char DefaultChar = 'a';
-        private const char EmptyCharacter = ' ';
+        private const char EmptyCharacter = '\0';
 
         [SetUp]
         public override void SetUp()

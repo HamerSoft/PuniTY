@@ -3,7 +3,6 @@
     public interface ICharacter
     {
         public char Char { get; }
-        public bool IsValid { get; }
         public GraphicAttributes GraphicAttributes { get; }
     }
 }

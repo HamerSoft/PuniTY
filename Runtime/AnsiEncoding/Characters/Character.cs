@@ -3,10 +3,9 @@
     public struct Character : ICharacter
     {
         public char Char { get; private set; }
-        public bool IsValid => true;
         public GraphicAttributes GraphicAttributes { get; }
 
-        public Character(GraphicAttributes graphicAttributes, char c = ' ')
+        public Character(GraphicAttributes graphicAttributes, char c = '\0')
         {
             GraphicAttributes = graphicAttributes;
             Char = c;

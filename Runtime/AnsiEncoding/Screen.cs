@@ -449,7 +449,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void InsertLines(int linesToInsert = 1)
         {
-            var lines = linesToInsert.Repeat(()=> GenerateNewRow(Columns));
+            linesToInsert.For(() =>
+            {
+                _characters.Insert(Cursor.Position.Row - 1 + _rowOffset,
+                    new List<ICharacter>(GenerateNewRow(Columns)));
+            });
         }
 
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
@@ -472,11 +476,18 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             var collection = new List<T>();
             for (var i = 0; i < amount; i++)
-            {
                 collection.Add(generator());
-            }
 
             return collection;
+        }
+
+        public static void For(this int amount, Action generator)
+        {
+            if (generator == null)
+                return;
+
+            for (var i = 0; i < amount; i++)
+                generator();
         }
     }
 }
