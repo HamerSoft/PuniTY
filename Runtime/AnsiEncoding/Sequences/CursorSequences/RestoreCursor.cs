@@ -1,8 +1,9 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public class RestoreCursor : Sequence
+    public class RestoreCursor : CSISequence
     {
         public override char Command => 'u';
 
@@ -18,6 +19,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
     public class RestoreCursorDec : RestoreCursor
     {
+        public override SequenceType SequenceType => SequenceType.ESC;
         public override char Command => '8';
 
         public RestoreCursorDec(ILogger.ILogger logger) : base(logger)

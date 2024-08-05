@@ -1,8 +1,9 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.ScrollSequences
 {
-    public abstract class ScrollSequence : Sequence
+    public abstract class ScrollSequence : CSISequence
     {
         public abstract override char Command { get; }
         protected abstract Direction Direction { get; }

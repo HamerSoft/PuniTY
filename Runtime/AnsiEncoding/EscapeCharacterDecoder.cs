@@ -129,8 +129,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         return;
                     }
                 }
-
-
+                
                 bool insideQuotes = false;
                 int end = start;
                 while (end < _commandBuffer.Count &&

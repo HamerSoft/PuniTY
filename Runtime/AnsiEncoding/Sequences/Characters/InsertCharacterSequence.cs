@@ -1,9 +1,10 @@
 ﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Characters
 {
-    public class InsertCharacterSequence : Sequence
+    public class InsertCharacterSequence : CSISequence
     {
         public override char Command => '@';
         private const char EmptyCharacter = '\0';

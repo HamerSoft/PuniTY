@@ -1,8 +1,9 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    internal class MoveCursorPreviousLineSequence : Sequence
+    internal class MoveCursorPreviousLineSequence : CSISequence
     {
         public override char Command => 'F';
 

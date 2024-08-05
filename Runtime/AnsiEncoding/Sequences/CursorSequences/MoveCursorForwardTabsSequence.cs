@@ -1,9 +1,10 @@
 ﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public class MoveCursorForwardTabsSequence : Sequence
+    public class MoveCursorForwardTabsSequence : CSISequence
     {
         public override char Command => 'I';
 

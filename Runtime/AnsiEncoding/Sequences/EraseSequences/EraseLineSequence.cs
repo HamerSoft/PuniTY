@@ -1,8 +1,9 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
 {
-    public class EraseLineSequence : Sequence
+    public class EraseLineSequence : CSISequence
     {
         public override char Command => 'K';
 

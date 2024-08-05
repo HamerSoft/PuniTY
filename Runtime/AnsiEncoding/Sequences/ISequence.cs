@@ -53,8 +53,18 @@
     //     }
     // }
 
+
+    public enum SequenceType
+    {
+        ESC = 0, // sequence starting with ESC (\x1B)
+        CSI = 1, // Control Sequence Introducer: sequence starting with ESC [ or CSI (\x9B)
+        DCS = 2, // Device Control String: sequence starting with ESC P or DCS (\x90)
+        OSC = 3 //  Operating System Command: sequence starting with ESC ] or OSC (\x9D)
+    }
+
     public interface ISequence
     {
+        public SequenceType SequenceType { get; }
         public char Command { get; }
         public void Execute(IScreen screen, string parameters);
     }

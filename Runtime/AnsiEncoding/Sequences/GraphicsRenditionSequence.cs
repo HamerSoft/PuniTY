@@ -1,11 +1,12 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public class GraphicsRenditionSequence : Sequence
+    public class GraphicsRenditionSequence : CSISequence
     {
         private const int ForegroundTextColor = 38;
         private const int BackgroundTextColor = 48;

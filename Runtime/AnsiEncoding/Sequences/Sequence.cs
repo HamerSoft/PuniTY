@@ -5,8 +5,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     public abstract class Sequence : ISequence
     {
         private const char DefaultSeparator = ';';
-        private readonly IScreen _screen;
+        public abstract SequenceType SequenceType { get; }
         public abstract char Command { get; }
+        private readonly IScreen _screen;
         protected ILogger.ILogger Logger;
 
         public Sequence(ILogger.ILogger logger)

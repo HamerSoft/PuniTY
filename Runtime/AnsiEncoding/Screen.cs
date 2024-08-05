@@ -456,6 +456,25 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             });
         }
 
+        public void DeleteLines(int linesToDelete = 1)
+        {
+            if (Cursor.Position.Row - 1 + _rowOffset + linesToDelete > _characters.Count)
+            {
+                linesToDelete -= Math.Abs(_characters.Count - (Cursor.Position.Row - 1 + _rowOffset + linesToDelete));
+            }
+            
+            _characters.RemoveRange(Cursor.Position.Row - 1 + _rowOffset, linesToDelete);
+            var newRows = _characters.Count;
+            if (newRows <= Rows)
+            {
+                _rowOffset = 0;
+                if (newRows < Rows)
+                {
+                    (Rows - newRows).For(() => _characters.Add(new List<ICharacter>(GenerateNewRow(Columns))));
+                }
+            }
+        }
+
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
         {
             return Enumerable.Repeat<ICharacter>(new Character(), columns);

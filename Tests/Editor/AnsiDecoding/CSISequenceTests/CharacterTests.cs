@@ -20,7 +20,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen = new MockScreen(ScreenRows, ScreenColumns);
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
-                CreateSequence(typeof(InsertCharacterSequence), typeof(InsertLineSequence)));
+                CreateSequence(typeof(InsertCharacterSequence),
+                    typeof(InsertLineSequence),
+                    typeof(DeleteLineSequence)));
             PopulateScreen();
         }
 
@@ -66,6 +68,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.DoesNotThrow(() => { Decode($"{Escape}10000@"); });
         }
 
+        [Test]
+        public void InsertLineSequence_Inserts_1_Line_From_Cursor_Starting_Down_By_Default()
+        {
+            Screen.Cursor.SetPosition(new Position(1, 1));
+            Decode($"{Escape}L");
+            PrintScreen();
+            for (int i = 1; i <= ScreenColumns; i++)
+            for (int j = 1; j <= 1; j++)
+            {
+                var actual = Screen.GetCharacter(new Position(j, i));
+                Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
+            }
+        }
+
         [TestCase(1, 1)]
         [TestCase(1, 3)]
         [TestCase(10, 3)]
@@ -79,6 +95,57 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             {
                 var actual = Screen.GetCharacter(new Position(j, i));
                 Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
+            }
+        }
+
+        [Test]
+        public void DeleteLineSequence_Deletes_1_Line_From_Cursor_Starting_Down_By_Default()
+        {
+            Screen.Cursor.SetPosition(new Position(1, 1));
+            Decode($"{Escape}M");
+            for (int i = 1; i <= ScreenColumns; i++)
+            for (int j = 1; j <= ScreenRows; j++)
+            {
+                var actual = Screen.GetCharacter(new Position(j, i));
+                if (j < ScreenRows)
+                    Assert.That(actual.Char, Is.EqualTo(DefaultChar));
+                else
+                    Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
+            }
+        }
+
+        [TestCase(1, 1)]
+        [TestCase(1, 3)]
+        public void DeleteLineSequence_Deletes_Line_From_Cursor_Starting_Down(int startRow, int linesToDelete)
+        {
+            Screen.Cursor.SetPosition(new Position(startRow, 1));
+            Decode($"{Escape}{linesToDelete}M");
+            PrintScreen();
+            for (int i = 1; i <= ScreenColumns; i++)
+            for (int j = 1; j <= ScreenRows; j++)
+            {
+                var actual = Screen.GetCharacter(new Position(j, i));
+                if (j <= ScreenRows - linesToDelete)
+                    Assert.That(actual.Char, Is.EqualTo(DefaultChar));
+                else
+                    Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
+            }
+        }
+
+        [Test]
+        public void DeleteLineSequence_Deletes_Only_Lines_Within_Bounds()
+        {
+            Screen.Cursor.SetPosition(new Position(10, 1));
+            Decode($"{Escape}{2}M");
+            PrintScreen();
+            for (int i = 1; i <= ScreenColumns; i++)
+            for (int j = 1; j <= ScreenRows; j++)
+            {
+                var actual = Screen.GetCharacter(new Position(j, i));
+                if (j < ScreenRows)
+                    Assert.That(actual.Char, Is.EqualTo(DefaultChar));
+                else
+                    Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
             }
         }
     }

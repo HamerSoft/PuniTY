@@ -26,8 +26,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void SaveCursor();
         public void RestoreCursor();
         public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions);
+        public void InsertLines(int linesToInsert);
+        public void DeleteLines(int linesToDelete);
 
         internal void Transmit(byte[] data);
-        public void InsertLines(int linesToInsert);
     }
 }

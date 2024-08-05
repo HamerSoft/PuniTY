@@ -1,8 +1,9 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Device
 {
-    public class DeviceStatusReportSequence : TransmitSequence
+    public class DeviceStatusReportSequence : CSISequence
     {
         /// <summary>
         /// This command has a hardcoded 6 as parameter, other integers are invalid.

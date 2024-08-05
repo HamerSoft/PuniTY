@@ -1,8 +1,9 @@
-﻿using HamerSoft.PuniTY.Logging;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Line
 {
-    public class InsertLineSequence : Sequence
+    public class InsertLineSequence : CSISequence
     {
         public override char Command => 'L';
 
