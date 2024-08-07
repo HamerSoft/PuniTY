@@ -9,6 +9,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public string Characters = "";
         public char Command = ' ';
         public string Parameters = "";
+        public SequenceType SequenceType;
         internal readonly IEscapeCharacterDecoder EscapeCharacterDecorder;
 
         public MockEscapeCharacterDecoder(IEscapeCharacterDecoder decoder)
@@ -27,8 +28,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Characters += characters;
         }
 
-        private void OnProcessCommand(byte command, string parameter)
+        private void OnProcessCommand(SequenceType sequenceType, byte command, string parameter)
         {
+            SequenceType = sequenceType;
             Command = (char)command;
             Parameters = parameter;
         }
@@ -51,6 +53,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             string command = "\x001b[?2004h";
             Decode(command);
+            Assert.That(_decoder.SequenceType, Is.EqualTo(SequenceType.CSI));
             Assert.That(_decoder.Command, Is.EqualTo('h'));
             Assert.That(_decoder.Parameters, Is.EqualTo("?2004"));
         }
@@ -60,8 +63,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             string command = "\x001b[2J";
             Decode(command);
+            Assert.That(_decoder.SequenceType, Is.EqualTo(SequenceType.CSI));
             Assert.That(_decoder.Command, Is.EqualTo('J'));
             Assert.That(_decoder.Parameters, Is.EqualTo("2"));
+        }
+
+
+        [Test]
+        public void EscapeCharacterDecoder_Can_Detect_ESC_Command()
+        {
+            string command = "\x001b7";
+            Decode(command);
+            Assert.That(_decoder.SequenceType, Is.EqualTo(SequenceType.ESC));
+            Assert.That(_decoder.Command, Is.EqualTo('7'));
+            Assert.That(_decoder.Parameters, Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -78,6 +93,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             string command = "\x001b]0;MINGW64:/c/Users/ruben/Projects/Unity/PuniTY";
             Decode(command, 0x07);
+            Assert.That(_decoder.SequenceType, Is.EqualTo(SequenceType.OSC));
             Assert.That(_decoder.Command, Is.EqualTo('\a'));
             Assert.That(_decoder.Parameters, Is.EqualTo("0;MINGW64:/c/Users/ruben/Projects/Unity/PuniTY"));
         }

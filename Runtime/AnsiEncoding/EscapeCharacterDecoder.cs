@@ -30,7 +30,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private readonly List<byte[]> _outBuffer;
 
         public event Action<byte[]> ProcessOutput;
-        public event Action<byte, string> ProcessCommand;
+        public event Action<SequenceType, byte, string> ProcessCommand;
 
         public System.Text.Encoding Encoding
         {
@@ -63,6 +63,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
             else if (isCSI)
                 return Char.IsNumber(c) || c == ';' || c == '"' || c == '?';
+
             return false;
         }
 
@@ -115,10 +116,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
 
                 int start = 1;
-                bool isESC_CSI = false;
+                bool IsCsiCommand = false;
                 bool isOscCommand = false;
                 // Is this a one or two byte escape code?
-                if ((isESC_CSI = _commandBuffer[start] == LeftBracketCharacter_ControlSequenceIntroducer)
+                if ((IsCsiCommand = _commandBuffer[start] == LeftBracketCharacter_ControlSequenceIntroducer)
                     ||
                     (isOscCommand = _commandBuffer[start] == RightBracketCharacter_OperatingSystemCommandIntroducer))
                 {
@@ -129,11 +130,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                         return;
                     }
                 }
-                
+
                 bool insideQuotes = false;
                 int end = start;
                 while (end < _commandBuffer.Count &&
-                       (IsValidParameterCharacter((char)_commandBuffer[end], isOscCommand, isESC_CSI) || insideQuotes))
+                       (IsValidParameterCharacter((char)_commandBuffer[end], isOscCommand, IsCsiCommand) ||
+                        insideQuotes))
                 {
                     if (_commandBuffer[end] == '"')
                     {
@@ -177,7 +179,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
                 try
                 {
-                    OnProcessCommand(command, parameter);
+                    OnProcessCommand(GetSequenceType(IsCsiCommand, isOscCommand), command, parameter);
                 }
                 finally
                 {
@@ -216,6 +218,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     }
                 }
             }
+        }
+
+        private SequenceType GetSequenceType(bool isCsi, bool isOSC)
+        {
+            return (isCsi, isOSC) switch
+            {
+                (false, false) => SequenceType.ESC,
+                (true, false) => SequenceType.CSI,
+                (false, true) => SequenceType.OSC,
+            };
         }
 
         internal void ProcessNormalInput(byte data)
@@ -327,9 +339,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _commandBuffer = null;
         }
 
-        private void OnProcessCommand(byte command, string parameter)
+        private void OnProcessCommand(SequenceType sequenceType, byte command, string parameter)
         {
-            ProcessCommand?.Invoke(command, parameter);
+            ProcessCommand?.Invoke(sequenceType, command, parameter);
         }
 
         private void OnProcessOutput(byte[] output)
