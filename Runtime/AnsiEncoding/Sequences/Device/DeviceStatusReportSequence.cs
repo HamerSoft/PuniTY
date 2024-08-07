@@ -3,7 +3,7 @@ using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Device
 {
-    public class DeviceStatusReportSequence : CSISequence
+    public class DeviceStatusReportSequence : TransmitSequence
     {
         /// <summary>
         /// This command has a hardcoded 6 as parameter, other integers are invalid.

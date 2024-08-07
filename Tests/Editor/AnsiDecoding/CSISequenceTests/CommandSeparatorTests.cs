@@ -1,4 +1,5 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 
@@ -9,7 +10,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
     {
         private EmptySequence _sequence;
 
-        private class EmptySequence : Sequence
+        private class EmptySequence : ESCSequence
         {
             public override char Command { get; }
 
