@@ -40,6 +40,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         }
 
         private readonly ILogger _logger;
+        private readonly IScreenConfiguration _screenConfiguration;
         public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
@@ -50,7 +51,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private int _rowOffset;
         private Position? _savedCursorPosition;
         private GraphicAttributes _currentGraphicAttributes;
-        private IScreenConfiguration _screenConfiguration;
 
         public Screen(Dimensions dimensions, ICursor cursor, ILogger logger, IScreenConfiguration screenConfiguration)
         {
@@ -462,7 +462,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 linesToDelete -= Math.Abs(_characters.Count - (Cursor.Position.Row - 1 + _rowOffset + linesToDelete));
             }
-            
+
             _characters.RemoveRange(Cursor.Position.Row - 1 + _rowOffset, linesToDelete);
             var newRows = _characters.Count;
             if (newRows <= Rows)

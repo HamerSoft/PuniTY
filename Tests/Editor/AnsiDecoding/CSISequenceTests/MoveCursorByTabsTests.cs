@@ -20,7 +20,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
                 CreateSequence(typeof(MoveCursorForwardTabsSequence),
-                    typeof(MoveCursorBackwardTabsSequence)));
+                    typeof(MoveCursorBackwardTabsSequence),
+                    typeof(ResetTabStopSequence)));
         }
 
         [TestCase("", 1, 8)]
@@ -75,6 +76,13 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Decode($"{Escape}300Z");
             LogAssert.Expect(LogType.Warning, new Regex(""));
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(9));
+        }
+
+        [Test]
+        public void ResetTabStops_Logs_Warning_Not_Supported()
+        {
+            Decode($"{Escape}?5W");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
     }
 }
