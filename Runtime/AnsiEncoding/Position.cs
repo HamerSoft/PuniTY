@@ -18,5 +18,17 @@
                    && Row <= screen.Rows
                    && Column <= screen.Columns;
         }
+
+        public Position AddColumns(IScreen screen, int columnsToAdd)
+        {
+            int rowsToAdd = columnsToAdd / screen.Columns;
+            columnsToAdd -= rowsToAdd * screen.Columns;
+            return new Position(Row + rowsToAdd, Column + columnsToAdd);
+        }
+
+        public override string ToString()
+        {
+            return $"Position(row:{Row}, column:{Column})";
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.Characters;
 using HamerSoft.PuniTY.AnsiEncoding.Line;
 using NUnit.Framework;
@@ -21,6 +22,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             AnsiDecoder = new AnsiDecoder(Screen,
                 EscapeCharacterDecoder,
                 CreateSequence(typeof(InsertCharacterSequence),
+                    typeof(EraseCharacterSequence),
                     typeof(InsertLineSequence),
                     typeof(DeleteLineSequence)));
             PopulateScreen();
@@ -60,6 +62,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                     currentRow++;
                 }
             }
+        }
+
+        [TestCase(1)]
+        public void EraseCharacterSequence_Resets_Characters_Equal_To_Parameter(int charactersToDelete)
+        {
+            throw new NotImplementedException();
         }
 
         [Test]
