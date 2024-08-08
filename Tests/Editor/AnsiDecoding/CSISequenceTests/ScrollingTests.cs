@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.EraseSequences;
 using HamerSoft.PuniTY.AnsiEncoding.ScrollSequences;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
@@ -67,6 +70,13 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Scroll(linesToScroll, Direction.Up);
             PrintScreen();
             AssertScreen(ScreenRows, ScreenColumns, DefaultChar, DefaultChar, true);
+        }
+
+        [Test]
+        public void ScrollDownSequence_Checks_For_MouseTracking_And_Logs_WarningNotImplemented()
+        {
+            Decode($"{Escape}1;8;2;3T");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
         private void Scroll(int lines, Direction direction)
