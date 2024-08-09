@@ -18,6 +18,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void SetCursorPosition(Position position);
         public void AddCharacter(char character);
+        public void InsertCharacters(int charactersToInsert);
         public ICharacter GetCharacter(Position position);
         public void MoveCursor(int cells, Direction direction);
         public void Erase(Position? from = null, Position? to = null);

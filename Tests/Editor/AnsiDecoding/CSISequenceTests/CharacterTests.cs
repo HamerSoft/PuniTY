@@ -42,10 +42,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Decode($"{Escape}@");
             Assert.That(Screen.GetCharacter(new Position(1, 1)).Char, Is.EqualTo(EmptyCharacter));
         }
+        
+        [Test]
+        public void EraseCharacterSequence_By_Default_Erases_1_Character()
+        {
+            Decode($"{Escape}X");
+            Assert.That(Screen.GetCharacter(new Position(1, 1)).Char, Is.EqualTo(EmptyCharacter));
+        }
 
         [TestCase("1")]
         [TestCase("2")]
+        [TestCase("5")]
+        [TestCase("7")]
         [TestCase("10")]
+        [TestCase("13")]
         public void InsertCharacterSequence_Inserts_Chars_EqualTo_Parameter(string parameter)
         {
             int chars = int.Parse(parameter);
@@ -65,9 +75,31 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(7)]
+        [TestCase(10)]
+        [TestCase(13)]
         public void EraseCharacterSequence_Resets_Characters_Equal_To_Parameter(int charactersToDelete)
         {
-            throw new NotImplementedException();
+            int currentRow = 1;
+            int currentColumn = 1;
+            Decode($"{Escape}{charactersToDelete}X");
+            for (int i = 1; i <= charactersToDelete; i++)
+            {
+                Assert.That(Screen.GetCharacter(new Position(currentRow, currentColumn)).Char,
+                    Is.EqualTo(EmptyCharacter));
+                if (i == ScreenColumns)
+                {
+                    currentColumn = 1;
+                    currentRow++;
+                }
+            }
+        }
+        [Test]
+        public void EraseCharacterSequence_Stops_ErasingCharacters_Once_GreaterThan_Buffer()
+        {
+            Assert.DoesNotThrow(() => { Decode($"{Escape}10000X"); });
         }
 
         [Test]

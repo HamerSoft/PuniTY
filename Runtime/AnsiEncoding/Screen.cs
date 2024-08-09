@@ -105,6 +105,27 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
         }
 
+        public void InsertCharacters(int charactersToInsert)
+        {
+            for (var i = 0; i < charactersToInsert; i++)
+                _characters[Cursor.Position.Row + _rowOffset - 1].Insert(Cursor.Position.Column - 1, new Character());
+            
+            for (int i = Cursor.Position.Row + _rowOffset - 1; i < _characters.Count; i++)
+            {
+                var targetRow = _characters[i];
+                var overflow = targetRow.Skip(Columns).ToList();
+                targetRow.RemoveRange(Columns, targetRow.Count - Columns); // Remove excess characters
+                if (i == _characters.Count-1)
+                    _characters.Add(new List<ICharacter>());
+                _characters[i + 1].InsertRange(0, overflow);
+            }
+
+            for (int i = _characters[^1].Count; i < Columns; i++)
+            {
+                _characters[^1].Add(new Character());
+            }
+        }
+
         public void MoveCursor(int cells, Direction direction)
         {
             switch (direction)
