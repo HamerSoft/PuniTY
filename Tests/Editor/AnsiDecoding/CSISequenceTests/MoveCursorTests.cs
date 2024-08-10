@@ -25,7 +25,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                     typeof(MoveCursorNextLineSequence),
                     typeof(MoveCursorPreviousLineSequence),
                     typeof(MoveCursorToColumn),
-                    typeof(SetCursorPositionSequence)));
+                    typeof(SetCursorPositionSequence),
+                    typeof(CharacterPositionAbsoluteSequence)));
         }
 
         [Test]
@@ -221,6 +222,31 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             return new int[] { Screen.Cursor.Position.Row, Screen.Cursor.Position.Column };
         }
 
+        [Test]
+        public void CharacterPositionAbsoluteSequence_Moves_Cursor_To_Column_1_In_CurrentRow_By_Default()
+        {
+            Screen.SetCursorPosition(new Position(1, 4));
+            Decode($"{Escape}`");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+        }
+
+        [TestCase(2)]
+        [TestCase(4)]
+        [TestCase(10)]
+        public void CharacterPositionAbsoluteSequence_Moves_Cursor_To_Column_In_CurrentRow(int targetColumn)
+        {
+            Decode($"{Escape}{targetColumn}`");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, targetColumn)));
+        }
+
+        [TestCase(0)]
+        [TestCase(11)]
+        public void CharacterPositionAbsoluteSequence_Logs_Warning_When_Out_Of_Bounds(int targetColumn)
+        {
+            Decode($"{Escape}{targetColumn}`");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+        }
 
         private void SetCursorPosition(int row, int column, bool forceSeparator = false)
         {
