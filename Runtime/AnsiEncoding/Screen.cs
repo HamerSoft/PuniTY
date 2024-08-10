@@ -109,14 +109,21 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             for (var i = 0; i < charactersToInsert; i++)
                 _characters[Cursor.Position.Row + _rowOffset - 1].Insert(Cursor.Position.Column - 1, new Character());
-            
+
             for (int i = Cursor.Position.Row + _rowOffset - 1; i < _characters.Count; i++)
             {
                 var targetRow = _characters[i];
                 var overflow = targetRow.Skip(Columns).ToList();
-                targetRow.RemoveRange(Columns, targetRow.Count - Columns); // Remove excess characters
-                if (i == _characters.Count-1)
-                    _characters.Add(new List<ICharacter>());
+                if (overflow.Count == 0)
+                    continue;
+                if (targetRow.Count > Columns)
+                {
+                    targetRow.RemoveRange(Columns, targetRow.Count - Columns); // Remove excess characters
+
+                    if (i == _characters.Count - 1)
+                        _characters.Add(new List<ICharacter>());
+                }
+
                 _characters[i + 1].InsertRange(0, overflow);
             }
 
@@ -179,7 +186,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 case Direction.Up:
                     _rowOffset += lines;
-                    for (int i = currentRows; i < currentRows + _rowOffset; i++)
+                    for (int i = currentRows; i < Rows + _rowOffset; i++)
                         _characters.Add(new List<ICharacter>(GenerateNewRow(Columns)));
                     break;
                 case Direction.Down:

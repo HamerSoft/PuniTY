@@ -42,7 +42,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Decode($"{Escape}@");
             Assert.That(Screen.GetCharacter(new Position(1, 1)).Char, Is.EqualTo(EmptyCharacter));
         }
-        
+
         [Test]
         public void EraseCharacterSequence_By_Default_Erases_1_Character()
         {
@@ -74,6 +74,23 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             }
         }
 
+        [Test]
+        public void InsertCharacterSequence_Increases_Buffer()
+        {
+            Decode($"{Escape}1@");
+            Screen.Scroll(1, Direction.Up);
+            int row = ScreenRows;
+            int column = 1;
+            var expectedCharacter = DefaultChar;
+            do
+            {
+                var actual = Screen.GetCharacter(new Position(row, column)).Char;
+                Assert.That(actual, Is.EqualTo(expectedCharacter));
+                expectedCharacter = EmptyCharacter;
+                column++;
+            } while (column <= ScreenColumns);
+        }
+
         [TestCase(1)]
         [TestCase(2)]
         [TestCase(3)]
@@ -96,6 +113,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 }
             }
         }
+
         [Test]
         public void EraseCharacterSequence_Stops_ErasingCharacters_Once_GreaterThan_Buffer()
         {
