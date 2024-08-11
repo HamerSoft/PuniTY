@@ -30,5 +30,8 @@
         {
             return $"Position(row:{Row}, column:{Column})";
         }
+
+        public static bool operator ==(Position a, object b) => a.Equals(b);
+        public static bool operator !=(Position a, object b) => !(a == b);
     }
 }

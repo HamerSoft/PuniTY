@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.Characters;
 using HamerSoft.PuniTY.AnsiEncoding.Line;
 using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
@@ -24,7 +27,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 CreateSequence(typeof(InsertCharacterSequence),
                     typeof(EraseCharacterSequence),
                     typeof(InsertLineSequence),
-                    typeof(DeleteLineSequence)));
+                    typeof(DeleteLineSequence),
+                    typeof(RepeatPrecedingGraphicCharacter)));
             PopulateScreen();
         }
 
@@ -206,5 +210,31 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                     Assert.That(actual.Char, Is.EqualTo(EmptyCharacter));
             }
         }
+
+        [Test]
+        public void RepeatPrecedingGraphicCharacter_Repeats_By_1_By_Default()
+        {
+            Screen.AddCharacter('A');
+            Decode($"{Escape}b");
+            Assert.That(Screen.GetCharacter(new Position(1, 2)).Char, Is.EqualTo('A'));
+        }
+
+        [Test]
+        public void RepeatPrecedingGraphicCharacter_Logs_Warning_When_At_StartPosition()
+        {
+            Decode($"{Escape}b");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+            Assert.That(Screen.GetCharacter(new Position(1, 2)).Char, Is.EqualTo('a'));
+        }
+        
+        [TestCase(3)]
+        public void RepeatPrecedingGraphicCharacter_Repeats_Character_By_Given_Parameter(int repeats)
+        {
+            Screen.AddCharacter('A');
+            Decode($"{Escape}{repeats}b");
+            throw new Exception("write proper iterator for the screen already!");
+            Assert.That(Screen.GetCharacter(new Position(1, 2)).Char, Is.EqualTo('A'));
+        }
+
     }
 }
