@@ -18,6 +18,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public abstract void Execute(IScreen screen, string parameters);
 
+        protected bool TryParseInt(string parameters, out int value)
+        {
+            if (string.IsNullOrWhiteSpace(parameters))
+                parameters = "1";
+            return int.TryParse(parameters, out value);
+        }
+
         protected int[] GetCommandArguments(string parameters, int expectedAmount, int defaultValue,
             char separator = DefaultSeparator)
         {

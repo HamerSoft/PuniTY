@@ -14,9 +14,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public override void Execute(IScreen screen, string parameters)
         {
-            if (string.IsNullOrWhiteSpace(parameters))
-                parameters = "1";
-            if (!int.TryParse(parameters, out var targetColumn))
+            if (!TryParseInt(parameters, out var targetColumn))
             {
                 Logger.LogWarning($"Cannot move cursor to column given: {parameters}. Int expected");
                 return;
