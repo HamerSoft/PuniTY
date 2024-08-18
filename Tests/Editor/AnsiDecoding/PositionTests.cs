@@ -28,7 +28,39 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         [Test]
         public void Position_Operator_Tests()
         {
-            throw new NotImplementedException("add tests for operators");
+            // ==
+            Assert.IsTrue(new Position(1, 1) == new Position(1, 1));
+            Assert.IsFalse(new Position(1, 1) == new Position(1, 2));
+            // !=
+            Assert.IsTrue(new Position(1, 2) != new Position(1, 1));
+            Assert.IsFalse(new Position(1, 1) != new Position(1, 1));
+            // <
+            Assert.IsTrue(new Position(1, 1) < new Position(1, 2));
+            Assert.IsTrue(new Position(1, 1) < new Position(2, 1));
+            Assert.IsFalse(new Position(1, 1) < new Position(1, 1));
+            Assert.IsFalse(new Position(2, 1) < new Position(1, 1));
+            Assert.IsFalse(new Position(2, 4) < new Position(2, 2));
+
+            // >
+            Assert.IsTrue(new Position(2, 1) > new Position(1, 2));
+            Assert.IsTrue(new Position(2, 2) > new Position(2, 1));
+            Assert.IsFalse(new Position(1, 1) > new Position(1, 1));
+            Assert.IsFalse(new Position(1, 1) > new Position(1, 2));
+            Assert.IsFalse(new Position(2, 4) > new Position(4, 2));
+
+            // <=
+            Assert.IsTrue(new Position(1, 1) <= new Position(1, 2));
+            Assert.IsTrue(new Position(1, 1) <= new Position(2, 1));
+            Assert.IsTrue(new Position(1, 1) <= new Position(1, 1));
+            Assert.IsFalse(new Position(2, 1) <= new Position(1, 1));
+            Assert.IsFalse(new Position(2, 4) <= new Position(2, 2));
+
+            // >
+            Assert.IsTrue(new Position(2, 1) >= new Position(1, 2));
+            Assert.IsTrue(new Position(2, 2) >= new Position(2, 1));
+            Assert.IsTrue(new Position(1, 1) >= new Position(1, 1));
+            Assert.IsFalse(new Position(1, 1) >= new Position(1, 2));
+            Assert.IsFalse(new Position(2, 4) >= new Position(4, 2));
         }
     }
 }

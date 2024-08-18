@@ -36,11 +36,21 @@
 
         public static bool operator ==(Position a, object b) => a.Equals(b);
         public static bool operator !=(Position a, object b) => !(a == b);
-        public static bool operator >(Position a, object b) =>  b is Position other &&
-                                                                (a.Row < other.Row || a.Row == other.Row && a.Column < other.Column);
-        public static bool operator <(Position a, object b) => !(a > b);
-        public static bool operator >=(Position a, object b) =>  b is Position other &&
-                                                                 (a.Row < other.Row || a.Row == other.Row && a.Column <= other.Column);
-        public static bool operator <=(Position a, object b) => !(a >= b);
+
+        public static bool operator >(Position a, object b) => b is Position other &&
+                                                               (a.Row > other.Row || a.Row == other.Row &&
+                                                                   a.Column > other.Column);
+
+        public static bool operator <(Position a, object b) => b is Position other &&
+                                                               (a.Row < other.Row || a.Row == other.Row &&
+                                                                   a.Column < other.Column);
+
+        public static bool operator >=(Position a, object b) => b is Position other &&
+                                                                (a.Row < other.Row || a.Row == other.Row &&
+                                                                    a.Column >= other.Column);
+
+        public static bool operator <=(Position a, object b) => b is Position other &&
+                                                                (a.Row < other.Row || a.Row == other.Row &&
+                                                                    a.Column <= other.Column);
     }
 }
