@@ -1,6 +1,7 @@
 ﻿using System;
 using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 {
@@ -61,6 +62,30 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Assert.IsTrue(new Position(1, 1) >= new Position(1, 1));
             Assert.IsFalse(new Position(1, 1) >= new Position(1, 2));
             Assert.IsFalse(new Position(2, 4) >= new Position(4, 2));
+        }
+
+        [Test]
+        public void Position_CanBe_Created_With_Tuple()
+        {
+            Assert.That(new Position(3, 4), Is.EqualTo(new Position((3, 4))));
+        }
+
+        [Test]
+        public void Position_CanBe_Created_With_Vector2Int()
+        {
+            Assert.That(new Position(3, 4), Is.EqualTo(new Position(new Vector2Int(4, 3))));
+        }
+
+        [Test]
+        public void Position_With_Column_Only_Changes_Column()
+        {
+            Assert.That(new Position(2,8), Is.EqualTo(new Position(2,1).WithColumn(8)));
+        }
+        
+        [Test]
+        public void Position_With_Row_Only_Changes_Row()
+        {
+            Assert.That(new Position(5,8), Is.EqualTo(new Position(2,8).WithRow(5)));
         }
     }
 }
