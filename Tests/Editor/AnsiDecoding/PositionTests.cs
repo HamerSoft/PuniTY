@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -22,6 +23,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Screen.SetCursorPosition(new Position(startRow, startColumn));
             var actualPosition = Screen.Cursor.Position.AddColumns(Screen, columnsToAdd);
             Assert.That(actualPosition, Is.EqualTo(new Position(expectedRow, expectedColumn)));
+        }
+
+        [Test]
+        public void Position_Operator_Tests()
+        {
+            throw new NotImplementedException("add tests for operators");
         }
     }
 }

@@ -226,15 +226,21 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             LogAssert.Expect(LogType.Warning, new Regex(""));
             Assert.That(Screen.GetCharacter(new Position(1, 2)).Char, Is.EqualTo('a'));
         }
-        
+
         [TestCase(3)]
+        [TestCase(8)]
+        [TestCase(49)]
         public void RepeatPrecedingGraphicCharacter_Repeats_Character_By_Given_Parameter(int repeats)
         {
             Screen.AddCharacter('A');
             Decode($"{Escape}{repeats}b");
-            throw new Exception("write proper iterator for the screen already!");
-            Assert.That(Screen.GetCharacter(new Position(1, 2)).Char, Is.EqualTo('A'));
+            PrintScreen();
+            int index = 0;
+            foreach (var character in new ScreenIterator(Screen))
+            {
+                Assert.That(character.Char, index <= repeats ? Is.EqualTo('A') : Is.EqualTo(DefaultChar));
+                index++;
+            }
         }
-
     }
 }
