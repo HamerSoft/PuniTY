@@ -54,6 +54,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             return new Position(Row + rowsToAdd, Column + columnsToAdd);
         }
 
+        public Position Add(IScreen screen, Position position)
+        {
+            var columnsToAdd = position.Column + Column;
+            int rowsToAdd = columnsToAdd / screen.Columns;
+            columnsToAdd -= rowsToAdd * screen.Columns;
+            return new Position(Row + rowsToAdd + position.Row, columnsToAdd);
+        }
+        
         public override string ToString()
         {
             return $"Position(row:{Row}, column:{Column})";
