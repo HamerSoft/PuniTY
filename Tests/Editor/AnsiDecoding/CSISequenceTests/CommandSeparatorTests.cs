@@ -1,7 +1,6 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {

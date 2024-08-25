@@ -21,7 +21,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 EscapeCharacterDecoder,
                 CreateSequence(typeof(MoveCursorForwardTabsSequence),
                     typeof(MoveCursorBackwardTabsSequence),
-                    typeof(ResetTabStopSequence)));
+                    typeof(ResetTabStopSequence),
+                    typeof(TabClearSequence)));
         }
 
         [TestCase("", 1, 8)]
@@ -111,6 +112,23 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Screen.SetCursorPosition(new Position(1, 1));
             Decode($"{Escape}1I");
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(8));
+        }
+
+        [Test]
+        public void TabClearSequence_Clears_By_Next_TabStop_By_Default()
+        {
+            Decode($"{Escape}g");
+            Assert.That(Screen.GetNextTabStop(1), Is.EqualTo(2));
+        }
+
+        [TestCase(14, 3)]
+        [TestCase(24, 4)]
+        [TestCase(1, 2)]
+        public void TabClearSequence_Clears_By_Next_TabStop(int column, int expectedTabStop)
+        {
+            Screen.SetCursorPosition(new Position(1, column));
+            Decode($"{Escape}0g");
+            Assert.That(Screen.GetNextTabStop(column), Is.EqualTo(expectedTabStop));
         }
     }
 }

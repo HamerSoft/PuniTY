@@ -6,8 +6,6 @@ using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
 using UnityEngine;
-using ILogger = NUnit.Framework.Internal.ILogger;
-using Object = System.Object;
 using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -79,6 +77,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public virtual void TearDown()
         {
             EscapeCharacterDecoder.Dispose();
+            AnsiDecoder?.Dispose();
         }
 
         protected void PrintScreen()

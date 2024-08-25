@@ -17,7 +17,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public void Screen_ClearTabStop_Makes_CurrentTabStop_Skip()
         {
             Screen.ClearTabStop(1);
-            Assert.That(Screen.GetCurrentTabStop(1), Is.EqualTo(1));
+            Assert.That(Screen.GetCurrentTabStop(1), Is.EqualTo(0));
         }
 
         [TestCase(2, 2)]

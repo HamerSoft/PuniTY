@@ -25,6 +25,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 _customTabStopSize = tabStopSize;
             }
+
+            public DefaultScreenConfiguration(DefaultScreenConfiguration other)
+            {
+                _customTabStopSize = other.TabStopSize;
+            }
         }
 
         public readonly struct Dimensions
@@ -526,15 +531,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             var tabStopSize = _screenConfiguration.TabStopSize;
             if (column.HasValue)
             {
-                int tabStopToClear = column.Value % tabStopSize == 0
+                var tabStopToClear = column.Value % tabStopSize == 0
                     ? column.Value / tabStopSize
                     : (Math.Clamp(column.Value / tabStopSize, 0,
-                        Columns / tabStopSize) + 1) / tabStopSize;
+                        Columns / tabStopSize) + 1) ;// tabStopSize;
                 _clearedTabStops.Add(tabStopToClear);
             }
             else
             {
                 _screenConfiguration = new DefaultScreenConfiguration(1);
+                _clearedTabStops.Clear();
             }
         }
 

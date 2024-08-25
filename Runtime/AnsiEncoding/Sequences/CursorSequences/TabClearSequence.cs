@@ -1,7 +1,7 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using HamerSoft.PuniTY.Logging;
 
-namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
+namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class TabClearSequence : CSISequence
     {

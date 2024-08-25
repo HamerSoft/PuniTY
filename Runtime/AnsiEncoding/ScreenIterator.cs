@@ -29,7 +29,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public IEnumerator<ICharacter> GetEnumerator()
         {
-            if (_screen == null || _endPosition > _startPosition)
+            if (_screen == null || _endPosition < _startPosition)
                 yield break;
 
             for (int i = _startPosition.Row; i <= _endPosition.Row; i++)
