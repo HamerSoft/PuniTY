@@ -40,7 +40,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         }
 
         private readonly ILogger _logger;
-        private readonly IScreenConfiguration _screenConfiguration;
+        private IScreenConfiguration _screenConfiguration;
         public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
@@ -51,6 +51,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private int _rowOffset;
         private Position? _savedCursorPosition;
         private GraphicAttributes _currentGraphicAttributes;
+        private readonly HashSet<int> _clearedTabStops;
 
         public Screen(Dimensions dimensions, ICursor cursor, ILogger logger, IScreenConfiguration screenConfiguration)
         {
@@ -63,6 +64,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _rowOffset = 0;
             _currentGraphicAttributes = new GraphicAttributes(AnsiColor.White, AnsiColor.Black);
             PopulateScreen(Rows, Columns);
+            _clearedTabStops = new HashSet<int>();
         }
 
         private void PopulateScreen(int rows, int columns)
@@ -511,6 +513,75 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void ClearSaved()
         {
             _logger.Log("ScrollBack buffer not implemented.");
+        }
+
+        public void ResetTabStops()
+        {
+            _clearedTabStops.Clear();
+            _screenConfiguration = new DefaultScreenConfiguration();
+        }
+
+        public void ClearTabStop(int? column)
+        {
+            var tabStopSize = _screenConfiguration.TabStopSize;
+            if (column.HasValue)
+            {
+                int tabStopToClear = column.Value % tabStopSize == 0
+                    ? column.Value / tabStopSize
+                    : (Math.Clamp(column.Value / tabStopSize, 0,
+                        Columns / tabStopSize) + 1) / tabStopSize;
+                _clearedTabStops.Add(tabStopToClear);
+            }
+            else
+            {
+                _screenConfiguration = new DefaultScreenConfiguration(1);
+            }
+        }
+
+        public int GetNextTabStop(int column)
+        {
+            var tabStopSize = _screenConfiguration.TabStopSize;
+            var nextTabStop = Math.Clamp(column / tabStopSize + 1, 0,
+                Columns / tabStopSize);
+            while (_clearedTabStops.Contains(nextTabStop))
+                nextTabStop += 1;
+
+            return Math.Clamp(nextTabStop, 0, Columns / tabStopSize);
+        }
+
+        public int GetPreviousTabStop(int column)
+        {
+            var tabStopSize = _screenConfiguration.TabStopSize;
+            var previousTabStop = Math.Clamp(column / tabStopSize - 1, 0,
+                Columns / tabStopSize);
+            while (_clearedTabStops.Contains(previousTabStop))
+                previousTabStop -= 1;
+
+            return Math.Clamp(previousTabStop, 0, Columns / tabStopSize);
+        }
+
+        public int GetCurrentTabStop(int column)
+        {
+            var tabStopSize = _screenConfiguration.TabStopSize;
+            var currentTabStop = Math.Clamp(column / tabStopSize, 0,
+                Columns / tabStopSize);
+            while (_clearedTabStops.Contains(currentTabStop))
+                currentTabStop -= 1;
+
+            currentTabStop = Math.Clamp(currentTabStop, 0, Columns / _screenConfiguration.TabStopSize);
+            while (_clearedTabStops.Contains(currentTabStop))
+                currentTabStop += 1;
+
+            currentTabStop = Math.Clamp(currentTabStop, 0, Columns / _screenConfiguration.TabStopSize);
+            return currentTabStop;
+        }
+
+        public int TabStopToColumn(int tabStop)
+        {
+            while (_clearedTabStops.Contains(tabStop))
+                tabStop += 1;
+
+            return Math.Clamp(tabStop * _screenConfiguration.TabStopSize, 1, Columns);
         }
     }
 

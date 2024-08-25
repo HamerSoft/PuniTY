@@ -78,11 +78,39 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(9));
         }
 
-        [Test]
-        public void ResetTabStops_Logs_Warning_Not_Supported()
+        [TestCase(2, 24)]
+        [TestCase(4, 40)]
+        [TestCase(10, 80)]
+        public void MoveCursorToNextTab_Skips_Cleared_TabStops(int tabStopsToClear, int expectedColumn)
         {
+            for (int i = 0; i < tabStopsToClear; i++)
+                Screen.ClearTabStop(i * 8);
+            Decode($"{Escape}1I");
+            Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(expectedColumn));
+        }
+
+        [TestCase(2, 56)]
+        [TestCase(4, 40)]
+        [TestCase(10, 1)]
+        public void MoveCursorToPreviousTab_Skips_Cleared_TabStops(int tabStopsToClear, int expectedColumn)
+        {
+            Screen.SetCursorPosition(new Position(1, 80));
+            for (int i = 0; i < tabStopsToClear; i++)
+                Screen.ClearTabStop(80 - i * 8);
+            Decode($"{Escape}1Z");
+            Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(expectedColumn));
+        }
+
+        [Test]
+        public void ResetTabStops_Removes_Cleared_TabStops()
+        {
+            Screen.ClearTabStop(8);
+            Decode($"{Escape}1I");
+            Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(16));
             Decode($"{Escape}?5W");
-            LogAssert.Expect(LogType.Warning, new Regex(""));
+            Screen.SetCursorPosition(new Position(1, 1));
+            Decode($"{Escape}1I");
+            Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(8));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -20,7 +19,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             if (!int.TryParse(parameters, out var offset))
                 return;
 
-            var tabStopSize = screen.ScreenConfiguration.TabStopSize;
             var currentTabStop = screen.Cursor.Position.Column / screen.ScreenConfiguration.TabStopSize;
             if (offset > screen.Columns - currentTabStop)
             {
@@ -29,7 +27,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
-            var targetColumn = Math.Clamp(Math.Abs((currentTabStop + offset) * tabStopSize), 1, screen.Columns);
+            var targetColumn = screen.TabStopToColumn(screen.GetCurrentTabStop(screen.Cursor.Position.Column) + offset);
             screen.SetCursorPosition(new Position(screen.Cursor.Position.Row, targetColumn));
         }
     }

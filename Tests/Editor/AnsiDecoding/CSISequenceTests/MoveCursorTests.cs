@@ -27,7 +27,11 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                     typeof(MoveCursorToColumn),
                     typeof(SetCursorPositionSequence),
                     typeof(CharacterPositionAbsoluteSequence),
-                    typeof(CharacterPositionRelativeSequence)));
+                    typeof(CharacterPositionRelativeSequence),
+                    typeof(LinePositionAbsoluteSequence),
+                    typeof(LinePositionRelativeSequence),
+                    typeof(HorizontalAndVerticalPositionSequence)
+                ));
         }
 
         [Test]
@@ -80,7 +84,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(1));
             Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(2));
         }
-
 
         [Test]
         public void When_CursorMove_Forward_Command_Is_Executed_At_Screen_Max_Nothing_Happens()
@@ -161,7 +164,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Assert.That(Screen.Cursor.Position.Column, Is.EqualTo(1));
             Assert.That(Screen.Cursor.Position.Row, Is.EqualTo(2));
         }
-
 
         [Test]
         public void When_CursorMove_NextLine_Multiple_IsExecuted_Cursor_Moves_To_Start_Down()
@@ -275,6 +277,66 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             Decode($"{Escape}{targetColumn}`");
             LogAssert.Expect(LogType.Warning, new Regex(""));
             Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+        }
+
+        [Test]
+        public void LinePositionAbsoluteSequence_Moves_Cursor_To_Row_1_By_Default()
+        {
+            Screen.SetCursorPosition(new Position(4, 4));
+            Decode($"{Escape}d");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 4)));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(3, 3)]
+        [TestCase(11, 1)]
+        public void LinePositionAbsoluteSequence_Moves_Cursor_To_Absolute_Row(int row, int expectedRow)
+        {
+            Decode($"{Escape}{row}d");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(expectedRow, 1)));
+        }
+
+        [Test]
+        public void LinePositionRelativeSequence_Moves_Cursor_By_1_Row_By_Default()
+        {
+            Screen.SetCursorPosition(new Position(4, 4));
+            Decode($"{Escape}e");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(5, 4)));
+        }
+
+        [TestCase(2, 3)]
+        [TestCase(3, 4)]
+        [TestCase(11, 1)]
+        public void LinePositionRelativeSequence_Moves_Cursor_By_AddingRows(int row, int expectedRow)
+        {
+            Decode($"{Escape}{row}e");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(expectedRow, 1)));
+        }
+
+        [Test]
+        public void HorizontalAndVerticalPositionSequence_Sets_Cursor_Position_To_1_Row_And_1_Column_By_Default()
+        {
+            Screen.SetCursorPosition(new Position(2, 2));
+            Decode($"{Escape}f");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+
+            Screen.SetCursorPosition(new Position(2, 2));
+            Decode($"{Escape}1f");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+
+            Screen.SetCursorPosition(new Position(2, 2));
+            Decode($"{Escape};1f");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(1, 1)));
+        }
+
+        [TestCase(2, 2, 2, 2)]
+        [TestCase(4, 2, 4, 2)]
+        [TestCase(11, 11, 1, 1)]
+        public void HorizontalAndVerticalPositionSequence_Sets_Cursor_Position_To_Parameters_Given(int row, int column,
+            int expectedRow, int expectedColumn)
+        {
+            Decode($"{Escape}{row};{column}f");
+            Assert.That(Screen.Cursor.Position, Is.EqualTo(new Position(expectedRow, expectedColumn)));
         }
 
         private void SetCursorPosition(int row, int column, bool forceSeparator = false)

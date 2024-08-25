@@ -5,7 +5,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class ResetTabStopSequence : CSISequence
     {
-        private const int DefaultTabStops = 8;
         public override char Command => 'W';
 
         public ResetTabStopSequence(ILogger logger) : base(logger)
@@ -14,7 +13,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public override void Execute(IScreen screen, string parameters)
         {
-            Logger.LogWarning("Resetting Tab stops not supported.");
+            screen.ResetTabStops();
         }
     }
 }
