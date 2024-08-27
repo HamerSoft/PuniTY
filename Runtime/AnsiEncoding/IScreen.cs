@@ -8,7 +8,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public GraphicRendition GraphicRendition;
     }
 
-    public interface IScreen : ITabStop
+    public interface IScreen : ITabStop, IMode
     {
         public event Action<byte[]> Output;
         public int Rows { get; }

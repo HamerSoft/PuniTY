@@ -49,6 +49,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
+        public AnsiMode Mode { get; private set; }
         public ICursor Cursor { get; }
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
@@ -60,6 +61,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public Screen(Dimensions dimensions, ICursor cursor, ILogger logger, IScreenConfiguration screenConfiguration)
         {
+            Mode = AnsiMode.None;
             _screenConfiguration = screenConfiguration;
             _logger = logger;
             Rows = dimensions.Rows;
@@ -534,7 +536,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 var tabStopToClear = column.Value % tabStopSize == 0
                     ? column.Value / tabStopSize
                     : (Math.Clamp(column.Value / tabStopSize, 0,
-                        Columns / tabStopSize) + 1) ;// tabStopSize;
+                        Columns / tabStopSize) + 1); // tabStopSize;
                 _clearedTabStops.Add(tabStopToClear);
             }
             else
@@ -588,6 +590,21 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 tabStop += 1;
 
             return Math.Clamp(tabStop * _screenConfiguration.TabStopSize, 1, Columns);
+        }
+
+        public void SetMode(AnsiMode mode)
+        {
+            Mode |= mode;
+        }
+
+        public void ResetMode(AnsiMode mode)
+        {
+            Mode &= ~mode;
+        }
+
+        public bool HasMode(AnsiMode mode)
+        {
+            return Mode.HasFlag(mode);
         }
     }
 
