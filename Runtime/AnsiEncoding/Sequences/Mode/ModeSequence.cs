@@ -20,7 +20,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
-            if (parameters.StartsWith(QuestionMark)&& !TryParseInt(parameters.Substring(1, parameters.Length - 1), out var argument, "-1") || !TryParseInt(parameters, out  argument, "-1"))
+            var paramsToParse = parameters.StartsWith(QuestionMark)
+                ? parameters.Substring(1, parameters.Length - 1)
+                : parameters;
+            
+            if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
                 Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
                 return;
@@ -40,5 +44,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         protected abstract void ExecutePrivateSequence(IScreen screen, int argument);
         protected abstract void ExecutePublicSequence(IScreen screen, int argument);
+        protected abstract void SetMode(IScreen screen, AnsiMode mode);
     }
 }
