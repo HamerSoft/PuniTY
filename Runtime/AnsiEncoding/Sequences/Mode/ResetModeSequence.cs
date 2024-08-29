@@ -19,16 +19,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     SetMode(screen, AnsiMode.ApplicationCursorKeys);
                     break;
                 case 2:
-
+                    SetMode(screen, AnsiMode.DECANM);
                     break;
                 case 3:
-
+                    SetMode(screen, AnsiMode.DECCOLM);
                     break;
                 case 4:
-
+                    SetMode(screen, AnsiMode.SmoothScroll);
                     break;
                 case 5:
-
+                    SetMode(screen, AnsiMode.ReverseVideo);
                     break;
                 case 6:
 
