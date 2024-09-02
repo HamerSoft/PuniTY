@@ -31,16 +31,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     SetMode(screen, AnsiMode.ReverseVideo);
                     break;
                 case 6:
-
+                    SetMode(screen, AnsiMode.Origin);
                     break;
                 case 7:
-
+                    SetMode(screen, AnsiMode.AutoWrap);
                     break;
                 case 8:
-
+                    SetMode(screen, AnsiMode.AutoRepeatKeys);
                     break;
                 case 9:
-
+                    SetMode(screen, AnsiMode.SendMouseXY);
                     break;
             }
         }

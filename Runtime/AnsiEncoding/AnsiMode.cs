@@ -50,21 +50,58 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// </summary>
         // ReSharper disable once InconsistentNaming
         DECANM = 32,
+
         /// <summary>
         /// DEC Column Mode (DECCOLM) allows you to toggle between 80 and 132 columns on a DEC terminal, providing flexibility for different types of applications and display needs.
         /// </summary>
         DECCOLM = 64,
+
         /// <summary>
         /// Smooth Scroll (DECSCLM) provides a smoother scrolling experience by making the terminal scroll one line at a time.
         /// This can be particularly useful for readability and reducing eye strain when working with text-heavy applications
         /// </summary>
         SmoothScroll = 128,
+
         /// <summary>
         /// Reverse Video Mode (DECSCNM) is a feature in DEC terminals that inverts the foreground and background colors of the display.
         /// This can be useful for highlighting text or making certain information stand out.
         /// </summary>
         /// <remarks>While both DECSCNM and CSI 7 m involve inverting colors, DECSCNM applies to the entire terminal display, whereas CSI 7 m applies only to specific text segments.</remarks>
-        ReverseVideo = 256
-        
+        ReverseVideo = 256,
+
+        /// <summary>
+        /// DECOM stands for DEC Origin Mode.
+        /// It is a mode that determines whether cursor positioning is relative to the entire screen or just the scrolling region.
+        /// </summary>
+        /// <remarks>DECOM is particularly useful in applications that need to manage a specific area of the screen independently from the rest, such as text editors or terminal-based user interfaces.</remarks>
+        /// <remarks>When DECOM is enabled: Cursor positions are relative to the defined scrolling region. This means that the home position (top-left corner) is at the top of the scrolling region, not the top of the screen.
+        /// When DECOM is disabled: Cursor positions are relative to the entire screen. The home position is the top-left corner of the screen.</remarks>
+        Origin = 512,
+
+        /// <summary>
+        /// DECAWM stands for DEC Auto-Wrap Mode and determines whether the cursor automatically moves to the beginning of the next line when it reaches the end of the current line.
+        /// </summary>
+        /// <remarks>DECAWM is useful in text editors and other applications where automatic line wrapping is desired. It ensures that text flows naturally from one line to the next without manual intervention.</remarks>
+        /// <remarks>When DECAWM is enabled: The cursor automatically wraps to the beginning of the next line when it reaches the end of the current line.
+        /// When DECAWM is disabled: The cursor stays at the end of the current line, and any additional characters overwrite the last character of the line.</remarks>
+        AutoWrap = 1024,
+
+        /// <summary>
+        /// DECARM stands for DEC Auto-Repeat Mode. It determines whether a key, when held down, will continuously send its character to the terminal.
+        /// </summary>
+        /// <remarks>DECARM is useful in scenarios where repeated input is necessary, such as in text editors or command-line interfaces where holding down a key to move the cursor or repeat a character is desired.</remarks>
+        /// <remarks>When DECARM is enabled: Holding down a key will cause it to repeat, sending multiple instances of the character to the terminal.
+        /// When DECARM is disabled: Holding down a key will only send a single instance of the character, regardless of how long the key is held.</remarks>
+        AutoRepeatKeys = 2048,
+        /// <summary>
+        /// This feature enables the terminal to send the coordinates of the mouse cursor whenever a mouse button is pressed. This is useful for applications that need to track mouse interactions within the terminal window.
+        /// </summary>
+        /// <remarks>ESC [ M CbCxCy
+        /// ESC [ M is the prefix indicating a mouse event.
+        /// Cb is the button and modifier state.
+        /// Cx is the X coordinate (column).
+        /// Cy is the Y coordinate (row).
+        /// Clicking at (10, 5) might send: ESC [ M 32 10 5</remarks>
+        SendMouseXY = 4096
     }
 }

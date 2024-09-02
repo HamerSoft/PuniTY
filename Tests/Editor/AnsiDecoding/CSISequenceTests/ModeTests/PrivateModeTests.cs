@@ -83,7 +83,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             ResetMode(4);
             Assert.That(Screen.HasMode(AnsiMode.SmoothScroll), Is.False);
         }
-        
+
         [Test]
         public void Private_SetMode_5h_Sets_ReverseVideo_Mode()
         {
@@ -99,6 +99,71 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             ResetMode(5);
             Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.False);
         }
+
+        [Test]
+        public void Private_SetMode_6h_Sets_Origin_Mode()
+        {
+            SetMode(6);
+            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
+        }
+
+        [Test]
+        public void Private_ResetMode_6l_Resets_Origin_Mode()
+        {
+            SetMode(6);
+            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
+            ResetMode(6);
+            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.False);
+        }
+
+        [Test]
+        public void Private_SetMode_7h_Sets_Origin_Mode()
+        {
+            SetMode(7);
+            Assert.That(Screen.HasMode(AnsiMode.AutoWrap), Is.True);
+        }
+
+        [Test]
+        public void Private_ResetMode_7l_Resets_Origin_Mode()
+        {
+            SetMode(7);
+            Assert.That(Screen.HasMode(AnsiMode.AutoWrap), Is.True);
+            ResetMode(7);
+            Assert.That(Screen.HasMode(AnsiMode.AutoWrap), Is.False);
+        }
+
+        [Test]
+        public void Private_SetMode_8h_Sets_Origin_Mode()
+        {
+            SetMode(8);
+            Assert.That(Screen.HasMode(AnsiMode.AutoRepeatKeys), Is.True);
+        }
+
+        [Test]
+        public void Private_ResetMode_8l_Resets_Origin_Mode()
+        {
+            SetMode(8);
+            Assert.That(Screen.HasMode(AnsiMode.AutoRepeatKeys), Is.True);
+            ResetMode(8);
+            Assert.That(Screen.HasMode(AnsiMode.AutoRepeatKeys), Is.False);
+        }
+
+        [Test]
+        public void Private_SetMode_9h_Sets_Origin_Mode()
+        {
+            SetMode(9);
+            Assert.That(Screen.HasMode(AnsiMode.SendMouseXY), Is.True);
+        }
+
+        [Test]
+        public void Private_ResetMode_9l_Resets_Origin_Mode()
+        {
+            SetMode(9);
+            Assert.That(Screen.HasMode(AnsiMode.SendMouseXY), Is.True);
+            ResetMode(9);
+            Assert.That(Screen.HasMode(AnsiMode.SendMouseXY), Is.False);
+        }
+
 
         private void SetMode(int command)
         {
