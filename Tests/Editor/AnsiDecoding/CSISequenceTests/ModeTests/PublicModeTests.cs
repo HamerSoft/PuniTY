@@ -20,70 +20,27 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                     typeof(ResetModeSequence)));
         }
 
-        [Test]
-        public void Public_SetMode_2h_Sets_KeyboardAction_Mode()
+        [TestCase(2, AnsiMode.KeyBoardAction)]
+        [TestCase(4, AnsiMode.Insert)]
+        [TestCase(12, AnsiMode.SendReceive)]
+        [TestCase(20, AnsiMode.AutomaticNewLine)]
+        public void Public_SetMode_Sets_AnsiMode(int command, AnsiMode expectedCommand)
         {
-            SetMode(2);
-            Assert.That(Screen.HasMode(AnsiMode.KeyBoardAction), Is.True);
+            SetMode(command);
+            Assert.That(Screen.HasMode(expectedCommand), Is.True);
         }
 
-        [Test]
-        public void Public_ResetMode_2l_Resets_KeyboardAction_Mode()
+        [TestCase(2, AnsiMode.KeyBoardAction)]
+        [TestCase(4, AnsiMode.Insert)]
+        [TestCase(12, AnsiMode.SendReceive)]
+        [TestCase(20, AnsiMode.AutomaticNewLine)]
+        public void Public_ResetMode_Resets_AnsiMode(int command, AnsiMode expectedCommand)
         {
-            SetMode(2);
-            Assert.That(Screen.HasMode(AnsiMode.KeyBoardAction), Is.True);
-            ResetMode(2);
-            Assert.That(Screen.HasMode(AnsiMode.KeyBoardAction), Is.False);
+            SetMode(command);
+            Assert.That(Screen.HasMode(expectedCommand), Is.True);
+            ResetMode(command);
+            Assert.That(Screen.HasMode(expectedCommand), Is.False);
         }
-
-        [Test]
-        public void Public_SetMode_4h_Sets_Insert_Mode()
-        {
-            SetMode(4);
-            Assert.That(Screen.HasMode(AnsiMode.Insert), Is.True);
-        }
-
-        [Test]
-        public void Public_ResetMode_4l_Resets_Insert_Mode()
-        {
-            SetMode(4);
-            Assert.That(Screen.HasMode(AnsiMode.Insert), Is.True);
-            ResetMode(4);
-            Assert.That(Screen.HasMode(AnsiMode.Insert), Is.False);
-        }
-
-        [Test]
-        public void Public_SetMode_12h_Sets_SendReceive_Mode()
-        {
-            SetMode(12);
-            Assert.That(Screen.HasMode(AnsiMode.SendReceive), Is.True);
-        }
-
-        [Test]
-        public void Public_ResetMode_12l_Resets_SendReceive_Mode()
-        {
-            SetMode(12);
-            Assert.That(Screen.HasMode(AnsiMode.SendReceive), Is.True);
-            ResetMode(12);
-            Assert.That(Screen.HasMode(AnsiMode.SendReceive), Is.False);
-        }
-
-        [Test]
-        public void Public_SetMode_20h_Sets_AutomaticNewLine_Mode()
-        {
-            SetMode(20);
-            Assert.That(Screen.HasMode(AnsiMode.AutomaticNewLine), Is.True);
-        }
-
-        [Test]
-        public void Public_ResetMode_20l_Resets_AutomaticNewLine_Mode()
-        {
-            SetMode(20);
-            Assert.That(Screen.HasMode(AnsiMode.AutomaticNewLine), Is.True);
-            ResetMode(20);
-            Assert.That(Screen.HasMode(AnsiMode.AutomaticNewLine), Is.False);
-        }
-
 
         private void SetMode(int command)
         {

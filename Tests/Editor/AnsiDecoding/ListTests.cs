@@ -8,7 +8,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
     public class ListTests
     {
         [Test]
-        public void Check_If_Can_Insert_Based_On_Capacity()
+        public void Cannot_Set_IndexBased_Given_Capacity()
         {
             var list = new List<int>(3);
             Assert.Throws<ArgumentOutOfRangeException>(() => { list[2] = 2; });

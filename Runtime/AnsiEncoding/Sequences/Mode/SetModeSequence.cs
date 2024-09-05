@@ -42,6 +42,24 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 case 9:
                     SetMode(screen, AnsiMode.SendMouseXY);
                     break;
+                case 10:
+                    SetMode(screen, AnsiMode.ShowToolbar);
+                    break;
+                case 12:
+                    SetMode(screen, AnsiMode.BlinkingCursor);
+                    break;
+                case 13:
+                    SetMode(screen, AnsiMode.StartBlinkingCursor);
+                    break;
+                case 14:
+                    SetMode(screen, AnsiMode.XORBlinkingCursor);
+                    break;
+                case 18:
+                    SetMode(screen, AnsiMode.PrintFormFeed);
+                    break;
+                case 19:
+                    SetMode(screen, AnsiMode.PrintExtentFullScreen);
+                    break;
             }
         }
 

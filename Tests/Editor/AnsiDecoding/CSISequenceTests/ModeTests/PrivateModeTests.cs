@@ -29,6 +29,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(7, AnsiMode.AutoWrap)]
         [TestCase(8, AnsiMode.AutoRepeatKeys)]
         [TestCase(9, AnsiMode.SendMouseXY)]
+        [TestCase(10, AnsiMode.ShowToolbar)]
+        [TestCase(12, AnsiMode.BlinkingCursor)]
+        [TestCase(13, AnsiMode.StartBlinkingCursor)]
+        [TestCase(14, AnsiMode.XORBlinkingCursor)]
+        [TestCase(18, AnsiMode.PrintFormFeed)]
+        [TestCase(19, AnsiMode.PrintExtentFullScreen)]
         public void Private_SetMode_Sets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
@@ -44,6 +50,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(7, AnsiMode.AutoWrap)]
         [TestCase(8, AnsiMode.AutoRepeatKeys)]
         [TestCase(9, AnsiMode.SendMouseXY)]
+        [TestCase(10, AnsiMode.ShowToolbar)]
+        [TestCase(12, AnsiMode.BlinkingCursor)]
+        [TestCase(13, AnsiMode.StartBlinkingCursor)]
+        [TestCase(14, AnsiMode.XORBlinkingCursor)]
+        [TestCase(18, AnsiMode.PrintFormFeed)]
+        [TestCase(19, AnsiMode.PrintExtentFullScreen)]
         public void Private_ResetMode_Resets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
