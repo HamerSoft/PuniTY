@@ -124,25 +124,111 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// This mode is not controlled by an ANSI escape sequence but rather through configuration files or graphical menu options.
         /// </summary>
         StartBlinkingCursor = 1UL << 15,
+
         /// <summary>
         /// This sequence is specific to certain terminal emulators that support this feature, such as xterm and its derivatives.
         /// It allows for more flexible control over the cursor behavior and menu interactions.
         /// </summary>
         // ReSharper disable once InconsistentNaming
         XORBlinkingCursor = 1UL << 16,
+
         /// <summary>
         /// The “Print Form Feed” mode, also known as DECPFF, is a feature in DEC terminals that controls how form feeds (page breaks) are handled when printing.
         /// Determines whether a form feed character (ASCII 0x0C) will be sent to the printer when a form feed is encountered in the terminal’s output.
         /// </summary>
         /// <remarks>This mode is useful when you want to control the pagination of printed output directly from the terminal.</remarks>
-        PrintFormFeed = 1UL << 16,
+        PrintFormFeed = 1UL << 17,
+
         /// <summary>
         /// The “Set print extent to full screen” mode, also known as DECPEX, is a feature in DEC terminals that controls the extent of the printed area.
         /// </summary>
         /// <remarks>: DECPEX determines whether the print area is limited to the scrolling region or extends to the entire screen.
         /// When enabled, the print extent covers the full screen, allowing for more comprehensive printouts.</remarks>
         /// <remarks>This mode is useful when you need to capture and print the entire screen content, not just the portion within the scrolling region.</remarks>
-        PrintExtentFullScreen  = 1UL << 17,
-        
+        PrintExtentFullScreen = 1UL << 18,
+
+        /// <summary>
+        /// The DECTCEM (Display Enable Cursor) control sequence is used to show or hide the cursor in a terminal emulator that supports VT220 or similar terminal standards.
+        /// This is particularly useful in text-based user interfaces and command-line applications where cursor visibility can enhance or detract from the user experience.
+        /// </summary>
+        ShowCursor = 1UL << 19,
+
+        /// <summary>
+        /// In rxvt (a VT102 terminal emulator for the X Window System), you can control the visibility of the scrollbar using specific resources in your configuration files.
+        /// The scrollbar can be enabled or disabled based on your preferences, which is particularly useful for users who want to customize their terminal experience.
+        /// </summary>
+        /// <remarks> Users who prefer using the mouse for navigation might find the scrollbar useful for quickly scrolling through terminal output.</remarks>
+        /// <remarks>On systems with limited resources, reducing the number of graphical elements can improve performance.</remarks>
+        ShowScrollbar = 1UL << 20,
+
+        /// <summary>
+        /// In rxvt (a VT102 terminal emulator for the X Window System), font-shifting functions allow users to dynamically change the font size within the terminal.
+        /// This feature is particularly useful for users who need to adjust text size for better readability or to fit more content on the screen.
+        /// </summary>
+        /// <remarks>Users with visual impairments may need to increase the font size for better readability.</remarks>
+        EnableFontShiftingFunctions = 1UL << 21,
+
+        /// <summary>
+        /// The DECTEK (Tektronix mode) control sequence allows a terminal to switch into Tektronix 4014 emulation mode.
+        /// This mode is used for rendering vector graphics, which is particularly useful for applications that require detailed graphical output, such as scientific plotting or CAD programs.
+        /// </summary>
+        Tektronix = 1UL << 22,
+
+        /// <summary>
+        /// The 80 ⇒ 132 mode control sequence allows a terminal to switch between 80-column and 132-column display modes.
+        /// This feature is particularly useful for applications that need to display more data horizontally, such as wide tables or logs.
+        /// </summary>
+        Display80_132 = 1UL << 23,
+
+        /// <summary>
+        /// The more command is a terminal pager program used to view the contents of a file one screen at a time.
+        /// Sometimes, users may encounter issues with more when it interacts with terminal capabilities, especially those managed by the curses library.
+        /// The “fix” often involves ensuring that the terminal settings are correctly configured to handle the display and input capabilities required by more.
+        /// </summary>
+        /// <remarks>Users working in different terminal emulators may experience inconsistent behavior with more. By configuring the curses resources, you can ensure that more works consistently across different terminal types.</remarks>
+        /// <remarks>To configure the terminal for the more(1) fix, you typically modify the .Xresources or .Xdefaults file in your home directory.</remarks>
+        More_Fix = 1UL << 24,
+
+        /// <summary>
+        /// The DECNRCM (National Replacement Character Set Mode) control sequence allows a VT220 terminal to switch between different national character sets.
+        /// This feature is particularly useful for displaying text in various languages that require specific characters not available in the standard ASCII set.
+        /// </summary>
+        /// <remarks>Users working with text in multiple languages may need to display characters specific to those languages.  By enabling DECNRCM, the terminal can switch to the appropriate national character set, ensuring correct display of text.</remarks>
+        NationalReplacementCharacters = 1UL << 25,
+
+        /// <summary>
+        /// The DECGEPM (Graphic Expanded Print Mode) control sequence allows a VT340 terminal to switch into a mode that expands the graphics for printing.
+        /// This mode is particularly useful for applications that need to print detailed graphics with enhanced clarity and size.
+        /// </summary>
+        /// <remarks>Researchers and scientists often need to print detailed graphs and charts for reports and presentations. By enabling DECGEPM, the terminal can expand the graphics, making them clearer and more readable when printed.</remarks>
+        GraphicExtendedPrint = 1UL << 26,
+
+        /// <summary>
+        /// The margin bell in xterm is a feature that triggers an audible bell when the cursor approaches the right margin of the terminal window.
+        /// This can be particularly useful for users who need to be alerted when they are nearing the end of a line, such as when writing code or text that should not exceed a certain width.
+        /// </summary>
+        /// <remarks>Writers and programmers often need to keep their text within a certain width for readability or formatting purposes. Enabling the margin bell alerts them when they are nearing the right margin, helping them maintain the desired text width.</remarks>
+        MarginBell = 1UL << 27,
+
+        /// <summary>
+        /// The DECGPCM (Graphic Print Color Mode) control sequence allows a VT340 terminal to switch into a mode that supports color printing of graphics.
+        /// This is particularly useful for applications that need to print detailed color graphics, such as scientific visualizations or engineering diagrams.
+        /// </summary>
+        GraphicPrintColor = 1UL << 28,
+
+        /// <summary>
+        /// Reverse-wraparound mode is a terminal feature that allows the cursor to wrap from the beginning of one line to the end of the previous line when performing a backspace operation.
+        /// This is the opposite of the standard wraparound mode, where the cursor moves from the end of one line to the beginning of the next line when typing characters.
+        /// </summary>
+        /// <remarks>When editing text, users might need to backspace across lines without manually moving the cursor to the previous line. Enabling reverse-wraparound mode allows users to seamlessly delete characters across line boundaries, improving the efficiency of text editing.</remarks>
+        ReverseWrapAround = 1UL << 29,
+
+        /// <summary>
+        /// The XTLOGGING feature in xterm allows the terminal to log its output to a file.
+        /// However, this feature is typically disabled by default due to security concerns and must be enabled at compile-time.
+        /// If logging is enabled, it can be controlled using specific escape sequences.
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        XTLogging = 1UL << 30,
     }
 }

@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -35,6 +36,16 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(14, AnsiMode.XORBlinkingCursor)]
         [TestCase(18, AnsiMode.PrintFormFeed)]
         [TestCase(19, AnsiMode.PrintExtentFullScreen)]
+        [TestCase(25, AnsiMode.ShowCursor)]
+        [TestCase(30, AnsiMode.ShowScrollbar)]
+        [TestCase(35, AnsiMode.EnableFontShiftingFunctions)]
+        [TestCase(38, AnsiMode.Tektronix)]
+        [TestCase(40, AnsiMode.Display80_132)]
+        [TestCase(41, AnsiMode.More_Fix)]
+        [TestCase(42, AnsiMode.NationalReplacementCharacters)]
+        [TestCase(43, AnsiMode.GraphicExtendedPrint)]
+        [TestCase(45, AnsiMode.ReverseWrapAround)]
+        [TestCase(46, AnsiMode.XTLogging)]
         public void Private_SetMode_Sets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
@@ -56,12 +67,34 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(14, AnsiMode.XORBlinkingCursor)]
         [TestCase(18, AnsiMode.PrintFormFeed)]
         [TestCase(19, AnsiMode.PrintExtentFullScreen)]
+        [TestCase(25, AnsiMode.ShowCursor)]
+        [TestCase(30, AnsiMode.ShowScrollbar)]
+        [TestCase(35, AnsiMode.EnableFontShiftingFunctions)]
+        [TestCase(38, AnsiMode.Tektronix)]
+        [TestCase(40, AnsiMode.Display80_132)]
+        [TestCase(41, AnsiMode.More_Fix)]
+        [TestCase(42, AnsiMode.NationalReplacementCharacters)]
+        [TestCase(43, AnsiMode.GraphicExtendedPrint)]
+        [TestCase(45, AnsiMode.ReverseWrapAround)]
+        [TestCase(46, AnsiMode.XTLogging)]
         public void Private_ResetMode_Resets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
             Assert.That(Screen.HasMode(expectedMode), Is.True);
             ResetMode(command);
             Assert.That(Screen.HasMode(expectedMode), Is.False);
+        }
+
+        [Test]
+        public void When_Xterm_Active_44h_Enables_MarginBell()
+        {
+            throw new NotImplementedException();
+        }
+        
+        [Test]
+        public void When_VT340_Active_44h_Enables_GraphicPrintColor()
+        {
+            throw new NotImplementedException();   
         }
 
         private void SetMode(int command)

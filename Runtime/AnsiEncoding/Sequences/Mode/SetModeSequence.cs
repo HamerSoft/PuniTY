@@ -60,6 +60,39 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 case 19:
                     SetMode(screen, AnsiMode.PrintExtentFullScreen);
                     break;
+                case 25:
+                    SetMode(screen, AnsiMode.ShowCursor);
+                    break;
+                case 30:
+                    SetMode(screen, AnsiMode.ShowScrollbar);
+                    break;
+                case 35:
+                    SetMode(screen, AnsiMode.EnableFontShiftingFunctions);
+                    break;
+                case 38:
+                    SetMode(screen, AnsiMode.Tektronix);
+                    break;
+                case 40:
+                    SetMode(screen, AnsiMode.Display80_132);
+                    break;
+                case 41:
+                    SetMode(screen, AnsiMode.More_Fix);
+                    break;
+                case 42:
+                    SetMode(screen, AnsiMode.NationalReplacementCharacters);
+                    break;
+                case 43:
+                    SetMode(screen, AnsiMode.GraphicExtendedPrint);
+                    break;
+                case 44:
+                    SetMode(screen, AnsiMode.MarginBell);
+                    break;
+                case 45:
+                    SetMode(screen, AnsiMode.ReverseWrapAround);
+                    break;
+                case 46:
+                    SetMode(screen, AnsiMode.XTLogging);
+                    break;
             }
         }
 
