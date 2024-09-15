@@ -93,6 +93,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 case 46:
                     SetMode(screen, AnsiMode.XTLogging);
                     break;
+                case 47:
+                    SetMode(screen, AnsiMode.AlternateScreenBuffer);
+                    break;
+                case 66:
+                    SetMode(screen, AnsiMode.ApplicationKeypad);
+                    break;
             }
         }
 

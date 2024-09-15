@@ -230,5 +230,27 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// </summary>
         // ReSharper disable once InconsistentNaming
         XTLogging = 1UL << 30,
+        /// <summary>
+        /// Graphic Print Background Mode is a setting found in some terminal emulators, particularly those that support advanced graphics capabilities like sixel graphics.
+        /// </summary>
+        /// <remarks>When this mode is enabled, the background color of the graphics image is printed along with the image itself. This is useful for printers that can handle color or grayscale images.</remarks>
+        /// <remarks>When this mode is disabled, the background color is not printed. This is typically used for printers that can only print black and white images, as it avoids printing unnecessary background colors</remarks>
+        GraphicPrintBackgoundMode = 1UL << 31,
+        /// <summary>
+        /// feature in terminal emulators that allows applications to switch between two different screen buffers: the main screen buffer and the alternate screen buffer.
+        /// </summary>
+        AlternateScreenBuffer = 1UL << 32,
+        /// <summary>
+        /// Feature that allows text and graphics to be printed in a rotated orientation.
+        /// This mode is particularly useful for applications that require text to be displayed in a non-standard orientation, such as certain types of graphical interfaces or specialized printing tasks.
+        /// </summary>
+        GraphicRotatedPrint = 1UL << 32,
+        /// <summary>
+        /// Feature that changes the behavior of the numeric keypad.
+        /// This mode is often used by applications that require different input from the keypad, such as text editors or terminal-based programs.
+        /// </summary>
+        /// <remarks>In normal mode, the numeric keypad behaves like a standard keypad. With NumLock on, the keys generate numbers. With NumLock off, they act as arrow keys and other navigation keys.</remarks>
+        /// <remarks>When this mode is enabled, the keypad sends different escape sequences, allowing applications to interpret the keys differently.</remarks>
+        ApplicationKeypad = 1UL << 33,
     }
 }
