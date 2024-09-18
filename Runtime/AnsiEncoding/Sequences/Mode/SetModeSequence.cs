@@ -99,6 +99,42 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 case 66:
                     SetMode(screen, AnsiMode.ApplicationKeypad);
                     break;
+                case 67:
+                    SetMode(screen, AnsiMode.BackarrowKeySendsBackspace);
+                    break;
+                case 69:
+                    SetMode(screen, AnsiMode.LeftAndRightMargin);
+                    break;
+                case 80:
+                    SetMode(screen, AnsiMode.SixelDisplayMode);
+                    break;
+                case 95:
+                    SetMode(screen, AnsiMode.DoNotClearScreenWhenDECCOLM);
+                    break;
+                case 1000:
+                    SetMode(screen, AnsiMode.SendMouseX_YOnButtonPressAndRelease);
+                    break;
+                case 1001:
+                    SetMode(screen, AnsiMode.UseHiliteMouseTracking);
+                    break;
+                case 1002:
+                    SetMode(screen, AnsiMode.UseCellMotionMouseTracking);
+                    break;
+                case 1003:
+                    SetMode(screen, AnsiMode.UseAllMotionMouseTracking);
+                    break;
+                case 1004:
+                    SetMode(screen, AnsiMode.SendFocusIn_FocusOutEvents);
+                    break;
+                case 1005:
+                    SetMode(screen, AnsiMode.EnableUTF_8Mouse);
+                    break;
+                case 1006:
+                    SetMode(screen, AnsiMode.EnableSGRMouse);
+                    break;
+                case 1007:
+                    SetMode(screen, AnsiMode.EnableAlternateScroll);
+                    break;
             }
         }
 

@@ -252,5 +252,82 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>In normal mode, the numeric keypad behaves like a standard keypad. With NumLock on, the keys generate numbers. With NumLock off, they act as arrow keys and other navigation keys.</remarks>
         /// <remarks>When this mode is enabled, the keypad sends different escape sequences, allowing applications to interpret the keys differently.</remarks>
         ApplicationKeypad = 1UL << 33,
+        /// <summary>
+        /// Control sequence used in VT100 and later terminals to determine whether the backarrow key should send a Backspace (BS) character or a Delete (DEL) character.
+        /// </summary>
+        /// <remarks>This mode is particularly useful in environments where the expected behavior of the backarrow key varies. For example, some systems and applications expect the backarrow key to send a Backspace, while others expect it to send a Delete. By toggling DECBKM, users can ensure compatibility with different systems and applications.</remarks>
+        /// <remarks>When DECBKM is enabled: The backarrow key sends a Backspace (BS) character, which is ASCII code 8.</remarks>
+        /// <remarks>When DECBKM is disabled: The backarrow key sends a Delete (DEL) character, which is ASCII code 127.</remarks>
+        BackarrowKeySendsBackspace = 1UL << 34,
+        /// <summary>
+        /// Terminal feature that allows you to set specific left and right margins within which text will be confined.
+        /// This mode is particularly useful for creating text layouts that need to be formatted within a specific area of the terminal screen.
+        /// </summary>
+        LeftAndRightMargin = 1UL << 35,
+        /// <summary>
+        /// Terminal feature that allows the display of bitmap graphics directly within the terminal.
+        /// This mode uses the SIXEL graphics format, which was originally developed by Digital Equipment Corporation (DEC).
+        /// </summary>
+        /// <remarks>Sixel Display Mode enables terminals to render bitmap images using a series of escape sequences.
+        /// This allows for more complex and colorful graphics compared to traditional text-based displays.</remarks>
+        SixelDisplayMode = 1UL << 36,
+        /// <summary>
+        /// Terminal feature that controls whether the screen is cleared when the column mode is changed.
+        /// </summary>
+        /// <remarks>This mode is useful in scenarios where you want to preserve the current screen content while changing the column width.
+        /// For example, in applications where maintaining the display context is important, enabling DECNCSM can prevent the screen from being cleared unnecessarily.</remarks>
+        /// <remarks>When DECNCSM is enabled: Changing the column mode (e.g., switching between 80 and 132 columns) does not clear the screen.</remarks>
+        /// <remarks>When DECNCSM is disabled: Changing the column mode clears the screen as a side effect.</remarks>
+        DoNotClearScreenWhenDECCOLM = 1UL << 37,
+        /// <summary>
+        /// Terminal feature that allows the terminal to report the mouse’s X and Y coordinates whenever a mouse button is pressed or released.
+        /// This feature is commonly used in terminal applications that require mouse interaction.
+        /// </summary>
+        /// <remarks>When Mouse Reporting is enabled: The terminal sends escape sequences that include the mouse’s X and Y coordinates whenever a mouse button is pressed or released.</remarks>
+        /// <remarks>Escape Sequences: These sequences typically start with ESC [ M followed by three characters that encode the button state and the X and Y coordinates.</remarks>
+        SendMouseX_YOnButtonPressAndRelease = 1UL << 38,
+        /// <summary>
+        /// Terminal feature that allows the terminal to highlight text as the mouse moves over it and report the coordinates of the highlighted area.
+        /// This mode is particularly useful for applications that need to track mouse movements and selections within a specific region of the terminal.
+        /// </summary>
+        /// <remarks>When Hilite Mouse Tracking is enabled: The terminal highlights text as the mouse moves over it while a button is pressed and sends the coordinates of the highlighted area to the application upon release.</remarks>
+        UseHiliteMouseTracking = 1UL << 39,
+        /// <summary>
+        /// Terminal feature that allows the terminal to report the mouse’s X and Y coordinates whenever the mouse moves from one cell to another, even if no buttons are pressed.
+        /// This mode is useful for applications that need to track mouse movements continuously.
+        /// </summary>
+        /// <remarks>When Cell Motion Mouse Tracking is enabled: The terminal sends escape sequences that include the mouse’s X and Y coordinates whenever the mouse moves to a new cell.</remarks>
+        UseCellMotionMouseTracking = 1UL << 40,
+        /// <summary>
+        /// Terminal feature that allows the terminal to report the mouse’s X and Y coordinates whenever the mouse moves, regardless of whether any buttons are pressed.
+        /// This mode is useful for applications that need to track continuous mouse movements.
+        /// </summary>
+        /// <remarks>When All Motion Mouse Tracking is enabled: The terminal sends escape sequences that include the mouse’s X and Y coordinates whenever the mouse moves.</remarks>
+        UseAllMotionMouseTracking= 1UL << 41,
+        /// <summary>
+        /// Terminal feature that allows the terminal to notify the application when it gains or loses focus.
+        /// This is useful for applications that need to respond to focus changes, such as updating the user interface or pausing/resuming activities.
+        /// </summary>
+        /// <remarks>FocusIn Event: This event is sent when the terminal window gains focus, meaning it becomes the active window and can receive keyboard input.</remarks>
+        /// <remarks>FocusOut Event: This event is sent when the terminal window loses focus, meaning it is no longer the active window and cannot receive keyboard input.</remarks>
+        SendFocusIn_FocusOutEvents = 1UL << 42,
+        /// <summary>
+        /// Terminal feature that allows the terminal to report mouse events using UTF-8 encoding.
+        /// This mode is particularly useful for terminals that support UTF-8, ensuring that mouse event data is correctly interpreted and displayed.
+        /// </summary>
+        /// <remarks>When UTF-8 Mouse Mode is enabled: The terminal sends mouse event data using UTF-8 encoding.</remarks>
+        EnableUTF_8Mouse = 1UL << 43,
+        /// <summary>
+        /// Terminal feature that allows the terminal to report mouse events using SGR (Select Graphic Rendition) encoding.
+        /// This mode provides more detailed information about mouse events and supports higher coordinate values, making it suitable for modern applications and high-resolution displays.
+        /// </summary>
+        /// <remarks>When SGR Mouse Mode is enabled: The terminal sends mouse event data using SGR encoding, which includes the button state, X and Y coordinates, and additional modifiers.</remarks>
+        EnableSGRMouse = 1UL << 44,
+        /// <summary>
+        /// Terminal feature that changes the behavior of the mouse scroll wheel when the terminal is in the alternate screen buffer.
+        /// Instead of scrolling through the terminal’s scrollback history, the scroll wheel sends up and down arrow key events to the application running in the terminal.
+        /// </summary>
+        /// <remarks>When Alternate Scroll Mode is enabled: The scroll wheel sends up and down arrow key events to the application, allowing it to handle scrolling internally.</remarks>
+        EnableAlternateScroll = 1UL << 45,
     }
 }

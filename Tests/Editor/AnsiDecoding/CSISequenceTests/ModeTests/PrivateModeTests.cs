@@ -48,6 +48,18 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(46, AnsiMode.XTLogging)]
         [TestCase(47, AnsiMode.AlternateScreenBuffer)]
         [TestCase(66, AnsiMode.ApplicationKeypad)]
+        [TestCase(67, AnsiMode.BackarrowKeySendsBackspace)]
+        [TestCase(69, AnsiMode.LeftAndRightMargin)]
+        [TestCase(80, AnsiMode.SixelDisplayMode)]
+        [TestCase(95, AnsiMode.DoNotClearScreenWhenDECCOLM)]
+        [TestCase(1000, AnsiMode.SendMouseX_YOnButtonPressAndRelease)]
+        [TestCase(1001, AnsiMode.UseHiliteMouseTracking)]
+        [TestCase(1002, AnsiMode.UseCellMotionMouseTracking)]
+        [TestCase(1003, AnsiMode.UseAllMotionMouseTracking)]
+        [TestCase(1004, AnsiMode.SendFocusIn_FocusOutEvents)]
+        [TestCase(1005, AnsiMode.EnableUTF_8Mouse)]
+        [TestCase(1006, AnsiMode.EnableSGRMouse)]
+        [TestCase(1007, AnsiMode.EnableAlternateScroll)]
         public void Private_SetMode_Sets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
@@ -81,6 +93,18 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(46, AnsiMode.XTLogging)]
         [TestCase(47, AnsiMode.AlternateScreenBuffer)]
         [TestCase(66, AnsiMode.ApplicationKeypad)]
+        [TestCase(67, AnsiMode.BackarrowKeySendsBackspace)]
+        [TestCase(69, AnsiMode.LeftAndRightMargin)]
+        [TestCase(80, AnsiMode.SixelDisplayMode)]
+        [TestCase(95, AnsiMode.DoNotClearScreenWhenDECCOLM)]
+        [TestCase(1000, AnsiMode.SendMouseX_YOnButtonPressAndRelease)]
+        [TestCase(1001, AnsiMode.UseHiliteMouseTracking)]
+        [TestCase(1002, AnsiMode.UseCellMotionMouseTracking)]
+        [TestCase(1003, AnsiMode.UseAllMotionMouseTracking)]
+        [TestCase(1004, AnsiMode.SendFocusIn_FocusOutEvents)]
+        [TestCase(1005, AnsiMode.EnableUTF_8Mouse)]
+        [TestCase(1006, AnsiMode.EnableSGRMouse)]
+        [TestCase(1007, AnsiMode.EnableAlternateScroll)]
         public void Private_ResetMode_Resets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
