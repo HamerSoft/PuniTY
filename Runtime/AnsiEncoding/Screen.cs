@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -46,10 +47,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private readonly ILogger _logger;
         private IScreenConfiguration _screenConfiguration;
+        private readonly IModeFactory _modeFactory;
         public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
-        public AnsiMode Mode { get; private set; }
         public ICursor Cursor { get; }
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
@@ -58,11 +59,17 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private Position? _savedCursorPosition;
         private GraphicAttributes _currentGraphicAttributes;
         private readonly HashSet<int> _clearedTabStops;
+        private Dictionary<AnsiMode, IMode> _activeModes;
 
-        public Screen(Dimensions dimensions, ICursor cursor, ILogger logger, IScreenConfiguration screenConfiguration)
+        public Screen(Dimensions dimensions,
+            ICursor cursor,
+            ILogger logger,
+            IScreenConfiguration screenConfiguration,
+            IModeFactory modeFactory)
         {
-            Mode = AnsiMode.None;
+            _activeModes = new Dictionary<AnsiMode, IMode>();
             _screenConfiguration = screenConfiguration;
+            _modeFactory = modeFactory;
             _logger = logger;
             Rows = dimensions.Rows;
             Columns = dimensions.Columns;
@@ -594,17 +601,35 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void SetMode(AnsiMode mode)
         {
-            Mode |= mode;
+            if (_activeModes.ContainsKey(mode))
+            {
+                _logger.LogWarning($"Mode: {mode} already active.");
+                return;
+            }
+
+            var iMode = _modeFactory.Create(mode, this);
+            _activeModes.Add(mode, iMode);
+            iMode.Enable(this);
         }
 
         public void ResetMode(AnsiMode mode)
         {
-            Mode &= ~mode;
+            if (_activeModes.Remove(mode, out var iMode))
+                iMode.Disable(this);
+            else
+                _logger.LogWarning($"Mode: {mode} is not active.");
         }
 
-        public bool HasMode(AnsiMode mode)
+        public bool HasMode(params AnsiMode[] mode)
         {
-            return Mode.HasFlag(mode);
+            var modes = new HashSet<AnsiMode>(mode);
+            if (_activeModes.Count == 0 && modes.Count == 1 && modes.First() == AnsiMode.None)
+                return true;
+
+            for (int i = 0; i < mode.Length; i++)
+                if (!_activeModes.ContainsKey(mode[i]))
+                    return false;
+            return true;
         }
     }
 

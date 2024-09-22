@@ -1,5 +1,6 @@
 ﻿using System;
 using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -76,6 +77,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(1043, AnsiMode.PopOnBell)]
         [TestCase(1044, AnsiMode.KeepClipBoard)]
         [TestCase(1045, AnsiMode.ExtendedReverseWrapAround)]
+        [TestCase(1046, AnsiMode.EnableSwitchingAlternateScreenBuffer)]
+        [TestCase(1047, AnsiMode.UseAlternateScreenBuffer)]
+        [TestCase(1048, AnsiMode.SaveCursorAsDECSC)]
         public void Private_SetMode_Sets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
@@ -137,6 +141,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(1043, AnsiMode.PopOnBell)]
         [TestCase(1044, AnsiMode.KeepClipBoard)]
         [TestCase(1045, AnsiMode.ExtendedReverseWrapAround)]
+        [TestCase(1046, AnsiMode.EnableSwitchingAlternateScreenBuffer)]
+        [TestCase(1047, AnsiMode.UseAlternateScreenBuffer)]
+        [TestCase(1048, AnsiMode.SaveCursorAsDECSC)]
         public void Private_ResetMode_Resets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);

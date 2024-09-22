@@ -1,4 +1,5 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -16,22 +17,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         [Test]
         public void IMode_By_Default_Is_None()
         {
-            Assert.That(Screen.Mode, Is.EqualTo(AnsiMode.None));
+            Assert.IsTrue(Screen.HasMode(AnsiMode.None));
         }
 
         [Test]
         public void IMode_SetMote_Removes_Mode_None()
         {
             Screen.SetMode(AnsiMode.Origin);
-            Assert.That(Screen.Mode, Is.EqualTo(AnsiMode.Origin));
-            Assert.That(Screen.Mode, Is.Not.EqualTo(AnsiMode.None));
+            Assert.IsTrue(Screen.HasMode(AnsiMode.Origin));
+            Assert.IsFalse(Screen.HasMode(AnsiMode.None));
         }
 
         [Test]
         public void IMode_SetMote_Enables_Mode()
         {
             Screen.SetMode(AnsiMode.Origin);
-            Assert.That(Screen.Mode, Is.EqualTo(AnsiMode.Origin));
+            Assert.IsTrue(Screen.HasMode(AnsiMode.Origin));
         }
 
         [Test]
@@ -40,7 +41,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Screen.SetMode(AnsiMode.Origin);
             Screen.SetMode(AnsiMode.SendReceive);
             Screen.SetMode(AnsiMode.ReverseVideo);
-            Assert.That(Screen.Mode, Is.EqualTo(AnsiMode.Origin | AnsiMode.SendReceive | AnsiMode.ReverseVideo));
+            Assert.That(Screen.HasMode(AnsiMode.Origin, AnsiMode.SendReceive, AnsiMode.ReverseVideo));
         }
 
         [Test]
@@ -63,6 +64,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Screen.SetMode(AnsiMode.ReverseVideo);
             Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
             Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.True);
+            Assert.That(Screen.HasMode(AnsiMode.None), Is.False);
         }
 
         [Test]
@@ -71,7 +73,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Assert.DoesNotThrow(() =>
             {
                 Screen.ResetMode(AnsiMode.Origin);
-                Assert.That(Screen.Mode, Is.EqualTo(AnsiMode.None));
+                Assert.IsFalse(Screen.HasMode(AnsiMode.Origin));
+                Assert.IsTrue(Screen.HasMode(AnsiMode.None));
             });
         }
 
@@ -80,12 +83,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             Screen.SetMode(AnsiMode.Origin);
             Screen.SetMode(AnsiMode.ReverseVideo);
-            Assert.That(Screen.Mode, Is.EqualTo(AnsiMode.Origin | AnsiMode.ReverseVideo));
-            
+            Assert.That(Screen.HasMode(AnsiMode.Origin, AnsiMode.ReverseVideo));
+
             Screen.ResetMode(AnsiMode.ReverseVideo);
             Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
             Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.False);
-            
+
             Screen.ResetMode(AnsiMode.Origin);
             Assert.That(Screen.HasMode(AnsiMode.Origin), Is.False);
             Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.False);

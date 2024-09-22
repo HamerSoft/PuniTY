@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Core.Logging;
 using NUnit.Framework;
 using UnityEngine;
@@ -25,7 +26,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         protected class MockScreen : Screen
         {
             public MockScreen(int rows, int columns) : base(new Dimensions(rows, columns), new MockCursor(),
-                new EditorLogger(), new DefaultScreenConfiguration())
+                new EditorLogger(), new DefaultScreenConfiguration(), new ModeFactory())
             {
             }
         }
