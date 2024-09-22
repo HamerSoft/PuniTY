@@ -135,6 +135,54 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 case 1007:
                     SetMode(screen, AnsiMode.EnableAlternateScroll);
                     break;
+                case 1010:
+                    SetMode(screen, AnsiMode.ScrollToBottomOnTtyOutput);
+                    break;
+                case 1011:
+                    SetMode(screen, AnsiMode.ScrollToBottomOnKeyPress);
+                    break;
+                case 1014:
+                    SetMode(screen, AnsiMode.FastScroll);
+                    break;
+                case 1015:
+                    SetMode(screen, AnsiMode.UrxvtMouse);
+                    break;
+                case 1016:
+                    SetMode(screen, AnsiMode.SGRMousePixelMode);
+                    break;
+                case 1034:
+                    SetMode(screen, AnsiMode.InterpretMetaKey);
+                    break;
+                case 1035:
+                    SetMode(screen, AnsiMode.SpecialModifiersAltAndNumLockKeys);
+                    break;
+                case 1036:
+                    SetMode(screen, AnsiMode.MetaSendsEscape);
+                    break;
+                case 1037:
+                    SetMode(screen, AnsiMode.SendDEL_EditingKeypadelete);
+                    break;
+                case 1039:
+                    SetMode(screen, AnsiMode.AltSendsEscape);
+                    break;
+                case 1040:
+                    SetMode(screen, AnsiMode.KeepSelection);
+                    break;
+                case 1041:
+                    SetMode(screen, AnsiMode.SelectToClipBoard);
+                    break;
+                case 1042:
+                    SetMode(screen, AnsiMode.BellsUrgent);
+                    break;
+                case 1043:
+                    SetMode(screen, AnsiMode.PopOnBell);
+                    break;
+                case 1044:
+                    SetMode(screen, AnsiMode.KeepClipBoard);
+                    break;
+                case 1045:
+                    SetMode(screen, AnsiMode.ExtendedReverseWrapAround);
+                    break;
             }
         }
 

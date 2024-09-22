@@ -230,21 +230,25 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// </summary>
         // ReSharper disable once InconsistentNaming
         XTLogging = 1UL << 30,
+
         /// <summary>
         /// Graphic Print Background Mode is a setting found in some terminal emulators, particularly those that support advanced graphics capabilities like sixel graphics.
         /// </summary>
         /// <remarks>When this mode is enabled, the background color of the graphics image is printed along with the image itself. This is useful for printers that can handle color or grayscale images.</remarks>
         /// <remarks>When this mode is disabled, the background color is not printed. This is typically used for printers that can only print black and white images, as it avoids printing unnecessary background colors</remarks>
         GraphicPrintBackgoundMode = 1UL << 31,
+
         /// <summary>
         /// feature in terminal emulators that allows applications to switch between two different screen buffers: the main screen buffer and the alternate screen buffer.
         /// </summary>
         AlternateScreenBuffer = 1UL << 32,
+
         /// <summary>
         /// Feature that allows text and graphics to be printed in a rotated orientation.
         /// This mode is particularly useful for applications that require text to be displayed in a non-standard orientation, such as certain types of graphical interfaces or specialized printing tasks.
         /// </summary>
         GraphicRotatedPrint = 1UL << 32,
+
         /// <summary>
         /// Feature that changes the behavior of the numeric keypad.
         /// This mode is often used by applications that require different input from the keypad, such as text editors or terminal-based programs.
@@ -252,6 +256,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>In normal mode, the numeric keypad behaves like a standard keypad. With NumLock on, the keys generate numbers. With NumLock off, they act as arrow keys and other navigation keys.</remarks>
         /// <remarks>When this mode is enabled, the keypad sends different escape sequences, allowing applications to interpret the keys differently.</remarks>
         ApplicationKeypad = 1UL << 33,
+
         /// <summary>
         /// Control sequence used in VT100 and later terminals to determine whether the backarrow key should send a Backspace (BS) character or a Delete (DEL) character.
         /// </summary>
@@ -259,11 +264,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>When DECBKM is enabled: The backarrow key sends a Backspace (BS) character, which is ASCII code 8.</remarks>
         /// <remarks>When DECBKM is disabled: The backarrow key sends a Delete (DEL) character, which is ASCII code 127.</remarks>
         BackarrowKeySendsBackspace = 1UL << 34,
+
         /// <summary>
         /// Terminal feature that allows you to set specific left and right margins within which text will be confined.
         /// This mode is particularly useful for creating text layouts that need to be formatted within a specific area of the terminal screen.
         /// </summary>
         LeftAndRightMargin = 1UL << 35,
+
         /// <summary>
         /// Terminal feature that allows the display of bitmap graphics directly within the terminal.
         /// This mode uses the SIXEL graphics format, which was originally developed by Digital Equipment Corporation (DEC).
@@ -271,6 +278,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>Sixel Display Mode enables terminals to render bitmap images using a series of escape sequences.
         /// This allows for more complex and colorful graphics compared to traditional text-based displays.</remarks>
         SixelDisplayMode = 1UL << 36,
+
         /// <summary>
         /// Terminal feature that controls whether the screen is cleared when the column mode is changed.
         /// </summary>
@@ -279,6 +287,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>When DECNCSM is enabled: Changing the column mode (e.g., switching between 80 and 132 columns) does not clear the screen.</remarks>
         /// <remarks>When DECNCSM is disabled: Changing the column mode clears the screen as a side effect.</remarks>
         DoNotClearScreenWhenDECCOLM = 1UL << 37,
+
         /// <summary>
         /// Terminal feature that allows the terminal to report the mouse’s X and Y coordinates whenever a mouse button is pressed or released.
         /// This feature is commonly used in terminal applications that require mouse interaction.
@@ -286,24 +295,28 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>When Mouse Reporting is enabled: The terminal sends escape sequences that include the mouse’s X and Y coordinates whenever a mouse button is pressed or released.</remarks>
         /// <remarks>Escape Sequences: These sequences typically start with ESC [ M followed by three characters that encode the button state and the X and Y coordinates.</remarks>
         SendMouseX_YOnButtonPressAndRelease = 1UL << 38,
+
         /// <summary>
         /// Terminal feature that allows the terminal to highlight text as the mouse moves over it and report the coordinates of the highlighted area.
         /// This mode is particularly useful for applications that need to track mouse movements and selections within a specific region of the terminal.
         /// </summary>
         /// <remarks>When Hilite Mouse Tracking is enabled: The terminal highlights text as the mouse moves over it while a button is pressed and sends the coordinates of the highlighted area to the application upon release.</remarks>
         UseHiliteMouseTracking = 1UL << 39,
+
         /// <summary>
         /// Terminal feature that allows the terminal to report the mouse’s X and Y coordinates whenever the mouse moves from one cell to another, even if no buttons are pressed.
         /// This mode is useful for applications that need to track mouse movements continuously.
         /// </summary>
         /// <remarks>When Cell Motion Mouse Tracking is enabled: The terminal sends escape sequences that include the mouse’s X and Y coordinates whenever the mouse moves to a new cell.</remarks>
         UseCellMotionMouseTracking = 1UL << 40,
+
         /// <summary>
         /// Terminal feature that allows the terminal to report the mouse’s X and Y coordinates whenever the mouse moves, regardless of whether any buttons are pressed.
         /// This mode is useful for applications that need to track continuous mouse movements.
         /// </summary>
         /// <remarks>When All Motion Mouse Tracking is enabled: The terminal sends escape sequences that include the mouse’s X and Y coordinates whenever the mouse moves.</remarks>
-        UseAllMotionMouseTracking= 1UL << 41,
+        UseAllMotionMouseTracking = 1UL << 41,
+
         /// <summary>
         /// Terminal feature that allows the terminal to notify the application when it gains or loses focus.
         /// This is useful for applications that need to respond to focus changes, such as updating the user interface or pausing/resuming activities.
@@ -311,23 +324,123 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <remarks>FocusIn Event: This event is sent when the terminal window gains focus, meaning it becomes the active window and can receive keyboard input.</remarks>
         /// <remarks>FocusOut Event: This event is sent when the terminal window loses focus, meaning it is no longer the active window and cannot receive keyboard input.</remarks>
         SendFocusIn_FocusOutEvents = 1UL << 42,
+
         /// <summary>
         /// Terminal feature that allows the terminal to report mouse events using UTF-8 encoding.
         /// This mode is particularly useful for terminals that support UTF-8, ensuring that mouse event data is correctly interpreted and displayed.
         /// </summary>
         /// <remarks>When UTF-8 Mouse Mode is enabled: The terminal sends mouse event data using UTF-8 encoding.</remarks>
         EnableUTF_8Mouse = 1UL << 43,
+
         /// <summary>
         /// Terminal feature that allows the terminal to report mouse events using SGR (Select Graphic Rendition) encoding.
         /// This mode provides more detailed information about mouse events and supports higher coordinate values, making it suitable for modern applications and high-resolution displays.
         /// </summary>
         /// <remarks>When SGR Mouse Mode is enabled: The terminal sends mouse event data using SGR encoding, which includes the button state, X and Y coordinates, and additional modifiers.</remarks>
         EnableSGRMouse = 1UL << 44,
+
         /// <summary>
         /// Terminal feature that changes the behavior of the mouse scroll wheel when the terminal is in the alternate screen buffer.
         /// Instead of scrolling through the terminal’s scrollback history, the scroll wheel sends up and down arrow key events to the application running in the terminal.
         /// </summary>
         /// <remarks>When Alternate Scroll Mode is enabled: The scroll wheel sends up and down arrow key events to the application, allowing it to handle scrolling internally.</remarks>
         EnableAlternateScroll = 1UL << 45,
+
+        /// <summary>
+        /// Feature that ensures the terminal window automatically scrolls to the bottom whenever new output is received
+        /// This is particularly useful for monitoring real-time processes or logs, as it keeps the most recent output visible without requiring manual scrolling.
+        /// </summary>
+        /// <remarks>Automatic Scrolling: When enabled, the terminal will automatically scroll to the bottom of the output whenever new data is received. This ensures that the latest information is always visible.</remarks>
+        ScrollToBottomOnTtyOutput = 1UL << 46,
+        /// <summary>
+        /// Feature that ensures the terminal window scrolls to the bottom of the output whenever a key is pressed.
+        /// This can be particularly useful in scenarios where you want to quickly view the latest output without continuous automatic scrolling.
+        /// </summary>
+        /// <remarks>Manual Scrolling: When enabled, the terminal will scroll to the bottom of the output whenever any key is pressed. This allows you to control when you want to view the latest output.</remarks>
+        ScrollToBottomOnKeyPress = 1UL << 47,
+        /// <summary>
+        /// The “fastScroll” resource in xterm is a feature that enhances the scrolling performance of the terminal by reducing the amount of screen updates during rapid output.
+        /// This can be particularly useful when dealing with applications or commands that produce a large amount of output quickly.
+        /// </summary>
+        /// <remarks>Enhanced Scrolling Performance: When enabled, fastScroll reduces the frequency of screen updates during rapid output, which can significantly improve performance and responsiveness.</remarks>
+        FastScroll = 1UL << 48,
+        /// <summary>
+        /// Enabling Mouse Mode in urxvt (rxvt-unicode) allows the terminal to capture and respond to mouse events, such as clicks and scrolls.
+        /// This can be particularly useful for applications that support mouse interactions within the terminal.
+        /// </summary>
+        /// <remarks>Mouse Event Handling: When enabled, urxvt can capture mouse events like clicks, scrolls, and drags, and pass them to applications running within the terminal.</remarks>
+        UrxvtMouse = 1UL << 49,
+        /// <summary>
+        /// Enabling SGR Mouse PixelMode in xterm allows the terminal to report mouse events with pixel precision rather than cell-based coordinates.
+        /// This can be particularly useful for applications that require more precise mouse interactions within the terminal.
+        /// </summary>
+        /// <remarks>Pixel Precision: When enabled, SGR Mouse PixelMode reports mouse events with pixel-level accuracy, providing finer control compared to the default cell-based reporting.</remarks>
+        // ReSharper disable once InconsistentNaming
+        SGRMousePixelMode = 1UL << 50,
+        /// <summary>
+        /// Enabling the “Interpret ‘meta’ key” feature in xterm allows the terminal to set the eighth bit of keyboard input when the Meta key is pressed.
+        /// This can be useful for applications that rely on this specific input behavior.
+        /// </summary>
+        /// <remarks>Eighth Bit Setting: When enabled, pressing the Meta key (often the Alt key) will set the eighth bit of the keyboard input. This modifies the input character by adding 128 to its ASCII value.</remarks>
+        InterpretMetaKey = 1UL << 51,
+        /// <summary>
+        /// Enabling special modifiers for the Alt and NumLock keys in xterm allows the terminal to recognize these keys as modifiers, which can be useful for certain keybindings and functions.
+        /// </summary>
+        SpecialModifiersAltAndNumLockKeys = 1UL << 52,
+        /// <summary>
+        /// Enabling the “metaSendsEscape” resource in xterm allows the terminal to send an ESC character when the Meta key (often the Alt key) modifies another key.
+        /// This can be useful for applications that interpret ESC-prefixed sequences as special commands.
+        /// </summary>
+        /// <remarks>ESC Character Sending: When enabled, pressing the Meta key in combination with another key will send an ESC character followed by the modified key. For example, pressing Meta + A will send ESC A.</remarks>
+        MetaSendsEscape = 1UL << 53,
+        /// <summary>
+        /// Enabling the “Send DEL from the editing-keypad Delete key” feature in xterm configures the terminal to send the DEL (ASCII 127) character when the Delete key on the editing keypad is pressed.
+        /// This can be useful for applications that expect the Delete key to send the DEL character instead of other sequences.
+        /// </summary>
+        /// <remarks>DEL Character Sending: When enabled, pressing the Delete key on the editing keypad will send the DEL character (ASCII 127) instead of the default VT220-style Remove escape sequence.</remarks>
+        SendDEL_EditingKeypadelete = 1UL << 54,
+        /// <summary>
+        /// Enabling the “altSendsEscape” resource in xterm configures the terminal to send an ESC character when the Alt key modifies another key.
+        /// This can be useful for applications that interpret ESC-prefixed sequences as special commands.
+        /// </summary>
+        /// <remarks>ESC Character Sending: When enabled, pressing the Alt key in combination with another key will send an ESC character followed by the modified key. For example, pressing Alt + A will send ESC A.</remarks>
+        AltSendsEscape = 1UL << 55,
+        /// <summary>
+        /// Enabling the “keepSelection” resource in xterm ensures that text selections are preserved even when they are not highlighted.
+        /// This can be useful for maintaining selections across different operations without losing the selected text.
+        /// </summary>
+        /// <remarks>When enabled, the text selection remains active even if it is not visually highlighted. This allows you to perform other tasks without losing the selection.</remarks>
+        KeepSelection = 1UL << 56,
+        /// <summary>
+        /// Enabling the “selectToClipboard” resource in xterm configures the terminal to use the CLIPBOARD selection for copy and paste operations.
+        /// This can be useful for integrating xterm with modern applications that rely on the CLIPBOARD buffer for these functions.
+        /// </summary>
+        /// <remarks>CLIPBOARD Selection: When enabled, text selected in xterm is copied to the CLIPBOARD buffer, allowing it to be pasted into other applications using standard shortcuts like Ctrl+V.</remarks>
+        SelectToClipBoard = 1UL << 57,
+        /// <summary>
+        /// Enabling the “bellIsUrgent” resource in xterm configures the terminal to set the Urgency window manager hint when a Control-G (BEL) character is received.
+        /// This can be useful for drawing attention to the terminal window when an important event occurs.
+        /// </summary>
+        /// <remarks>Urgency Hint: When enabled, receiving a Control-G (BEL) character will set the Urgency hint for the window.
+        /// This typically causes the window to flash or the taskbar entry to blink, depending on the window manager.</remarks>
+        BellsUrgent = 1UL << 58,
+        /// <summary>
+        /// Enabling the “popOnBell” resource in xterm configures the terminal to raise the window to the top of the stack when a Control-G (BEL) character is received.
+        /// This can be useful for drawing immediate attention to the terminal window when an important event occurs.
+        /// </summary>
+        /// <remarks>Window Raising: When enabled, receiving a Control-G (BEL) character will cause the terminal window to raise to the top of the window stack, making it the active window. This ensures that the user notices the event that triggered the bell.</remarks>
+        PopOnBell = 1UL << 59,
+        /// <summary>
+        /// Enabling the “keepClipboard” resource in xterm configures the terminal to reuse the most recent data copied to the CLIPBOARD.
+        /// This ensures that the clipboard content remains available for pasting, even if the selection changes.
+        /// </summary>
+        /// <remarks>Persistent Clipboard Data: When enabled, the most recent data copied to the CLIPBOARD is retained and can be reused, even if the selection changes or other clipboard operations occur.</remarks>
+        KeepClipBoard = 1UL << 60,
+        /// <summary>
+        /// Enabling the “Extended Reverse-wraparound mode” (XTREVWRAP2) in xterm allows the terminal to wrap the cursor from the beginning of one line to the end of the previous line when moving backwards.
+        /// This can be useful for applications that require more flexible cursor movement.
+        /// </summary>
+        /// <remarks>Reverse-Wraparound: When enabled, moving the cursor left from the beginning of a line will wrap it to the end of the previous line. This is an extension of the standard reverse-wraparound mode.</remarks>
+        ExtendedReverseWrapAround = 1UL << 61,
     }
 }
