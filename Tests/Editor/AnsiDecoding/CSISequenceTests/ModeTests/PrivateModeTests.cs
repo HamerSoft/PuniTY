@@ -1,5 +1,4 @@
-﻿using System;
-using HamerSoft.PuniTY.AnsiEncoding;
+﻿using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests;
 using NUnit.Framework;
