@@ -1,5 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
-using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+﻿using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -11,21 +11,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(2, 2);
-        }
-
-        [Test]
-        public void IMode_By_Default_Is_None()
-        {
-            Assert.IsTrue(Screen.HasMode(AnsiMode.None));
-        }
-
-        [Test]
-        public void IMode_SetMote_Removes_Mode_None()
-        {
-            Screen.SetMode(AnsiMode.Origin);
-            Assert.IsTrue(Screen.HasMode(AnsiMode.Origin));
-            Assert.IsFalse(Screen.HasMode(AnsiMode.None));
+            Screen = new MockScreen(2, 2, new AlwaysValidModeFactory());
         }
 
         [Test]
@@ -64,7 +50,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Screen.SetMode(AnsiMode.ReverseVideo);
             Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
             Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.True);
-            Assert.That(Screen.HasMode(AnsiMode.None), Is.False);
         }
 
         [Test]
@@ -74,7 +59,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             {
                 Screen.ResetMode(AnsiMode.Origin);
                 Assert.IsFalse(Screen.HasMode(AnsiMode.Origin));
-                Assert.IsTrue(Screen.HasMode(AnsiMode.None));
             });
         }
 
@@ -92,7 +76,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Screen.ResetMode(AnsiMode.Origin);
             Assert.That(Screen.HasMode(AnsiMode.Origin), Is.False);
             Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.False);
-            Assert.That(Screen.HasMode(AnsiMode.None), Is.True);
         }
     }
 }

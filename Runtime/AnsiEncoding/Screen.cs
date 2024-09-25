@@ -608,8 +608,15 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
 
             var iMode = _modeFactory.Create(mode, this);
-            _activeModes.Add(mode, iMode);
-            iMode.Enable(this);
+            if (iMode != null)
+            {
+                _activeModes.Add(mode, iMode);
+                iMode.Enable(this);
+            }
+            else
+            {
+                _logger.LogWarning($"No implementation for terminal mode {mode}. Skipping command...");
+            }
         }
 
         public void ResetMode(AnsiMode mode)
@@ -622,10 +629,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public bool HasMode(params AnsiMode[] mode)
         {
-            var modes = new HashSet<AnsiMode>(mode);
-            if (_activeModes.Count == 0 && modes.Count == 1 && modes.First() == AnsiMode.None)
-                return true;
-
             for (int i = 0; i < mode.Length; i++)
                 if (!_activeModes.ContainsKey(mode[i]))
                     return false;

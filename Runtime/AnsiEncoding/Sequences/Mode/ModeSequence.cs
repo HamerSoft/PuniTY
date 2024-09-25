@@ -132,7 +132,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     SetMode(screen, AnsiMode.ApplicationKeypad);
                     break;
                 case 67:
-                    SetMode(screen, AnsiMode.BackarrowKeySendsBackspace);
+                    SetMode(screen, AnsiMode.BackArrowKeySendsBackspace);
                     break;
                 case 69:
                     SetMode(screen, AnsiMode.LeftAndRightMargin);
@@ -141,10 +141,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     SetMode(screen, AnsiMode.SixelDisplayMode);
                     break;
                 case 95:
-                    SetMode(screen, AnsiMode.DoNotClearScreenWhenDECCOLM);
+                    SetMode(screen, AnsiMode.DoNotClearScreenWhenDeccolm);
                     break;
                 case 1000:
-                    SetMode(screen, AnsiMode.SendMouseX_YOnButtonPressAndRelease);
+                    SetMode(screen, AnsiMode.SendMouseXYOnButtonPressAndRelease);
                     break;
                 case 1001:
                     SetMode(screen, AnsiMode.UseHiliteMouseTracking);
@@ -192,7 +192,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     SetMode(screen, AnsiMode.MetaSendsEscape);
                     break;
                 case 1037:
-                    SetMode(screen, AnsiMode.SendDEL_EditingKeypadelete);
+                    SetMode(screen, AnsiMode.SendDEL_EditingKeypadDelete);
                     break;
                 case 1039:
                     SetMode(screen, AnsiMode.AltSendsEscape);
@@ -223,6 +223,45 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     break;
                 case 1048:
                     SetMode(screen, AnsiMode.SaveCursorAsDECSC);
+                    break;
+                case 1049:
+                    SetMode(screen, AnsiMode.SaveCursorAsDECSC_AfterSwitchAlternateScreen);
+                    break;
+                case 1050:
+                    SetMode(screen, AnsiMode.FunctionKey);
+                    break;
+                case 1051:
+                    SetMode(screen, AnsiMode.Sun_FunctionKeys);
+                    break;
+                case 1052:
+                    SetMode(screen, AnsiMode.HP_FunctionKeys);
+                    break;
+                case 1053:
+                    SetMode(screen, AnsiMode.SCO_FunctionKeys);
+                    break;
+                case 1060:
+                    SetMode(screen, AnsiMode.LegacyKeyboardEmulation);
+                    break;
+                case 1061:
+                    SetMode(screen, AnsiMode.VT220KeyboardEmulation);
+                    break;
+                case 2001:
+                    SetMode(screen, AnsiMode.ReadLineMouseButton_1);
+                    break;
+                case 2002:
+                    SetMode(screen, AnsiMode.ReadLineMouseButton_2);
+                    break;
+                case 2003:
+                    SetMode(screen, AnsiMode.ReadLineMouseButton_3);
+                    break;
+                case 2004:
+                    SetMode(screen, AnsiMode.BracketedPaste);
+                    break;
+                case 2005:
+                    SetMode(screen, AnsiMode.ReadLineCharacterQuoting);
+                    break;
+                case 2006:
+                    SetMode(screen, AnsiMode.ReadLineNewLinePasting);
                     break;
             }
         }

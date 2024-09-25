@@ -1,6 +1,7 @@
 ﻿using System;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -15,7 +16,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(Rows, Columns);
+            Screen = new MockScreen(Rows, Columns, new AlwaysValidModeFactory());
             AnsiDecoder = new AnsiDecoder(Screen, EscapeCharacterDecoder,
                 CreateSequence(
                     typeof(SetModeSequence),
@@ -45,15 +46,16 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(41, AnsiMode.More_Fix)]
         [TestCase(42, AnsiMode.NationalReplacementCharacters)]
         [TestCase(43, AnsiMode.GraphicExtendedPrint)]
+        [TestCase(44, AnsiMode.MarginBell)]
         [TestCase(45, AnsiMode.ReverseWrapAround)]
         [TestCase(46, AnsiMode.XTLogging)]
         [TestCase(47, AnsiMode.AlternateScreenBuffer)]
         [TestCase(66, AnsiMode.ApplicationKeypad)]
-        [TestCase(67, AnsiMode.BackarrowKeySendsBackspace)]
+        [TestCase(67, AnsiMode.BackArrowKeySendsBackspace)]
         [TestCase(69, AnsiMode.LeftAndRightMargin)]
         [TestCase(80, AnsiMode.SixelDisplayMode)]
-        [TestCase(95, AnsiMode.DoNotClearScreenWhenDECCOLM)]
-        [TestCase(1000, AnsiMode.SendMouseX_YOnButtonPressAndRelease)]
+        [TestCase(95, AnsiMode.DoNotClearScreenWhenDeccolm)]
+        [TestCase(1000, AnsiMode.SendMouseXYOnButtonPressAndRelease)]
         [TestCase(1001, AnsiMode.UseHiliteMouseTracking)]
         [TestCase(1002, AnsiMode.UseCellMotionMouseTracking)]
         [TestCase(1003, AnsiMode.UseAllMotionMouseTracking)]
@@ -66,10 +68,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(1014, AnsiMode.FastScroll)]
         [TestCase(1015, AnsiMode.UrxvtMouse)]
         [TestCase(1016, AnsiMode.SGRMousePixelMode)]
-        [TestCase(1034, AnsiMode.InterpretMetaKey)]       
+        [TestCase(1034, AnsiMode.InterpretMetaKey)]
         [TestCase(1035, AnsiMode.SpecialModifiersAltAndNumLockKeys)]
         [TestCase(1036, AnsiMode.MetaSendsEscape)]
-        [TestCase(1037, AnsiMode.SendDEL_EditingKeypadelete)]
+        [TestCase(1037, AnsiMode.SendDEL_EditingKeypadDelete)]
         [TestCase(1039, AnsiMode.AltSendsEscape)]
         [TestCase(1040, AnsiMode.KeepSelection)]
         [TestCase(1041, AnsiMode.SelectToClipBoard)]
@@ -80,6 +82,19 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(1046, AnsiMode.EnableSwitchingAlternateScreenBuffer)]
         [TestCase(1047, AnsiMode.UseAlternateScreenBuffer)]
         [TestCase(1048, AnsiMode.SaveCursorAsDECSC)]
+        [TestCase(1049, AnsiMode.SaveCursorAsDECSC_AfterSwitchAlternateScreen)]
+        [TestCase(1050, AnsiMode.FunctionKey)]
+        [TestCase(1051, AnsiMode.Sun_FunctionKeys)]
+        [TestCase(1052, AnsiMode.HP_FunctionKeys)]
+        [TestCase(1053, AnsiMode.SCO_FunctionKeys)]
+        [TestCase(1060, AnsiMode.LegacyKeyboardEmulation)]
+        [TestCase(1061, AnsiMode.VT220KeyboardEmulation)]
+        [TestCase(2001, AnsiMode.ReadLineMouseButton_1)]
+        [TestCase(2002, AnsiMode.ReadLineMouseButton_2)]
+        [TestCase(2003, AnsiMode.ReadLineMouseButton_3)]
+        [TestCase(2004, AnsiMode.BracketedPaste)]
+        [TestCase(2005, AnsiMode.ReadLineCharacterQuoting)]
+        [TestCase(2006, AnsiMode.ReadLineNewLinePasting)]
         public void Private_SetMode_Sets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
@@ -109,15 +124,16 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(41, AnsiMode.More_Fix)]
         [TestCase(42, AnsiMode.NationalReplacementCharacters)]
         [TestCase(43, AnsiMode.GraphicExtendedPrint)]
+        [TestCase(44, AnsiMode.MarginBell)]
         [TestCase(45, AnsiMode.ReverseWrapAround)]
         [TestCase(46, AnsiMode.XTLogging)]
         [TestCase(47, AnsiMode.AlternateScreenBuffer)]
         [TestCase(66, AnsiMode.ApplicationKeypad)]
-        [TestCase(67, AnsiMode.BackarrowKeySendsBackspace)]
+        [TestCase(67, AnsiMode.BackArrowKeySendsBackspace)]
         [TestCase(69, AnsiMode.LeftAndRightMargin)]
         [TestCase(80, AnsiMode.SixelDisplayMode)]
-        [TestCase(95, AnsiMode.DoNotClearScreenWhenDECCOLM)]
-        [TestCase(1000, AnsiMode.SendMouseX_YOnButtonPressAndRelease)]
+        [TestCase(95, AnsiMode.DoNotClearScreenWhenDeccolm)]
+        [TestCase(1000, AnsiMode.SendMouseXYOnButtonPressAndRelease)]
         [TestCase(1001, AnsiMode.UseHiliteMouseTracking)]
         [TestCase(1002, AnsiMode.UseCellMotionMouseTracking)]
         [TestCase(1003, AnsiMode.UseAllMotionMouseTracking)]
@@ -133,7 +149,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(1034, AnsiMode.InterpretMetaKey)]
         [TestCase(1035, AnsiMode.SpecialModifiersAltAndNumLockKeys)]
         [TestCase(1036, AnsiMode.MetaSendsEscape)]
-        [TestCase(1037, AnsiMode.SendDEL_EditingKeypadelete)]
+        [TestCase(1037, AnsiMode.SendDEL_EditingKeypadDelete)]
         [TestCase(1039, AnsiMode.AltSendsEscape)]
         [TestCase(1040, AnsiMode.KeepSelection)]
         [TestCase(1041, AnsiMode.SelectToClipBoard)]
@@ -144,24 +160,25 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [TestCase(1046, AnsiMode.EnableSwitchingAlternateScreenBuffer)]
         [TestCase(1047, AnsiMode.UseAlternateScreenBuffer)]
         [TestCase(1048, AnsiMode.SaveCursorAsDECSC)]
+        [TestCase(1049, AnsiMode.SaveCursorAsDECSC_AfterSwitchAlternateScreen)]
+        [TestCase(1050, AnsiMode.FunctionKey)]
+        [TestCase(1051, AnsiMode.Sun_FunctionKeys)]
+        [TestCase(1052, AnsiMode.HP_FunctionKeys)]
+        [TestCase(1053, AnsiMode.SCO_FunctionKeys)]
+        [TestCase(1060, AnsiMode.LegacyKeyboardEmulation)]
+        [TestCase(1061, AnsiMode.VT220KeyboardEmulation)]
+        [TestCase(2001, AnsiMode.ReadLineMouseButton_1)]
+        [TestCase(2002, AnsiMode.ReadLineMouseButton_2)]
+        [TestCase(2003, AnsiMode.ReadLineMouseButton_3)]
+        [TestCase(2004, AnsiMode.BracketedPaste)]
+        [TestCase(2005, AnsiMode.ReadLineCharacterQuoting)]
+        [TestCase(2006, AnsiMode.ReadLineNewLinePasting)]
         public void Private_ResetMode_Resets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
             Assert.That(Screen.HasMode(expectedMode), Is.True);
             ResetMode(command);
             Assert.That(Screen.HasMode(expectedMode), Is.False);
-        }
-
-        [Test]
-        public void When_Xterm_Active_44h_Enables_MarginBell()
-        {
-            throw new NotImplementedException();
-        }
-        
-        [Test]
-        public void When_VT340_Active_44h_Enables_GraphicPrintColor()
-        {
-            throw new NotImplementedException();   
         }
 
         private void SetMode(int command)

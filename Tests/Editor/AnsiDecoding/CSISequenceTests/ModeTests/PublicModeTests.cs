@@ -1,5 +1,6 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
@@ -14,7 +15,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(Rows, Columns);
+            Screen = new MockScreen(Rows, Columns, new AlwaysValidModeFactory());
             AnsiDecoder = new AnsiDecoder(Screen, EscapeCharacterDecoder,
                 CreateSequence(
                     typeof(SetModeSequence),

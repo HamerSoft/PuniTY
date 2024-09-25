@@ -29,6 +29,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 new EditorLogger(), new DefaultScreenConfiguration(), new ModeFactory())
             {
             }
+
+            public MockScreen(int rows, int columns, IModeFactory modeFactory) : base(new Dimensions(rows, columns),
+                new MockCursor(),
+                new EditorLogger(), new DefaultScreenConfiguration(), modeFactory)
+            {
+            }
         }
 
         protected AnsiDecoder AnsiDecoder;
