@@ -1,14 +1,12 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using ILogger = HamerSoft.PuniTY.Logging;
+﻿using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Device
 {
     public class DeviceStatusReportSequence : TransmitSequence
     {
-        /// <summary>
-        /// This command has a hardcoded 6 as parameter, other integers are invalid.
-        /// </summary>
-        private const int Six = 6;
+        private const int InvalidArgument = -1;
+        private const char DisableKeyModifierIndicator = '>';
+        private const char DecSpecificIndicator = '?';
 
         public override char Command => 'n';
 
@@ -18,15 +16,58 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Device
 
         public override void Execute(IScreen screen, string parameters)
         {
-            if (int.TryParse(parameters, out var six) && six == Six)
+            if (string.IsNullOrWhiteSpace(parameters))
             {
-                screen.Transmit(ToBytes($"{Escape}{screen.Cursor.Position.Row};{screen.Cursor.Position.Column};R"));
+                Logger.LogWarning($"Failed to executed {nameof(GetType)}, no parameters given. Skipping command");
+                return;
             }
+
+            var paramsToParse = parameters.StartsWith(DisableKeyModifierIndicator) ||
+                                parameters.StartsWith(DecSpecificIndicator)
+                ? parameters.Substring(1, parameters.Length - 1)
+                : parameters;
+
+            if (!TryParseInt(paramsToParse, out var argument, "-1"))
+            {
+                Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
+                return;
+            }
+
+            if (InvalidArgument == argument)
+            {
+                Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, parameter invalid. Int Expected.");
+                return;
+            }
+
+            if (parameters.StartsWith(DisableKeyModifierIndicator))
+                DisableKeyModifiers(screen, argument);
+            else if (parameters.StartsWith(DecSpecificIndicator))
+                ExecuteDecSpecific(screen, argument);
             else
+                ExecuteNormal(screen, argument);
+        }
+
+        private void ExecuteNormal(IScreen screen, int argument)
+        {
+            switch (argument)
             {
-                Logger.LogWarning(
-                    $"Failed to get DeviceStatusReport, parameter: {parameters} is not an integer, or not equal to 6");
+                case 5:
+                    screen.Transmit(ToBytes($"{Escape}0n"));
+                    break;
+                case 6:
+                    screen.Transmit(ToBytes($"{Escape}{screen.Cursor.Position.Row};{screen.Cursor.Position.Column};R"));
+                    break;
             }
+        }
+
+        private void ExecuteDecSpecific(IScreen screen, int argument)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void DisableKeyModifiers(IScreen screen, int argument)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
