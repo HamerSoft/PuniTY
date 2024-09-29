@@ -54,7 +54,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _outBuffer = new List<byte[]>();
         }
 
-
         internal bool IsValidParameterCharacter(char c, bool isOscCommand, bool isCSI)
         {
             if (isOscCommand)
@@ -62,7 +61,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return c != BellCharacter || Char.IsNumber(c) || c == ';' || c == '"' || c == '?';
             }
             else if (isCSI)
-                return Char.IsNumber(c) || c == ';' || c == '"' || c == '?';
+                return Char.IsNumber(c) || c == ';' || c == '"' || c == '?' || c == '>';
 
             return false;
         }

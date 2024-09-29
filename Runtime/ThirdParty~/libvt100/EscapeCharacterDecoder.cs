@@ -48,7 +48,7 @@ namespace libVT100
             m_state = State.Normal;
             (this as IDecoder).Encoding = Encoding.ASCII;
             m_commandBuffer = new List<byte>();
-            m_supportXonXoff = true;
+            m_supportFnXoff = true;
             m_xOffReceived = false;
             m_outBuffer = new List<byte[]>();
         }
