@@ -52,6 +52,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
+
+        public event Action<IPointerMode> PointerModeChanged;
+
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
         private List<List<ICharacter>> _characters;
@@ -60,16 +63,20 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private GraphicAttributes _currentGraphicAttributes;
         private readonly HashSet<int> _clearedTabStops;
         private Dictionary<AnsiMode, IMode> _activeModes;
+        private PointerMode _pointerMode;
+        private readonly IPointerModeFactory _pointerModeFactory;
 
         public Screen(Dimensions dimensions,
             ICursor cursor,
             ILogger logger,
             IScreenConfiguration screenConfiguration,
-            IModeFactory modeFactory)
+            IModeFactory modeFactory,
+            IPointerModeFactory pointerModeFactory)
         {
             _activeModes = new Dictionary<AnsiMode, IMode>();
             _screenConfiguration = screenConfiguration;
             _modeFactory = modeFactory;
+            _pointerModeFactory = pointerModeFactory;
             _logger = logger;
             Rows = dimensions.Rows;
             Columns = dimensions.Columns;
@@ -235,255 +242,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             _savedCursorPosition = Cursor.Position;
         }
 
-        public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions)
+        public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditionPairs)
         {
-            foreach (GraphicsPair graphicRendition in _graphicRenditions)
-            {
-                switch (graphicRendition.GraphicRendition)
-                {
-                    case GraphicRendition.Reset:
-                        _currentGraphicAttributes.Reset();
-                        break;
-                    case GraphicRendition.Bold:
-                        _currentGraphicAttributes.IsBold = true;
-                        break;
-                    case GraphicRendition.Faint:
-                        _currentGraphicAttributes.IsFaint = true;
-                        break;
-                    case GraphicRendition.Italic:
-                        _currentGraphicAttributes.IsItalic = true;
-                        break;
-                    case GraphicRendition.Framed:
-                        _currentGraphicAttributes.IsFramed = true;
-                        break;
-                    case GraphicRendition.OverLined:
-                        _currentGraphicAttributes.IsOverLined = true;
-                        break;
-                    case GraphicRendition.NoOverLined:
-                        _currentGraphicAttributes.IsOverLined = false;
-                        break;
-                    case GraphicRendition.Encircled:
-                        _currentGraphicAttributes.IsEncircled = true;
-                        break;
-                    case GraphicRendition.NotFramedOrEncircled:
-                        _currentGraphicAttributes.IsFramed = false;
-                        _currentGraphicAttributes.IsEncircled = false;
-                        break;
-                    case GraphicRendition.StrikeThrough:
-                        _currentGraphicAttributes.IsStrikeThrough = true;
-                        break;
-                    case GraphicRendition.Underline:
-                        _currentGraphicAttributes.UnderlineMode = UnderlineMode.Single;
-                        break;
-                    case GraphicRendition.BlinkSlow:
-                        _currentGraphicAttributes.BlinkSpeed = BlinkSpeed.Slow;
-                        break;
-                    case GraphicRendition.BlinkRapid:
-                        _currentGraphicAttributes.BlinkSpeed = BlinkSpeed.Rapid;
-                        break;
-                    case GraphicRendition.Positive:
-                    case GraphicRendition.Inverse:
-                        (_currentGraphicAttributes.Foreground, _currentGraphicAttributes.Background) = (
-                            _currentGraphicAttributes.Background, _currentGraphicAttributes.Foreground);
-                        (_currentGraphicAttributes.ForegroundRGBColor, _currentGraphicAttributes.BackgroundRGBColor) = (
-                            _currentGraphicAttributes.BackgroundRGBColor, _currentGraphicAttributes.ForegroundRGBColor);
-                        _currentGraphicAttributes.UnderLineColorRGBColor = _currentGraphicAttributes.ForegroundRGBColor;
-                        break;
-                    case GraphicRendition.Conceal:
-                        _currentGraphicAttributes.IsConcealed = true;
-                        break;
-                    case GraphicRendition.UnderlineDouble:
-                        _currentGraphicAttributes.UnderlineMode = UnderlineMode.Double;
-                        break;
-                    case GraphicRendition.NormalIntensity:
-                        _currentGraphicAttributes.IsBold = false;
-                        _currentGraphicAttributes.IsFaint = false;
-                        break;
-                    case GraphicRendition.NoItalic:
-                        _currentGraphicAttributes.IsItalic = false;
-                        break;
-                    case GraphicRendition.NoUnderline:
-                        _currentGraphicAttributes.UnderlineMode = UnderlineMode.None;
-                        break;
-                    case GraphicRendition.NoBlink:
-                        _currentGraphicAttributes.BlinkSpeed = BlinkSpeed.None;
-                        break;
-                    case GraphicRendition.Reveal:
-                        _currentGraphicAttributes.IsConcealed = false;
-                        break;
-                    case GraphicRendition.NoStrikeThrough:
-                        _currentGraphicAttributes.IsStrikeThrough = false;
-                        break;
-                    case GraphicRendition.ProportionalSpacing:
-                        _currentGraphicAttributes.IsProportionalSpaced = true;
-                        break;
-                    case GraphicRendition.NoProportionalSpacing:
-                        _currentGraphicAttributes.IsProportionalSpaced = false;
-                        break;
-                    case GraphicRendition.ForegroundNormalBlack:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Black;
-                        break;
-                    case GraphicRendition.ForegroundNormalRed:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Red;
-                        break;
-                    case GraphicRendition.ForegroundNormalGreen:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Green;
-                        break;
-                    case GraphicRendition.ForegroundNormalYellow:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Yellow;
-                        break;
-                    case GraphicRendition.ForegroundNormalBlue:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Blue;
-                        break;
-                    case GraphicRendition.ForegroundNormalMagenta:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Magenta;
-                        break;
-                    case GraphicRendition.ForegroundNormalCyan:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Cyan;
-                        break;
-                    case GraphicRendition.ForegroundNormalWhite:
-                        _currentGraphicAttributes.Foreground = AnsiColor.White;
-                        break;
-                    case GraphicRendition.ForegroundNormalReset:
-                        _currentGraphicAttributes.Foreground = AnsiColor.White;
-                        break;
-                    case GraphicRendition.BackgroundNormalBlack:
-                        _currentGraphicAttributes.Background = AnsiColor.Black;
-                        break;
-                    case GraphicRendition.BackgroundNormalRed:
-                        _currentGraphicAttributes.Background = AnsiColor.Red;
-                        break;
-                    case GraphicRendition.BackgroundNormalGreen:
-                        _currentGraphicAttributes.Background = AnsiColor.Green;
-                        break;
-                    case GraphicRendition.BackgroundNormalYellow:
-                        _currentGraphicAttributes.Background = AnsiColor.Yellow;
-                        break;
-                    case GraphicRendition.BackgroundNormalBlue:
-                        _currentGraphicAttributes.Background = AnsiColor.Blue;
-                        break;
-                    case GraphicRendition.BackgroundNormalMagenta:
-                        _currentGraphicAttributes.Background = AnsiColor.Magenta;
-                        break;
-                    case GraphicRendition.BackgroundNormalCyan:
-                        _currentGraphicAttributes.Background = AnsiColor.Cyan;
-                        break;
-                    case GraphicRendition.BackgroundNormalWhite:
-                        _currentGraphicAttributes.Background = AnsiColor.White;
-                        break;
-                    case GraphicRendition.BackgroundNormalReset:
-                        _currentGraphicAttributes.Background = AnsiColor.Black;
-                        break;
-                    case GraphicRendition.ForegroundBrightBlack:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightBlack;
-                        break;
-                    case GraphicRendition.ForegroundBrightRed:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightRed;
-                        break;
-                    case GraphicRendition.ForegroundBrightGreen:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightGreen;
-                        break;
-                    case GraphicRendition.ForegroundBrightYellow:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightYellow;
-                        break;
-                    case GraphicRendition.ForegroundBrightBlue:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightBlue;
-                        break;
-                    case GraphicRendition.ForegroundBrightMagenta:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightMagenta;
-                        break;
-                    case GraphicRendition.ForegroundBrightCyan:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightCyan;
-                        break;
-                    case GraphicRendition.ForegroundBrightWhite:
-                        _currentGraphicAttributes.Foreground = AnsiColor.BrightWhite;
-                        break;
-                    case GraphicRendition.ForegroundBrightReset:
-                        _currentGraphicAttributes.Foreground = AnsiColor.White;
-                        break;
-                    case GraphicRendition.BackgroundBrightBlack:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightBlack;
-                        break;
-                    case GraphicRendition.BackgroundBrightRed:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightRed;
-                        break;
-                    case GraphicRendition.BackgroundBrightGreen:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightGreen;
-                        break;
-                    case GraphicRendition.BackgroundBrightYellow:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightYellow;
-                        break;
-                    case GraphicRendition.BackgroundBrightBlue:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightBlue;
-                        break;
-                    case GraphicRendition.BackgroundBrightMagenta:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightMagenta;
-                        break;
-                    case GraphicRendition.BackgroundBrightCyan:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightCyan;
-                        break;
-                    case GraphicRendition.BackgroundBrightWhite:
-                        _currentGraphicAttributes.Background = AnsiColor.BrightWhite;
-                        break;
-                    case GraphicRendition.BackgroundBrightReset:
-                        _currentGraphicAttributes.Background = AnsiColor.Black;
-                        break;
-                    case GraphicRendition.ForegroundColor:
-                        _currentGraphicAttributes.Foreground = AnsiColor.Rgb;
-                        var hasCustomUnderline = _currentGraphicAttributes.ForegroundRGBColor !=
-                                                 _currentGraphicAttributes.UnderLineColorRGBColor;
-                        _currentGraphicAttributes.ForegroundRGBColor = new RgbColor(graphicRendition.Color[0].Value,
-                            graphicRendition.Color[1].Value, graphicRendition.Color[2].Value);
-                        if (!hasCustomUnderline)
-                            _currentGraphicAttributes.UnderLineColorRGBColor =
-                                _currentGraphicAttributes.ForegroundRGBColor;
-                        break;
-                    case GraphicRendition.BackgroundColor:
-                        _currentGraphicAttributes.Background = AnsiColor.Rgb;
-                        _currentGraphicAttributes.BackgroundRGBColor = new RgbColor(graphicRendition.Color[0].Value,
-                            graphicRendition.Color[1].Value, graphicRendition.Color[2].Value);
-                        break;
-                    case GraphicRendition.UnderLineColor:
-                        _currentGraphicAttributes.UnderLineColorRGBColor = new RgbColor(graphicRendition.Color[0].Value,
-                            graphicRendition.Color[1].Value, graphicRendition.Color[2].Value);
-                        break;
-                    case GraphicRendition.ResetUnderLineColor:
-                        _currentGraphicAttributes.UnderLineColorRGBColor = _currentGraphicAttributes.ForegroundRGBColor;
-                        break;
-                    case GraphicRendition.SuperScript:
-                        _currentGraphicAttributes.ScriptMode = ScriptMode.SuperScript;
-                        break;
-                    case GraphicRendition.Subscript:
-                        _currentGraphicAttributes.ScriptMode = ScriptMode.SubScript;
-                        break;
-                    case GraphicRendition.NoSuperOrSubScript:
-                        _currentGraphicAttributes.ScriptMode = ScriptMode.None;
-                        break;
-                    case GraphicRendition.AlternativeFont1:
-                    case GraphicRendition.AlternativeFont2:
-                    case GraphicRendition.AlternativeFont3:
-                    case GraphicRendition.AlternativeFont4:
-                    case GraphicRendition.AlternativeFont5:
-                    case GraphicRendition.AlternativeFont6:
-                    case GraphicRendition.AlternativeFont7:
-                    case GraphicRendition.AlternativeFont8:
-                    case GraphicRendition.AlternativeFont9:
-                    case GraphicRendition.Fraktur:
-                    case GraphicRendition.Font1:
-                        _logger.LogWarning($"Trying to set GraphicsRendition Font {graphicRendition} now what!?");
-                        break;
-                    case GraphicRendition.RightSideLine:
-                    case GraphicRendition.DoubleRightSideLine:
-                    case GraphicRendition.LeftSideLine:
-                    case GraphicRendition.DoubleLeftSideLine:
-                    case GraphicRendition.IdeogramStressMarking:
-                    case GraphicRendition.NoIdeogram:
-                        _logger.LogWarning($"SGR command {(int)graphicRendition.GraphicRendition} not supported.");
-                        break;
-                    default:
-                        throw new Exception("Unknown rendition command");
-                }
-            }
+            _currentGraphicAttributes =
+                GraphicsRenditionParser.Parse(_currentGraphicAttributes, _graphicRenditionPairs, _logger);
         }
 
         void IScreen.Transmit(byte[] data)
@@ -633,6 +395,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 if (!_activeModes.ContainsKey(mode[i]))
                     return false;
             return true;
+        }
+
+        void IPointerable.SetPointerMode(PointerMode mode)
+        {
+            if (mode == _pointerMode)
+                return;
+            _pointerMode = mode;
+            PointerModeChanged?.Invoke(_pointerModeFactory.Create(this, mode));
         }
     }
 

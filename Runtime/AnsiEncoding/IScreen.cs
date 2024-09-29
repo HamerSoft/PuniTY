@@ -8,7 +8,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public GraphicRendition GraphicRendition;
     }
 
-    public interface IScreen : ITabStop, IModeable
+    public interface IScreen : ITabStop, IModeable, IPointerable
     {
         public event Action<byte[]> Output;
         public int Rows { get; }
@@ -26,10 +26,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         void Scroll(int lines, Direction direction);
         public void SaveCursor();
         public void RestoreCursor();
-        public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditions);
+        public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditionPairs);
         public void InsertLines(int linesToInsert);
         public void DeleteLines(int linesToDelete);
-
         internal void Transmit(byte[] data);
     }
 }
