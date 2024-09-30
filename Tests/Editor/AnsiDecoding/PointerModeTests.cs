@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
 
@@ -29,6 +30,16 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             _stubPointer.SetPosition(new Vector2(10, 10), _bounds);
             Assert.That(_stubPointer.IsActive, Is.True);
             _stubPointer.SetPosition(new Vector2(200, 200), _bounds);
+        }
+
+        [Test]
+        public void PointerMode_HideWhenTrackingDisabled_Hides_Pointer_When_Tracking_Is_Disabled()
+        {
+            ((IPointer)_stubPointer).SetMode(new HideWhenTrackingDisabled(Screen));
+            Assert.That(_stubPointer.IsActive, Is.False);
+            ((IPointerable)Screen).SetPointerMode(PointerMode.HideIfNotTracking);
+            Screen.SetMode(AnsiMode.UseAllMotionMouseTracking);
+            Assert.That(_stubPointer.IsActive, Is.True);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -22,6 +23,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
     public interface IModeable
     {
+        /// <summary>
+        /// Event raised when mode changed
+        /// <remarks>Data is on format [mode, enabled]</remarks> 
+        /// </summary>
+        public event Action<AnsiMode, bool> ModeChanged;
+
         /// <summary>
         /// Set a mode
         /// </summary>

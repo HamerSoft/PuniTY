@@ -54,6 +54,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public ICursor Cursor { get; }
 
         public event Action<IPointerMode> PointerModeChanged;
+        public event Action<AnsiMode, bool> ModeChanged;
 
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
@@ -374,6 +375,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 _activeModes.Add(mode, iMode);
                 iMode.Enable(this);
+                ModeChanged?.Invoke(mode, true);
             }
             else
             {
@@ -384,7 +386,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void ResetMode(AnsiMode mode)
         {
             if (_activeModes.Remove(mode, out var iMode))
+            {
                 iMode.Disable(this);
+                ModeChanged?.Invoke(mode, false);
+            }
             else
                 _logger.LogWarning($"Mode: {mode} is not active.");
         }

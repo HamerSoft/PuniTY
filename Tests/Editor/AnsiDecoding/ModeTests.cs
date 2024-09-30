@@ -22,6 +22,37 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         }
 
         [Test]
+        public void IMode_When_Modes_Are_Toggled_Events_Are_Raised()
+        {
+            var resultMode = AnsiMode.KeyBoardAction;
+            var invoked = false;
+            var enabled = false;
+
+            void OnMode(AnsiMode mode, bool isActive)
+            {
+                resultMode = mode;
+                enabled = isActive;
+                invoked = true;
+            }
+
+            Screen.ModeChanged += OnMode;
+            Screen.SetMode(AnsiMode.Origin);
+
+            Assert.That(invoked, Is.True);
+            Assert.That(enabled, Is.True);
+            Assert.That(resultMode, Is.EqualTo(AnsiMode.Origin));
+
+            resultMode = AnsiMode.KeyBoardAction;
+            invoked = false;
+            Screen.ResetMode(AnsiMode.Origin);
+
+            Assert.That(invoked, Is.True);
+            Assert.That(enabled, Is.False);
+            Assert.That(resultMode, Is.EqualTo(AnsiMode.Origin));
+            Screen.ModeChanged -= OnMode;
+        }
+
+        [Test]
         public void IMode_SetMode_Can_Enable_Multiple_Modes()
         {
             Screen.SetMode(AnsiMode.Origin);
