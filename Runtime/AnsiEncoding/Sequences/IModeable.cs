@@ -1,24 +1,25 @@
 ﻿using System;
+using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public interface IMode
+    internal interface IMode
     {
         /// <summary>
         /// Called when enabling the mode
         /// </summary>
-        public void Enable(IScreen screen);
+        public void Enable(AnsiContext context);
 
         /// <summary>
         /// Called when disabling the mode
         /// </summary>
-        public void Disable(IScreen screen);
+        public void Disable(AnsiContext context);
 
         /// <summary>
         /// Apply Mode if needs to be done repeatedly
         /// </summary>
-        public void Apply(IScreen screen);
+        public void Apply(AnsiContext context);
     }
 
     public interface IModeable
@@ -33,13 +34,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// Set a mode
         /// </summary>
         /// <param name="mode">The mode that needs to be set</param>
-        public void SetMode(AnsiMode mode);
+        internal void SetMode(AnsiMode mode);
 
         /// <summary>
         /// Reset a mode
         /// </summary>
         /// <param name="mode">The mode that needs to be reset</param>
-        public void ResetMode(AnsiMode mode);
+        internal void ResetMode(AnsiMode mode);
 
         /// <summary>
         /// Check whether a mode is active

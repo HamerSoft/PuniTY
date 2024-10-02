@@ -6,7 +6,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     public interface IEscapeCharacterDecoder : IDisposable
     {
         public event Action<byte[]> ProcessOutput;
-        public event Action<SequenceType, byte, string> ProcessCommand;
+        internal event Action<SequenceType, char, string> ProcessCommand;
         public System.Text.Encoding Encoding { get; }
 
         /// <summary>

@@ -1,17 +1,18 @@
 ﻿using System;
+using AnsiEncoding;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
 {
     internal class PointerModeFactory : IPointerModeFactory
     {
-        IPointerMode IPointerModeFactory.Create(IScreen screen, PointerMode pointerMode)
+        IPointerMode IPointerModeFactory.Create(AnsiContext ansiContext, PointerMode pointerMode)
         {
             switch (pointerMode)
             {
                 case PointerMode.NeverHide:
                     return new NeverHide();
                 case PointerMode.HideIfNotTracking:
-                    return new HideWhenTrackingDisabled(screen);
+                    return new HideWhenTrackingDisabled(ansiContext.Screen);
                 case PointerMode.AlwaysHideInWindow:
                     return new HideInWindow();
                 case PointerMode.AlwaysHide:

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using AnsiEncoding;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -81,8 +82,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         internal void Apply(IPointer pointer, Rect bounds);
     }
 
-    public interface IPointerModeFactory
+    internal interface IPointerModeFactory
     {
-        internal IPointerMode Create(IScreen screen, PointerMode pointerMode);
+        internal IPointerMode Create(AnsiContext context, PointerMode pointerMode);
     }
 }

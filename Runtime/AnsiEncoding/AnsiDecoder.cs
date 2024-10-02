@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public sealed class AnsiDecoder : IDisposable
+    internal sealed class AnsiDecoder : IDisposable
     {
         private readonly IScreen _screen;
 
@@ -13,7 +12,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         // private readonly Dictionary<char, ISequence> _sequences;
         private readonly Dictionary<SequenceType, Dictionary<char, ISequence>> _sequences;
 
-        public AnsiDecoder(IScreen screen, IEscapeCharacterDecoder escapeCharacterDecoder,
+        internal AnsiDecoder(IScreen screen, IEscapeCharacterDecoder escapeCharacterDecoder,
             params ISequence[] acceptedSequences)
         {
             _screen = screen;
@@ -43,9 +42,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             throw new NotImplementedException();
         }
 
-        private void ProcessCommand(SequenceType sequenceType, byte command, string parameters)
+        private void ProcessCommand(SequenceType sequenceType, char character, string parameters)
         {
-            var character = (char)command;
             if (_sequences.TryGetValue(sequenceType, out var typedSequences) &&
                 typedSequences.TryGetValue(character, out var sequence))
                 sequence.Execute(_screen, parameters);

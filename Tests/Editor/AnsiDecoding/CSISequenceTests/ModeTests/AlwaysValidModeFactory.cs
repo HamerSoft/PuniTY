@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests
@@ -10,20 +11,23 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests
     {
         private class AlwaysValidMode : IMode
         {
-            public void Enable(IScreen screen)
+            public void Enable(AnsiContext context)
             {
+                throw new System.NotImplementedException();
             }
 
-            public void Disable(IScreen screen)
+            public void Disable(AnsiContext context)
             {
+                throw new System.NotImplementedException();
             }
 
-            public void Apply(IScreen screen)
+            public void Apply(AnsiContext context)
             {
+                throw new System.NotImplementedException();
             }
         }
 
-        public IMode Create(AnsiMode mode, IScreen screen)
+        IMode IModeFactory.Create(AnsiMode mode, IScreen screen)
         {
             return new AlwaysValidMode();
         }

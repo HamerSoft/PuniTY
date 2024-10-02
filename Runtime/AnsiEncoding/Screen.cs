@@ -21,27 +21,24 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             private readonly int _customTabStopSize;
 
             public int TabStopSize => _customTabStopSize > 0 ? _customTabStopSize : DefaultTabStopSize;
+            public ScreenDimensions ScreenDimensions { get; }
 
-            public DefaultScreenConfiguration(int tabStopSize)
+            public DefaultScreenConfiguration(int rows, int columns, int tabStopSize)
             {
+                ScreenDimensions = new ScreenDimensions(rows, columns);
                 _customTabStopSize = tabStopSize;
             }
 
-            public DefaultScreenConfiguration(DefaultScreenConfiguration other)
+            internal DefaultScreenConfiguration(ScreenDimensions screenDimensions)
+            {
+                ScreenDimensions = screenDimensions;
+                _customTabStopSize = 0;
+            }
+
+            internal DefaultScreenConfiguration(DefaultScreenConfiguration other)
             {
                 _customTabStopSize = other.TabStopSize;
-            }
-        }
-
-        public readonly struct Dimensions
-        {
-            public readonly int Rows;
-            public readonly int Columns;
-
-            public Dimensions(int rows, int columns)
-            {
-                Rows = rows;
-                Columns = columns;
+                ScreenDimensions = other.ScreenDimensions;
             }
         }
 
@@ -67,20 +64,17 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private PointerMode _pointerMode;
         private readonly IPointerModeFactory _pointerModeFactory;
 
-        public Screen(Dimensions dimensions,
-            ICursor cursor,
+        public Screen(ICursor cursor,
             ILogger logger,
             IScreenConfiguration screenConfiguration,
-            IModeFactory modeFactory,
-            IPointerModeFactory pointerModeFactory)
+            IModeFactory modeFactory)
         {
             _activeModes = new Dictionary<AnsiMode, IMode>();
             _screenConfiguration = screenConfiguration;
             _modeFactory = modeFactory;
-            _pointerModeFactory = pointerModeFactory;
             _logger = logger;
-            Rows = dimensions.Rows;
-            Columns = dimensions.Columns;
+            Rows = _screenConfiguration.ScreenDimensions.Rows;
+            Columns = _screenConfiguration.ScreenDimensions.Columns;
             Cursor = cursor;
             Cursor.SetPosition(new Position(1, 1));
             _rowOffset = 0;
@@ -295,7 +289,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void ResetTabStops()
         {
             _clearedTabStops.Clear();
-            _screenConfiguration = new DefaultScreenConfiguration();
+            _screenConfiguration = new DefaultScreenConfiguration(_screenConfiguration.ScreenDimensions);
         }
 
         public void ClearTabStop(int? column)
@@ -311,7 +305,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
             else
             {
-                _screenConfiguration = new DefaultScreenConfiguration(1);
+                _screenConfiguration = new DefaultScreenConfiguration(_screenConfiguration.ScreenDimensions.Rows,
+                    _screenConfiguration.ScreenDimensions.Columns, 1);
                 _clearedTabStops.Clear();
             }
         }
@@ -362,7 +357,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             return Math.Clamp(tabStop * _screenConfiguration.TabStopSize, 1, Columns);
         }
 
-        public void SetMode(AnsiMode mode)
+        void IModeable.SetMode(AnsiMode mode)
         {
             if (_activeModes.ContainsKey(mode))
             {
@@ -383,7 +378,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
         }
 
-        public void ResetMode(AnsiMode mode)
+        void IModeable.ResetMode(AnsiMode mode)
         {
             if (_activeModes.Remove(mode, out var iMode))
             {

@@ -2,6 +2,6 @@
 {
     public interface IModeFactory
     {
-        public IMode Create(AnsiMode mode, IScreen screen);
+        internal IMode Create(AnsiMode mode, IScreen screen);
     }
 }

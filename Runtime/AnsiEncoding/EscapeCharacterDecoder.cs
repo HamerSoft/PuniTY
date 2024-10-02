@@ -28,9 +28,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private readonly bool _supportXonXOff;
         private bool _xOffReceived;
         private readonly List<byte[]> _outBuffer;
-
+        private event Action<SequenceType, char, string> _processCommand;
         public event Action<byte[]> ProcessOutput;
-        public event Action<SequenceType, byte, string> ProcessCommand;
+
+        event Action<SequenceType, char, string> IEscapeCharacterDecoder.ProcessCommand
+        {
+            add => _processCommand += value;
+            remove => _processCommand -= value;
+        }
 
         public System.Text.Encoding Encoding
         {
@@ -340,7 +345,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private void OnProcessCommand(SequenceType sequenceType, byte command, string parameter)
         {
-            ProcessCommand?.Invoke(sequenceType, command, parameter);
+            _processCommand?.Invoke(sequenceType, (char)command, parameter);
         }
 
         private void OnProcessOutput(byte[] output)

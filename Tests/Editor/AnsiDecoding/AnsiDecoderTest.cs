@@ -26,12 +26,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 
         protected class MockScreen : Screen
         {
-            public MockScreen(int rows, int columns) : base(new Dimensions(rows, columns), new MockCursor(),
+            public MockScreen(int rows, int columns) : base(new ScreenDimensions(rows, columns), new MockCursor(),
                 new EditorLogger(), new DefaultScreenConfiguration(), new ModeFactory(), new PointerModeFactory())
             {
             }
 
-            public MockScreen(int rows, int columns, IModeFactory modeFactory) : base(new Dimensions(rows, columns),
+            public MockScreen(int rows, int columns, IModeFactory modeFactory) : base(new ScreenDimensions(rows, columns),
                 new MockCursor(),
                 new EditorLogger(), new DefaultScreenConfiguration(), modeFactory, new PointerModeFactory())
             {
