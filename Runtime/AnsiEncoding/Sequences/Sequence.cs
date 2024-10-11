@@ -1,4 +1,4 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using AnsiEncoding;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -8,15 +8,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         protected const char EmptyCharacter = '\0';
         public abstract SequenceType SequenceType { get; }
         public abstract char Command { get; }
-        private readonly IScreen _screen;
-        protected ILogger.ILogger Logger;
-
-        public Sequence(ILogger.ILogger logger)
-        {
-            Logger = logger;
-        }
-
-        public abstract void Execute(IScreen screen, string parameters);
+        public abstract void Execute(IAnsiContext context, string parameters);
 
         protected bool TryParseInt(string parameters, out int value, string defaultValue = "1")
         {
@@ -42,8 +34,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
                 else
                 {
-                    Logger.LogWarning(
-                        $"{GetType().Name} failed to parse parameters: {parameters}. Invalid integer {arguments[i]}.");
                     output[i] = defaultValue;
                 }
             }

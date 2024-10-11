@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Characters
@@ -11,7 +12,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Characters
         {
         }
 
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (!TryParseInt(parameters, out var repeats))
             {
@@ -19,6 +20,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Characters
                 return;
             }
 
+            var screen = context.Screen;
             if (screen.Cursor.Position == new Position(1, 1))
             {
                 Logger.LogWarning(

@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
@@ -11,7 +12,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
         {
         }
 
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
@@ -23,7 +24,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.EraseSequences
                 Logger.LogWarning($"Cannot erase line, failed to parse {parameters}");
                 return;
             }
-
+var screen = context.Screen;
             switch (number)
             {
                 case 0:

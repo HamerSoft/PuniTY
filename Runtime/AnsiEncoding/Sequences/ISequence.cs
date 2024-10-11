@@ -1,4 +1,6 @@
-﻿namespace HamerSoft.PuniTY.AnsiEncoding
+﻿using AnsiEncoding;
+
+namespace HamerSoft.PuniTY.AnsiEncoding
 {
     // /// <summary>
     // /// Command types as per https://en.wikipedia.org/wiki/ANSI_escape_code
@@ -81,6 +83,6 @@
     {
         public SequenceType SequenceType { get; }
         public char Command { get; }
-        public void Execute(IScreen screen, string parameters);
+        public void Execute(IAnsiContext context, string parameters);
     }
 }

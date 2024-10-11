@@ -1,10 +1,11 @@
 ﻿using System;
+using AnsiEncoding;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
 {
     internal class ModeFactory : IModeFactory
     {
-        IMode IModeFactory.Create(AnsiMode mode, IScreen screen)
+        IMode IModeFactory.Create(AnsiMode mode, IAnsiContext context)
         {
             IMode terminalMode = null;
             switch (mode)

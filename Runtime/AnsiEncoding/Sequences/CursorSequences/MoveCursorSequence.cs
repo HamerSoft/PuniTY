@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -20,11 +21,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
         }
 
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             var cells = 1;
             if (string.IsNullOrWhiteSpace(parameters) || int.TryParse(parameters, out cells))
-                screen.MoveCursor(cells, Direction);
+                context.Screen.MoveCursor(cells, Direction);
             else
             {
                 Logger.LogWarning($"Failed to parse move cursor command {Direction} => {parameters}");

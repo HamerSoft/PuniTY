@@ -29,8 +29,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
         {
             if (enabled)
             {
-                if (_acceptedModes.Contains(mode))
-                    
+                // if (_acceptedModes.Contains(mode))
+                //     
             }
         }
 

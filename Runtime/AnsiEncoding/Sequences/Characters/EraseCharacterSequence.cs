@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using UnityEngine;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
@@ -12,13 +13,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Characters
         {
         }
 
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (!int.TryParse(parameters, out var charactersToErase))
             {
                 Logger.LogWarning($"Cannot erase characters, invalid parameter: {parameters}. Int expected.");
             }
 
+            var screen = context.Screen;
             screen.Erase(screen.Cursor.Position, screen.Cursor.Position.AddColumns(screen, charactersToErase));
         }
     }

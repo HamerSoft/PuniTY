@@ -9,17 +9,17 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// <summary>
         /// Called when enabling the mode
         /// </summary>
-        public void Enable(AnsiContext context);
+        public void Enable(IAnsiContext context);
 
         /// <summary>
         /// Called when disabling the mode
         /// </summary>
-        public void Disable(AnsiContext context);
+        public void Disable(IAnsiContext context);
 
         /// <summary>
         /// Apply Mode if needs to be done repeatedly
         /// </summary>
-        public void Apply(AnsiContext context);
+        public void Apply(IAnsiContext context);
     }
 
     public interface IModeable

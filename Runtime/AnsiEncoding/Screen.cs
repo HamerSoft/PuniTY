@@ -44,14 +44,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private readonly ILogger _logger;
         private IScreenConfiguration _screenConfiguration;
-        private readonly IModeFactory _modeFactory;
         public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
 
         public event Action<IPointerMode> PointerModeChanged;
-        public event Action<AnsiMode, bool> ModeChanged;
 
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
@@ -60,18 +58,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private Position? _savedCursorPosition;
         private GraphicAttributes _currentGraphicAttributes;
         private readonly HashSet<int> _clearedTabStops;
-        private Dictionary<AnsiMode, IMode> _activeModes;
         private PointerMode _pointerMode;
         private readonly IPointerModeFactory _pointerModeFactory;
 
         public Screen(ICursor cursor,
             ILogger logger,
-            IScreenConfiguration screenConfiguration,
-            IModeFactory modeFactory)
+            IScreenConfiguration screenConfiguration)
         {
-            _activeModes = new Dictionary<AnsiMode, IMode>();
             _screenConfiguration = screenConfiguration;
-            _modeFactory = modeFactory;
             _logger = logger;
             Rows = _screenConfiguration.ScreenDimensions.Rows;
             Columns = _screenConfiguration.ScreenDimensions.Columns;
@@ -357,45 +351,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             return Math.Clamp(tabStop * _screenConfiguration.TabStopSize, 1, Columns);
         }
 
-        void IModeable.SetMode(AnsiMode mode)
-        {
-            if (_activeModes.ContainsKey(mode))
-            {
-                _logger.LogWarning($"Mode: {mode} already active.");
-                return;
-            }
-
-            var iMode = _modeFactory.Create(mode, this);
-            if (iMode != null)
-            {
-                _activeModes.Add(mode, iMode);
-                iMode.Enable(this);
-                ModeChanged?.Invoke(mode, true);
-            }
-            else
-            {
-                _logger.LogWarning($"No implementation for terminal mode {mode}. Skipping command...");
-            }
-        }
-
-        void IModeable.ResetMode(AnsiMode mode)
-        {
-            if (_activeModes.Remove(mode, out var iMode))
-            {
-                iMode.Disable(this);
-                ModeChanged?.Invoke(mode, false);
-            }
-            else
-                _logger.LogWarning($"Mode: {mode} is not active.");
-        }
-
-        public bool HasMode(params AnsiMode[] mode)
-        {
-            for (int i = 0; i < mode.Length; i++)
-                if (!_activeModes.ContainsKey(mode[i]))
-                    return false;
-            return true;
-        }
 
         void IPointerable.SetPointerMode(PointerMode mode)
         {

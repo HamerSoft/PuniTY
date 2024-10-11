@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -11,7 +12,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
         }
 
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
                 parameters = "1";
@@ -19,6 +20,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             if (!int.TryParse(parameters, out var offset))
                 return;
 
+            var screen = context.Screen;
             var currentTabStop = screen.Cursor.Position.Column / screen.ScreenConfiguration.TabStopSize;
             if (offset > screen.Columns - currentTabStop)
             {

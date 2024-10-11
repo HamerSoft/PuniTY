@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using UnityEngine;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
@@ -12,7 +13,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
         }
 
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (!TryParseInt(parameters, out var targetColumn))
             {
@@ -20,6 +21,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
+            var screen = context.Screen;
             if (targetColumn < 1 || targetColumn > screen.Columns)
             {
                 Logger.LogWarning(
