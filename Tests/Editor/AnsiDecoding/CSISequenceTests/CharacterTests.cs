@@ -20,15 +20,17 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(ScreenRows, ScreenColumns);
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(InsertCharacterSequence),
-                    typeof(EraseCharacterSequence),
-                    typeof(InsertLineSequence),
-                    typeof(DeleteLineSequence),
-                    typeof(RepeatPrecedingGraphicCharacter)));
             PopulateScreen();
+        }
+
+        protected override DefaultTestSetup DoTestSetup()
+        {
+            return new DefaultTestSetup(ScreenRows, ScreenColumns,
+                typeof(InsertCharacterSequence),
+                typeof(EraseCharacterSequence),
+                typeof(InsertLineSequence),
+                typeof(DeleteLineSequence),
+                typeof(RepeatPrecedingGraphicCharacter));
         }
 
         private void PopulateScreen()

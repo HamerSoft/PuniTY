@@ -11,15 +11,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public const int Rows = 25;
         public const int Columns = 80;
 
-        [SetUp]
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(Rows, Columns, new AlwaysValidModeFactory());
-            AnsiDecoder = new AnsiDecoder(Screen, EscapeCharacterDecoder,
-                CreateSequence(
-                    typeof(SetModeSequence),
-                    typeof(ResetModeSequence)));
+            return new DefaultTestSetup(Rows, Columns, new AlwaysValidModeFactory(), typeof(SetModeSequence),
+                typeof(ResetModeSequence));
         }
 
         [TestCase(1, AnsiMode.ApplicationCursorKeys)]
@@ -97,7 +92,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void Private_SetMode_Sets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
-            Assert.That(Screen.HasMode(expectedMode), Is.True);
+            Assert.That(AnsiContext.TerminalModeContext.HasMode(expectedMode), Is.True);
         }
 
         [TestCase(1, AnsiMode.ApplicationCursorKeys)]
@@ -175,9 +170,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         public void Private_ResetMode_Resets_Correct_AnsiMode(int command, AnsiMode expectedMode)
         {
             SetMode(command);
-            Assert.That(Screen.HasMode(expectedMode), Is.True);
+            Assert.That(AnsiContext.TerminalModeContext.HasMode(expectedMode), Is.True);
             ResetMode(command);
-            Assert.That(Screen.HasMode(expectedMode), Is.False);
+            Assert.That(AnsiContext.TerminalModeContext.HasMode(expectedMode), Is.False);
         }
 
         private void SetMode(int command)

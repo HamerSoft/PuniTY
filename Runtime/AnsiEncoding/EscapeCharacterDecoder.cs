@@ -29,7 +29,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private bool _xOffReceived;
         private readonly List<byte[]> _outBuffer;
         private event Action<SequenceType, char, string> _processCommand;
-        public event Action<byte[]> ProcessOutput;
+        private event Action<byte[]> _processOutput;
+
+        event Action<byte[]> IEscapeCharacterDecoder.ProcessOutput
+        {
+            add => _processOutput += value;
+            remove => _processOutput -= value;
+        }
 
         event Action<SequenceType, char, string> IEscapeCharacterDecoder.ProcessCommand
         {
@@ -350,7 +356,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private void OnProcessOutput(byte[] output)
         {
-            if (ProcessOutput != null)
+            if (_processOutput != null)
             {
                 if (_supportXonXOff && _xOffReceived)
                 {
@@ -358,7 +364,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
                 else
                 {
-                    ProcessOutput(output);
+                    _processOutput(output);
                 }
             }
         }

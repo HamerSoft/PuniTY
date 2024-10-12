@@ -7,13 +7,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
     [TestFixture]
     public class ScreenIteratorTests : AnsiDecoderTest
     {
-        private readonly int _screenRows = 25;
-        private readonly int _screenColumns = 80;
+        private readonly int _rows = 25;
+        private readonly int _columns = 80;
 
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(_screenRows, _screenColumns);
+            return new DefaultTestSetup(_rows, _columns);
         }
 
         [Test]

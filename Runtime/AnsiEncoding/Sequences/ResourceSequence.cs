@@ -1,5 +1,7 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using HamerSoft.PuniTY.Logging;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+using NUnit.Framework.Internal;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -11,15 +13,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public override char Command => 'p';
 
-        public ResourceSequence(ILogger logger) : base(logger)
-        {
-        }
-
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                Logger.LogWarning($"Failed to executed {nameof(GetType)}, no parameters given. Skipping command");
+                context.LogWarning($"Failed to executed {nameof(GetType)}, no parameters given. Skipping command");
                 return;
             }
 
@@ -30,18 +28,19 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
-                Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
+                context.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
                 return;
             }
 
             if (InvalidArgument == argument)
             {
-                Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, parameter invalid. Int Expected.");
+                context.LogWarning($"Failed to parse argument {nameof(GetType)}, parameter invalid. Int Expected.");
                 return;
             }
 
+            var screen = context.Screen;
             if (parameters.StartsWith(SetResource))
-                SetPointerResourceMode(screen, argument);
+                SetPointerResourceMode(context.TerminalModeContext, argument);
             else if (parameters.StartsWith(DecSpecificIndicator))
                 ExecuteDecSpecific(screen, argument);
             else
@@ -56,21 +55,21 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
         }
 
-        private void SetPointerResourceMode(IScreen screen, int argument)
+        private void SetPointerResourceMode(IPointerable pointerable, int argument)
         {
             switch (argument)
             {
                 case 0:
-                    screen.SetPointerMode(PointerMode.NeverHide);
+                    pointerable.SetPointerMode(PointerMode.NeverHide);
                     break;
                 case 1:
-                    screen.SetPointerMode(PointerMode.HideIfNotTracking);
+                    pointerable.SetPointerMode(PointerMode.HideIfNotTracking);
                     break;
                 case 2:
-                    screen.SetPointerMode(PointerMode.AlwaysHideInWindow);
+                    pointerable.SetPointerMode(PointerMode.AlwaysHideInWindow);
                     break;
                 case 3:
-                    screen.SetPointerMode(PointerMode.AlwaysHide);
+                    pointerable.SetPointerMode(PointerMode.AlwaysHide);
                     break;
             }
         }

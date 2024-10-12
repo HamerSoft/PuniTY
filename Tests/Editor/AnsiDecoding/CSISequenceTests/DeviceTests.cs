@@ -18,11 +18,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             base.SetUp();
             _output = new List<byte>();
-            Screen = new MockScreen(10, 10);
             Screen.Output += ScreenOnOutput;
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(DeviceStatusReportSequence)));
+        }
+
+        protected override DefaultTestSetup DoTestSetup()
+        {
+            return new DefaultTestSetup(10, 10, typeof(DeviceStatusReportSequence));
         }
 
         [Test]

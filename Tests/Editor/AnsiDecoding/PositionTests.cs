@@ -1,5 +1,4 @@
-﻿using System;
-using HamerSoft.PuniTY.AnsiEncoding;
+﻿using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -8,10 +7,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
     [TestFixture]
     public class PositionTests : AnsiDecoderTest
     {
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(5, 10);
+            return new DefaultTestSetup(5, 10);
         }
 
         [TestCase(1, 1, 1, 2, 1)]

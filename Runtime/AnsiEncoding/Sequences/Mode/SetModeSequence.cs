@@ -1,5 +1,4 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
-using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -7,13 +6,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     {
         public override char Command => 'h';
 
-        public SetModeSequence(ILogger logger) : base(logger)
+        protected override void SetMode(IModeable modeable, AnsiMode mode)
         {
-        }
-        
-        protected override void SetMode(IScreen screen, AnsiMode mode)
-        {
-            screen.SetMode(mode);
+            modeable.SetMode(mode);
         }
     }
 }

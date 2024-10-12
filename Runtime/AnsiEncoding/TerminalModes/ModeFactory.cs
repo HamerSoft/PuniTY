@@ -1,10 +1,27 @@
 ﻿using System;
 using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
 {
     internal class ModeFactory : IModeFactory
     {
+        IPointerMode IModeFactory.Create(PointerMode pointerMode, IAnsiContext context)
+        {
+            switch (pointerMode)
+            {
+                case PointerMode.NeverHide:
+                    return new NeverHide();
+                case PointerMode.HideIfNotTracking:
+                    return new HideWhenTrackingDisabled(context.Screen);
+                case PointerMode.AlwaysHideInWindow:
+                    return new HideInWindow();
+                case PointerMode.AlwaysHide:
+                    return new AlwaysHide();
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(pointerMode), pointerMode, null);
+            }
+        }
         IMode IModeFactory.Create(AnsiMode mode, IAnsiContext context)
         {
             IMode terminalMode = null;

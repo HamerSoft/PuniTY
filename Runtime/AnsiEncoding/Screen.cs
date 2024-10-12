@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -48,9 +47,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
-
-        public event Action<IPointerMode> PointerModeChanged;
-
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
         private List<List<ICharacter>> _characters;
@@ -349,15 +345,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 tabStop += 1;
 
             return Math.Clamp(tabStop * _screenConfiguration.TabStopSize, 1, Columns);
-        }
-
-
-        void IPointerable.SetPointerMode(PointerMode mode)
-        {
-            if (mode == _pointerMode)
-                return;
-            _pointerMode = mode;
-            PointerModeChanged?.Invoke(_pointerModeFactory.Create(this, mode));
         }
     }
 

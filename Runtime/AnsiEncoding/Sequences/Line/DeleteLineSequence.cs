@@ -1,5 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using HamerSoft.PuniTY.Logging;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Line
 {
@@ -10,22 +10,18 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Line
     {
         public override char Command => 'M';
 
-        public DeleteLineSequence(ILogger logger) : base(logger)
-        {
-        }
-
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
                 parameters = "1";
 
             if (!int.TryParse(parameters, out var linesToDelete))
             {
-                Logger.LogWarning($"Cannot parse {parameters} to delete lines, int expected!");
+                context.LogWarning($"Cannot parse {parameters} to delete lines, int expected!");
                 return;
             }
 
-            screen.DeleteLines(linesToDelete);
+            context.Screen.DeleteLines(linesToDelete);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ILogger = HamerSoft.PuniTY.Logging;
+﻿using AnsiEncoding;
+using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Device
 {
@@ -10,15 +11,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Device
 
         public override char Command => 'n';
 
-        public DeviceStatusReportSequence(ILogger.ILogger logger) : base(logger)
-        {
-        }
-
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                Logger.LogWarning($"Failed to executed {nameof(GetType)}, no parameters given. Skipping command");
+                context.LogWarning($"Failed to executed {nameof(GetType)}, no parameters given. Skipping command");
                 return;
             }
 
@@ -29,19 +26,19 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Device
 
             if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
-                Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
+                context.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
                 return;
             }
 
             if (InvalidArgument == argument)
             {
-                Logger.LogWarning($"Failed to parse argument {nameof(GetType)}, parameter invalid. Int Expected.");
+                context.LogWarning($"Failed to parse argument {nameof(GetType)}, parameter invalid. Int Expected.");
                 return;
             }
 
-            Logger.LogWarning(
+            context.LogWarning(
                 "DSR requested: not officially supported, create GH issue for feature request or make a PR.");
-
+            var screen = context.Screen;
             if (parameters.StartsWith(DisableKeyModifierIndicator))
                 DisableKeyModifiers(screen, argument);
             else if (parameters.StartsWith(DecSpecificIndicator))
@@ -123,9 +120,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Device
             }
         }
 
-        private void DisableKeyModifiers(IScreen screen, int argument)
+        private void DisableKeyModifiers(IAnsiContext context, int argument)
         {
-            Logger.LogWarning("Disable Key Modifier Options not supported! Skipping command.");
+            context.LogWarning("Disable Key Modifier Options not supported! Skipping command.");
         }
     }
 }

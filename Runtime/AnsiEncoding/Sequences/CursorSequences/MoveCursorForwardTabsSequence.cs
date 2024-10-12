@@ -1,17 +1,12 @@
 ﻿using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public class MoveCursorForwardTabsSequence : CSISequence
     {
         public override char Command => 'I';
-
-        public MoveCursorForwardTabsSequence(ILogger.ILogger logger) : base(logger)
-        {
-        }
-
+        
         public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
@@ -24,7 +19,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             var currentTabStop = screen.Cursor.Position.Column / screen.ScreenConfiguration.TabStopSize;
             if (offset > screen.Columns - currentTabStop)
             {
-                Logger.LogWarning(
+                context.LogWarning(
                     $"Cannot move tabstops greater than max tabstops");
                 return;
             }

@@ -1,16 +1,11 @@
 ﻿using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.Characters
 {
     public class InsertCharacterSequence : CSISequence
     {
         public override char Command => '@';
-
-        public InsertCharacterSequence(ILogger.ILogger logger) : base(logger)
-        {
-        }
 
         public override void Execute(IAnsiContext context, string parameters)
         {
@@ -19,7 +14,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Characters
 
             if (!int.TryParse(parameters, out var charactersToInsert))
             {
-                Logger.LogWarning($"Invalid insert character argument. Expected int: {parameters}");
+                context.LogWarning($"Invalid insert character argument. Expected int: {parameters}");
                 return;
             }
 

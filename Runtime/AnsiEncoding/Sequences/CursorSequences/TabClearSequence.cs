@@ -1,6 +1,5 @@
 ﻿using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -10,15 +9,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private const int Three = 3;
         public override char Command => 'g';
 
-        public TabClearSequence(ILogger logger) : base(logger)
-        {
-        }
-
         public override void Execute(IAnsiContext context, string parameters)
         {
             if (!TryParseInt(parameters, out var parameter, "0"))
             {
-                Logger.LogWarning("Cannot clear column / all, invalid parameter. Int Expected.");
+                context.LogWarning("Cannot clear column / all, invalid parameter. Int Expected.");
                 return;
             }
 
@@ -32,7 +27,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     screen.ClearTabStop(null);
                     break;
                 default:
-                    Logger.LogWarning(
+                    context.LogWarning(
                         $"TabClear only accepts parameters '0' or '3'. Given: {parameter}. Skipping command.");
                     break;
             }

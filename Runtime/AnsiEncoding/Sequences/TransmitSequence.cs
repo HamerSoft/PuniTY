@@ -1,15 +1,10 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
-using ILogger = HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
     public abstract class TransmitSequence : CSISequence
     {
         protected const string Escape = "\x001b[";
-
-        protected TransmitSequence(ILogger.ILogger logger) : base(logger)
-        {
-        }
 
         protected byte[] ToBytes(string toTransmit)
         {

@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using NUnit.Framework;
 
@@ -13,11 +14,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             public override char Command { get; }
 
-            public EmptySequence(HamerSoft.PuniTY.Logging.ILogger logger) : base(logger)
-            {
-            }
-
-            public override void Execute(IScreen screen, string parameters)
+            public override void Execute(IAnsiContext screen, string parameters)
             {
             }
 
@@ -30,7 +27,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         [SetUp]
         public void SetUp()
         {
-            _sequence = new EmptySequence(null);
+            _sequence = new EmptySequence();
         }
 
         [TestCase("1;1", 2, 1, ExpectedResult = new[] { 1, 1 })]

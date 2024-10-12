@@ -17,10 +17,16 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             base.SetUp();
             _pointer = new StubPointer(new NeverHide(), new Vector2(0, 0), _rect);
-            Screen = new MockScreen(5, 5);
-            Screen.PointerModeChanged += ScreenOnPointerModeChanged;
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder, CreateSequence(typeof(ResourceSequence)));
+            AnsiContext = new StubAnsiContext(_pointer,
+                new Screen.DefaultScreenConfiguration(5, 5, 8),
+                Logger,
+                new ResourceSequence());
+            // Screen.PointerModeChanged += ScreenOnPointerModeChanged;
+        }
+
+        protected override DefaultTestSetup DoTestSetup()
+        {
+            return DefaultSetup;
         }
 
         private void ScreenOnPointerModeChanged(IPointerMode mode)

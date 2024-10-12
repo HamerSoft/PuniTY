@@ -9,7 +9,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
         public PointerMode Mode => PointerMode.HideIfNotTracking;
         private HashSet<AnsiMode> _acceptedModes;
 
-        public HideWhenTrackingDisabled(IScreen screen)
+        public HideWhenTrackingDisabled(Itermin screen)
         {
             _screen = screen;
             _screen.ModeChanged += ScreenOnModeChanged;

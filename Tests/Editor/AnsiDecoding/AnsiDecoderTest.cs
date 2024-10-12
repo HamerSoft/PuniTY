@@ -2,18 +2,53 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding;
-using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Core.Logging;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
 using UnityEngine;
+using Cursor = AnsiEncoding.Cursor.Cursor;
+using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 {
     public abstract class AnsiDecoderTest
     {
+        public readonly struct DefaultTestSetup
+        {
+            internal readonly int Rows;
+            internal readonly int Columns;
+            internal readonly Type[] Sequences;
+            public readonly IModeFactory ModeFactory;
+
+            public DefaultTestSetup(int rows, int columns, params Type[] sequences)
+            {
+                Rows = rows;
+                Columns = columns;
+                Sequences = sequences;
+                ModeFactory = null;
+            }
+
+            public DefaultTestSetup(int rows, int columns, IModeFactory modeFactory, params Type[] sequences)
+            {
+                ModeFactory = modeFactory;
+                Rows = rows;
+                Columns = columns;
+                Sequences = sequences;
+            }
+
+            public DefaultTestSetup(int rows, int columns)
+            {
+                Rows = rows;
+                Columns = columns;
+                Sequences = Array.Empty<Type>();
+                ModeFactory = null;
+            }
+        }
+
         protected class MockCursor : ICursor
         {
             public Position Position { get; private set; }
@@ -26,29 +61,51 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 
         protected class MockScreen : Screen
         {
-            public MockScreen(int rows, int columns) : base(new ScreenDimensions(rows, columns), new MockCursor(),
-                new EditorLogger(), new DefaultScreenConfiguration(), new ModeFactory(), new PointerModeFactory())
-            {
-            }
-
-            public MockScreen(int rows, int columns, IModeFactory modeFactory) : base(new ScreenDimensions(rows, columns),
-                new MockCursor(),
-                new EditorLogger(), new DefaultScreenConfiguration(), modeFactory, new PointerModeFactory())
+            public MockScreen(int rows, int columns, ILogger logger) : base(new Cursor(), logger,
+                new DefaultScreenConfiguration(rows, columns, 8))
             {
             }
         }
 
-        protected AnsiDecoder AnsiDecoder;
-        protected MockScreen Screen;
-        internal EscapeCharacterDecoder EscapeCharacterDecoder;
+        protected const char DefaultChar = 'a';
+        protected const char EmptyCharacter = '\0';
+        protected IScreen Screen => AnsiContext.Screen;
         protected const string Escape = "\x001b[";
         protected HamerSoft.PuniTY.Logging.ILogger Logger;
+        private StubAnsiContext _context;
+
+        protected StubAnsiContext AnsiContext
+        {
+            get => _context;
+            set
+            {
+                _context?.Dispose();
+                _context = value;
+            }
+        }
+
+        protected DefaultTestSetup DefaultSetup => new DefaultTestSetup(2, 10);
 
         [SetUp]
         public virtual void SetUp()
         {
             Logger = new EditorLogger();
-            EscapeCharacterDecoder = new EscapeCharacterDecoder();
+            AnsiContext = CreateTestContext(DoTestSetup());
+        }
+
+        protected abstract DefaultTestSetup DoTestSetup();
+
+        private StubAnsiContext CreateTestContext(DefaultTestSetup defaultTestSetup)
+        {
+            if (defaultTestSetup.ModeFactory == null)
+                return new StubAnsiContext(defaultTestSetup.Rows, defaultTestSetup.Columns, Logger,
+                    CreateSequence(defaultTestSetup.Sequences));
+            else
+            {
+                return new StubAnsiContext(defaultTestSetup.Rows, defaultTestSetup.Columns, Logger,
+                    defaultTestSetup.ModeFactory,
+                    CreateSequence(defaultTestSetup.Sequences));
+            }
         }
 
         /// <summary>
@@ -60,7 +117,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             var sequences = new List<ISequence>();
             foreach (var type in types)
                 if (type.IsSubclassOf(typeof(Sequence)))
-                    sequences.Add((Sequence)Activator.CreateInstance(type, new object[] { Logger }));
+                    sequences.Add((Sequence)Activator.CreateInstance(type));
                 else
                     throw new ArgumentException($"Invalid Sequence Type: {type.FullName}");
 
@@ -78,14 +135,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 i++;
             }
 
-            EscapeCharacterDecoder.Decode(data.Concat(trailingBytes).ToArray());
+            AnsiContext.Decoder.Decode(data.Concat(trailingBytes).ToArray());
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            EscapeCharacterDecoder.Dispose();
-            AnsiDecoder?.Dispose();
+            AnsiContext.Dispose();
+        }
+
+
+        protected void PopulateScreen(char @char = DefaultChar)
+        {
+            var iterator = new ScreenIterator(Screen);
+            foreach (var _ in iterator)
+                Screen.AddCharacter(@char);
+            Screen.SetCursorPosition(new Position(1, 1));
         }
 
         protected void PrintScreen()

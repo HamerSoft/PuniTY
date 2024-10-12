@@ -11,25 +11,30 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests
     {
         private class AlwaysValidMode : IMode
         {
-            public void Enable(AnsiContext context)
+            public void Enable(IAnsiContext context)
             {
                 throw new System.NotImplementedException();
             }
 
-            public void Disable(AnsiContext context)
+            public void Disable(IAnsiContext context)
             {
                 throw new System.NotImplementedException();
             }
 
-            public void Apply(AnsiContext context)
+            public void Apply(IAnsiContext context)
             {
                 throw new System.NotImplementedException();
             }
         }
 
-        IMode IModeFactory.Create(AnsiMode mode, IScreen screen)
+        IMode IModeFactory.Create(AnsiMode mode, IAnsiContext context)
         {
             return new AlwaysValidMode();
+        }
+
+        IPointerMode IModeFactory.Create(PointerMode pointerMode, IAnsiContext context)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

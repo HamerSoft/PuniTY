@@ -5,15 +5,18 @@ using HamerSoft.PuniTY.Logging;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
 {
-    internal class TerminalModeContext : IModeable
+    public sealed class TerminalModeContext : IModeable, IPointerable
     {
         private readonly IAnsiContext _context;
         private Dictionary<AnsiMode, IMode> _activeModes;
         private readonly IModeFactory _modeFactory;
         private readonly ILogger _logger;
-        public event Action<AnsiMode, bool> ModeChanged;
+        private PointerMode _pointerMode;
 
-        public TerminalModeContext(IAnsiContext context, IModeFactory modeFactory)
+        public event Action<AnsiMode, bool> ModeChanged;
+        public event Action<IPointerMode> PointerModeChanged;
+        
+        internal TerminalModeContext(IAnsiContext context, IModeFactory modeFactory)
         {
             _context = context;
             _logger = _context.Logger;
@@ -58,6 +61,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 if (!_activeModes.ContainsKey(mode[i]))
                     return false;
             return true;
+        }
+
+        void IPointerable.SetPointerMode(PointerMode mode)
+        {
+            if (mode == _pointerMode)
+                return;
+            _pointerMode = mode;
+            PointerModeChanged?.Invoke(_modeFactory.Create(mode, _context));
         }
     }
 }

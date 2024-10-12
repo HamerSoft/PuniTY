@@ -4,34 +4,28 @@ using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
-using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
     [TestFixture]
     public class MoveCursorTests : AnsiDecoderTest
     {
-        [SetUp]
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(10, 10);
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(MoveCursorBackSequence),
-                    typeof(MoveCursorForwardSequence),
-                    typeof(MoveCursorUpSequence),
-                    typeof(MoveCursorDownSequence),
-                    typeof(MoveCursorNextLineSequence),
-                    typeof(MoveCursorPreviousLineSequence),
-                    typeof(MoveCursorToColumn),
-                    typeof(SetCursorPositionSequence),
-                    typeof(CharacterPositionAbsoluteSequence),
-                    typeof(CharacterPositionRelativeSequence),
-                    typeof(LinePositionAbsoluteSequence),
-                    typeof(LinePositionRelativeSequence),
-                    typeof(HorizontalAndVerticalPositionSequence)
-                ));
+            return new DefaultTestSetup(10, 10, 
+                typeof(MoveCursorBackSequence),
+                typeof(MoveCursorForwardSequence),
+                typeof(MoveCursorUpSequence),
+                typeof(MoveCursorDownSequence),
+                typeof(MoveCursorNextLineSequence),
+                typeof(MoveCursorPreviousLineSequence),
+                typeof(MoveCursorToColumn),
+                typeof(SetCursorPositionSequence),
+                typeof(CharacterPositionAbsoluteSequence),
+                typeof(CharacterPositionRelativeSequence),
+                typeof(LinePositionAbsoluteSequence),
+                typeof(LinePositionRelativeSequence),
+                typeof(HorizontalAndVerticalPositionSequence));
         }
 
         [Test]

@@ -1,6 +1,8 @@
 ﻿using System;
+using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.Logging;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -13,51 +15,44 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         private class ESCSequence : AnsiEncoding.SequenceTypes.ESCSequence
         {
             private readonly Action _callback;
+            public override char Command => CommandChar;
 
-            public ESCSequence(ILogger logger, Action callback) : base(logger)
+            public ESCSequence(Action callback)
             {
                 _callback = callback;
             }
-
-            public override char Command => CommandChar;
-
-            public override void Execute(IScreen screen, string parameters)
+            public override void Execute(IAnsiContext context, string parameters)
             {
                 _callback?.Invoke();
             }
         }
-
         private class CSISequence : AnsiEncoding.SequenceTypes.CSISequence
         {
             private readonly Action _callback;
+            public override char Command => CommandChar;
 
-            public CSISequence(ILogger logger, Action callback) : base(logger)
+            public CSISequence(Action callback)
             {
                 _callback = callback;
             }
-
-            public override char Command => CommandChar;
-
-            public override void Execute(IScreen screen, string parameters)
+            public override void Execute(IAnsiContext context, string parameters)
             {
                 _callback?.Invoke();
             }
         }
-
-        [SetUp]
-        public override void SetUp()
+        
+        
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(10, 10);
+            return DefaultSetup;
         }
-
+        
         [Test]
         public void AnsiDecoder_Throws_Exception_When_DuplicateCommand_Args_Are_Given()
         {
             Assert.Throws<ArgumentException>(() =>
             {
-                AnsiDecoder = new AnsiDecoder(Screen,
-                    EscapeCharacterDecoder, new ESCSequence(null, null), new ESCSequence(null, null));
+                _ = new StubAnsiContext(2,10, Logger,new ESCSequence(null), new ESCSequence(null));
             });
         }
 
@@ -79,8 +74,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 csiExecuted = true;
             }
 
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder, new ESCSequence(null, ESC), new CSISequence(null, CSI));
+            AnsiContext= new StubAnsiContext(2,10, Logger,new ESCSequence(ESC), new CSISequence(CSI));
             Decode($"\x001b{CommandChar}");
             Assert.That(escExecuted, Is.True);
             Assert.That(csiExecuted, Is.False);
@@ -103,11 +97,11 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 csiExecuted = true;
             }
 
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder, new ESCSequence(null, ESC), new CSISequence(null, CSI));
+            AnsiContext= new StubAnsiContext(2,10, Logger,new ESCSequence(ESC), new CSISequence(CSI));
             Decode($"{Escape}{CommandChar}");
             Assert.That(escExecuted, Is.False);
             Assert.That(csiExecuted, Is.True);
         }
+
     }
 }

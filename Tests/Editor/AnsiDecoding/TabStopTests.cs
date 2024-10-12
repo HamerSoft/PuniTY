@@ -1,16 +1,13 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 {
     [TestFixture]
     public class TabStopTests : AnsiDecoderTest
     {
-        [SetUp]
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(2, 80);
+            return new DefaultTestSetup(2, 80);
         }
 
         [Test]

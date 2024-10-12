@@ -21,7 +21,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         /// </summary>
         public void Apply(IAnsiContext context);
     }
-
+    
     public interface IModeable
     {
         /// <summary>

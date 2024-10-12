@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 using ILogger = HamerSoft.PuniTY.Logging;
 
@@ -16,15 +17,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public override char Command => 'm';
 
-        public GraphicsRenditionSequence(ILogger.ILogger logger) : base(logger)
-        {
-        }
-
-        public override void Execute(IScreen screen, string parameters)
+        public override void Execute(IAnsiContext context, string parameters)
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                Logger.LogWarning("Invalid GraphicsRendition, no parameters given!");
+                context.LogWarning("Invalid GraphicsRendition, no parameters given!");
                 return;
             }
 
@@ -98,7 +95,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 }
                 else
                 {
-                    Logger?.LogError(
+                    context?.LogError(
                         $"Failed to parse GraphicsRendition parameter {arguments[i]} at index {i} from parameters {parameters}. Skipping command...");
                     return;
                 }
@@ -106,11 +103,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             if (!string.IsNullOrWhiteSpace(errorMessage))
             {
-                Logger?.LogError(errorMessage);
+                context?.LogError(errorMessage);
                 return;
             }
 
-            screen.SetGraphicsRendition(graphicsRenditions.ToArray());
+            context.Screen.SetGraphicsRendition(graphicsRenditions.ToArray());
         }
 
         private int?[] Parse8BitColor(int?[] customColor, out AnsiColor? defaultColor)

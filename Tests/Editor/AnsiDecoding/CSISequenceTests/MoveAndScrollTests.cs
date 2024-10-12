@@ -6,14 +6,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
     [TestFixture]
     public class MoveAndScrollTests : AnsiDecoderTest
     {
-        [SetUp]
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(10, 10);
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(MoveAndScrollUp)));
+            return new DefaultTestSetup(10, 10, typeof(MoveAndScrollUp));
         }
 
         [Test]

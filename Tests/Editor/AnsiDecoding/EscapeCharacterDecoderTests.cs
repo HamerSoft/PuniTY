@@ -1,4 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding;
+﻿using System;
+using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
 using EscapeCharacterDecoder = HamerSoft.PuniTY.AnsiEncoding.EscapeCharacterDecoder;
 
@@ -28,10 +29,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Characters += characters;
         }
 
-        private void OnProcessCommand(SequenceType sequenceType, byte command, string parameter)
+        private void OnProcessCommand(SequenceType sequenceType, char command, string parameter)
         {
             SequenceType = sequenceType;
-            Command = (char)command;
+            Command = command;
             Parameters = parameter;
         }
     }
@@ -42,10 +43,15 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         private MockEscapeCharacterDecoder _decoder;
 
         [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
             base.SetUp();
-            _decoder = new MockEscapeCharacterDecoder(EscapeCharacterDecoder);
+            _decoder = new MockEscapeCharacterDecoder(new EscapeCharacterDecoder());
+        }
+
+        protected override DefaultTestSetup DoTestSetup()
+        {
+            return DefaultSetup;
         }
 
         [Test]

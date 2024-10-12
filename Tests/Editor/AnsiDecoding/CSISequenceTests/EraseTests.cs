@@ -11,27 +11,18 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
     {
         private const int ScreenRows = 10;
         private const int ScreenColumns = 5;
-        private const char DefaultChar = 'a';
-        private const char EmptyCharacter = '\0';
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(ScreenRows, ScreenColumns);
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(EraseDisplaySequence),
-                    typeof(EraseLineSequence)));
             PopulateScreen();
         }
 
-        private void PopulateScreen()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            for (int i = 0; i < ScreenRows; i++)
-            for (int j = 0; j < ScreenColumns; j++)
-                Screen.AddCharacter(DefaultChar);
-            Screen.SetCursorPosition(new Position(1, 1));
+            return new DefaultTestSetup(ScreenRows, ScreenColumns, typeof(EraseDisplaySequence),
+                typeof(EraseLineSequence));
         }
 
         [Test]

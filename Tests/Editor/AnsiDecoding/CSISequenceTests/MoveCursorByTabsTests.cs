@@ -12,17 +12,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         private const int ScreenRows = 2;
         private const int ScreenColumns = 80;
 
-        [SetUp]
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(ScreenRows, ScreenColumns);
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(MoveCursorForwardTabsSequence),
-                    typeof(MoveCursorBackwardTabsSequence),
-                    typeof(ResetTabStopSequence),
-                    typeof(TabClearSequence)));
+            return new DefaultTestSetup(ScreenRows, ScreenColumns, typeof(MoveCursorForwardTabsSequence),
+                typeof(MoveCursorBackwardTabsSequence),
+                typeof(ResetTabStopSequence),
+                typeof(TabClearSequence));
         }
 
         [TestCase("", 1, 8)]

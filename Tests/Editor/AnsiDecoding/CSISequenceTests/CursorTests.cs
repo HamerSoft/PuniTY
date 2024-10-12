@@ -6,17 +6,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
     [TestFixture]
     public class CursorTests : AnsiDecoderTest
     {
-        [SetUp]
-        public override void SetUp()
+        protected override DefaultTestSetup DoTestSetup()
         {
-            base.SetUp();
-            Screen = new MockScreen(10, 10);
-            AnsiDecoder = new AnsiDecoder(Screen,
-                EscapeCharacterDecoder,
-                CreateSequence(typeof(SaveCursor),
-                    typeof(SaveCursorDec),
-                    typeof(RestoreCursor),
-                    typeof(RestoreCursorDec)));
+            return new DefaultTestSetup(10, 10, typeof(SaveCursor),
+                typeof(SaveCursorDec),
+                typeof(RestoreCursor),
+                typeof(RestoreCursorDec));
         }
 
         [Test]

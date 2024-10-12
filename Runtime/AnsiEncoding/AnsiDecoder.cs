@@ -5,18 +5,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 {
     internal sealed class AnsiDecoder : IDisposable
     {
-        private readonly IScreen _screen;
-
         private readonly IEscapeCharacterDecoder _escapeCharacterDecoder;
-
-        // private readonly Dictionary<char, ISequence> _sequences;
+        private readonly Action<ISequence, string> _onSequenceExecute;
         private readonly Dictionary<SequenceType, Dictionary<char, ISequence>> _sequences;
 
-        internal AnsiDecoder(IScreen screen, IEscapeCharacterDecoder escapeCharacterDecoder,
+        internal AnsiDecoder(IEscapeCharacterDecoder escapeCharacterDecoder,
+            Action<ISequence, string> onSequenceExecute,
             params ISequence[] acceptedSequences)
         {
-            _screen = screen;
             _escapeCharacterDecoder = escapeCharacterDecoder;
+            _onSequenceExecute = onSequenceExecute;
             _sequences = new Dictionary<SequenceType, Dictionary<char, ISequence>>();
             SetupSequenceTable(acceptedSequences);
 
@@ -46,12 +44,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             if (_sequences.TryGetValue(sequenceType, out var typedSequences) &&
                 typedSequences.TryGetValue(character, out var sequence))
-                sequence.Execute(_screen, parameters);
+                _onSequenceExecute.Invoke(sequence, parameters);
         }
 
         public void Dispose()
         {
             _escapeCharacterDecoder.ProcessCommand -= ProcessCommand;
+            _escapeCharacterDecoder.ProcessOutput -= ProcessOutput;
             _escapeCharacterDecoder?.Dispose();
         }
     }

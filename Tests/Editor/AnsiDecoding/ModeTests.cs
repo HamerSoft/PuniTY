@@ -1,5 +1,5 @@
-﻿using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
-using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests;
+﻿using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -7,18 +7,25 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
     [TestFixture]
     public class ModeTests : AnsiDecoderTest
     {
+        private IModeable _modeContext;
+
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            Screen = new MockScreen(2, 2, new AlwaysValidModeFactory());
+            _modeContext = AnsiContext.TerminalModeContext;
+        }
+
+        protected override DefaultTestSetup DoTestSetup()
+        {
+            return DefaultSetup;
         }
 
         [Test]
         public void IMode_SetMote_Enables_Mode()
         {
-            Screen.SetMode(AnsiMode.Origin);
-            Assert.IsTrue(Screen.HasMode(AnsiMode.Origin));
+            _modeContext.SetMode(AnsiMode.Origin);
+            Assert.IsTrue(_modeContext.HasMode(AnsiMode.Origin));
         }
 
         [Test]
@@ -35,8 +42,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
                 invoked = true;
             }
 
-            Screen.ModeChanged += OnMode;
-            Screen.SetMode(AnsiMode.Origin);
+            _modeContext.ModeChanged += OnMode;
+            _modeContext.SetMode(AnsiMode.Origin);
 
             Assert.That(invoked, Is.True);
             Assert.That(enabled, Is.True);
@@ -44,43 +51,43 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 
             resultMode = AnsiMode.KeyBoardAction;
             invoked = false;
-            Screen.ResetMode(AnsiMode.Origin);
+            _modeContext.ResetMode(AnsiMode.Origin);
 
             Assert.That(invoked, Is.True);
             Assert.That(enabled, Is.False);
             Assert.That(resultMode, Is.EqualTo(AnsiMode.Origin));
-            Screen.ModeChanged -= OnMode;
+            _modeContext.ModeChanged -= OnMode;
         }
 
         [Test]
         public void IMode_SetMode_Can_Enable_Multiple_Modes()
         {
-            Screen.SetMode(AnsiMode.Origin);
-            Screen.SetMode(AnsiMode.SendReceive);
-            Screen.SetMode(AnsiMode.ReverseVideo);
-            Assert.That(Screen.HasMode(AnsiMode.Origin, AnsiMode.SendReceive, AnsiMode.ReverseVideo));
+            _modeContext.SetMode(AnsiMode.Origin);
+            _modeContext.SetMode(AnsiMode.SendReceive);
+            _modeContext.SetMode(AnsiMode.ReverseVideo);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin, AnsiMode.SendReceive, AnsiMode.ReverseVideo));
         }
 
         [Test]
         public void IMode_HasMode_Returns_False_If_Mode_Not_Set()
         {
-            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.False);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin), Is.False);
         }
 
         [Test]
         public void IMode_HasMode_Returns_True_If_Mode_Set()
         {
-            Screen.SetMode(AnsiMode.Origin);
-            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
+            _modeContext.SetMode(AnsiMode.Origin);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin), Is.True);
         }
 
         [Test]
         public void IMode_HasMode_Returns_True_If_MultipleModes_Mode_Set()
         {
-            Screen.SetMode(AnsiMode.Origin);
-            Screen.SetMode(AnsiMode.ReverseVideo);
-            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
-            Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.True);
+            _modeContext.SetMode(AnsiMode.Origin);
+            _modeContext.SetMode(AnsiMode.ReverseVideo);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin), Is.True);
+            Assert.That(_modeContext.HasMode(AnsiMode.ReverseVideo), Is.True);
         }
 
         [Test]
@@ -88,25 +95,25 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             Assert.DoesNotThrow(() =>
             {
-                Screen.ResetMode(AnsiMode.Origin);
-                Assert.IsFalse(Screen.HasMode(AnsiMode.Origin));
+                _modeContext.ResetMode(AnsiMode.Origin);
+                Assert.IsFalse(_modeContext.HasMode(AnsiMode.Origin));
             });
         }
 
         [Test]
         public void IMode_Reset_Mode_Removes_Mode()
         {
-            Screen.SetMode(AnsiMode.Origin);
-            Screen.SetMode(AnsiMode.ReverseVideo);
-            Assert.That(Screen.HasMode(AnsiMode.Origin, AnsiMode.ReverseVideo));
+            _modeContext.SetMode(AnsiMode.Origin);
+            _modeContext.SetMode(AnsiMode.ReverseVideo);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin, AnsiMode.ReverseVideo));
 
-            Screen.ResetMode(AnsiMode.ReverseVideo);
-            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.True);
-            Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.False);
+            _modeContext.ResetMode(AnsiMode.ReverseVideo);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin), Is.True);
+            Assert.That(_modeContext.HasMode(AnsiMode.ReverseVideo), Is.False);
 
-            Screen.ResetMode(AnsiMode.Origin);
-            Assert.That(Screen.HasMode(AnsiMode.Origin), Is.False);
-            Assert.That(Screen.HasMode(AnsiMode.ReverseVideo), Is.False);
+            _modeContext.ResetMode(AnsiMode.Origin);
+            Assert.That(_modeContext.HasMode(AnsiMode.Origin), Is.False);
+            Assert.That(_modeContext.HasMode(AnsiMode.ReverseVideo), Is.False);
         }
     }
 }
