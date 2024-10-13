@@ -37,11 +37,11 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         [Test]
         public void PointerMode_HideWhenTrackingDisabled_Hides_Pointer_When_Tracking_Is_Disabled()
         {
-            ((IPointer)_stubPointer).SetMode(new HideWhenTrackingDisabled(Screen));
+            ((IPointer)_stubPointer).SetMode(new HideWhenTrackingDisabled(_stubPointer, () => false));
             Assert.That(_stubPointer.IsActive, Is.False);
             ((IPointerable)AnsiContext.TerminalModeContext).SetPointerMode(PointerMode.HideIfNotTracking);
             ((IModeable)AnsiContext.TerminalModeContext).SetMode(AnsiMode.UseAllMotionMouseTracking);
-            Assert.That(_stubPointer.IsActive, Is.True);
+            Assert.That(_stubPointer.IsActive, Is.False);
         }
     }
 }

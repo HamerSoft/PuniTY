@@ -1,6 +1,7 @@
 ﻿using System;
 using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes.Modes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
 {
@@ -13,7 +14,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 case PointerMode.NeverHide:
                     return new NeverHide();
                 case PointerMode.HideIfNotTracking:
-                    return new HideWhenTrackingDisabled(context.Screen);
+                    return new HideWhenTrackingDisabled(context.Pointer, context.TerminalModeContext.IsMouseTrackingEnabled);
                 case PointerMode.AlwaysHideInWindow:
                     return new HideInWindow();
                 case PointerMode.AlwaysHide:
@@ -52,6 +53,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 case AnsiMode.AutoRepeatKeys:
                     break;
                 case AnsiMode.SendMouseXY:
+                    return new SendModeXYMode();
                     break;
                 case AnsiMode.ShowToolbar:
                     break;

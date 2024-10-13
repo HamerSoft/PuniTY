@@ -13,17 +13,17 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests
         {
             public void Enable(IAnsiContext context)
             {
-                throw new System.NotImplementedException();
+
             }
 
             public void Disable(IAnsiContext context)
             {
-                throw new System.NotImplementedException();
+               
             }
 
             public void Apply(IAnsiContext context)
             {
-                throw new System.NotImplementedException();
+                
             }
         }
 

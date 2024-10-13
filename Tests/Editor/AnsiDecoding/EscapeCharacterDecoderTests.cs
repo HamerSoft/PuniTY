@@ -1,5 +1,6 @@
 ﻿using System;
 using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using NUnit.Framework;
 using EscapeCharacterDecoder = HamerSoft.PuniTY.AnsiEncoding.EscapeCharacterDecoder;
 
@@ -46,7 +47,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public override void SetUp()
         {
             base.SetUp();
-            _decoder = new MockEscapeCharacterDecoder(new EscapeCharacterDecoder());
+            _decoder = new MockEscapeCharacterDecoder(AnsiContext.Decoder);
         }
 
         protected override DefaultTestSetup DoTestSetup()

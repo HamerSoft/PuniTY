@@ -1,5 +1,7 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
@@ -13,6 +15,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         public override void SetUp()
         {
             base.SetUp();
+            AnsiContext = new StubAnsiContext(2, 10, Logger, new AlwaysValidModeFactory());
             _modeContext = AnsiContext.TerminalModeContext;
         }
 

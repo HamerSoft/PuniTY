@@ -21,7 +21,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
                 new Screen.DefaultScreenConfiguration(5, 5, 8),
                 Logger,
                 new ResourceSequence());
-            // Screen.PointerModeChanged += ScreenOnPointerModeChanged;
+             AnsiContext.TerminalModeContext.PointerModeChanged += ContextOnPointerModeChanged;
         }
 
         protected override DefaultTestSetup DoTestSetup()
@@ -29,7 +29,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             return DefaultSetup;
         }
 
-        private void ScreenOnPointerModeChanged(IPointerMode mode)
+        private void ContextOnPointerModeChanged(IPointerMode mode)
         {
             ((IPointer)_pointer).SetMode(mode);
             _currentMode = mode;
@@ -43,6 +43,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             Decode($"{Escape}>{argument}p");
             Assert.That(_currentMode.Mode, Is.EqualTo(expectedMode));
+        }
+
+        public override void TearDown()
+        {
+            AnsiContext.TerminalModeContext.PointerModeChanged -= ContextOnPointerModeChanged;
+            base.TearDown();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace AnsiEncoding
     {
         public IScreen Screen { get; private set; }
         public IPointer Pointer { get; private set; }
-        public TerminalModeContext TerminalModeContext { get; private set; }
+        public ITerminalModeContext TerminalModeContext { get; private set; }
         public IEscapeCharacterDecoder Decoder { get; }
 
         IReadOnlyList<ISequence> IAnsiContext.Sequences => _sequences;

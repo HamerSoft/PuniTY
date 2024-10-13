@@ -40,9 +40,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Device
                 "DSR requested: not officially supported, create GH issue for feature request or make a PR.");
             var screen = context.Screen;
             if (parameters.StartsWith(DisableKeyModifierIndicator))
-                DisableKeyModifiers(screen, argument);
+                DisableKeyModifiers(context, argument);
             else if (parameters.StartsWith(DecSpecificIndicator))
-                ExecuteDecSpecific(screen, argument);
+                ExecuteDecSpecific(context, argument);
             else
                 ExecuteNormal(screen, argument);
         }
@@ -60,15 +60,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Device
             }
         }
 
-        private void ExecuteDecSpecific(IScreen screen, int argument)
+        private void ExecuteDecSpecific(IAnsiContext context, int argument)
         {
+            var screen = context.Screen;
             switch (argument)
             {
                 case 6:
                     screen.Transmit(ToBytes($"{Escape}{screen.Cursor.Position.Row};{screen.Cursor.Position.Column};R"));
                     break;
                 case 15:
-                    Logger.LogWarning("Printer not implemented, so returning not ready.");
+                    context.LogWarning("Printer not implemented, so returning not ready.");
                     // Report Printer status.  The response is
                     // CSI ? 1 0 n  (ready).  or
                     // CSI ? 1 1 n  (not ready).
