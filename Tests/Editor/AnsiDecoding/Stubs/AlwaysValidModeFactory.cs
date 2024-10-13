@@ -11,19 +11,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests
     {
         private class AlwaysValidMode : IMode
         {
-            public void Enable(IAnsiContext context)
+            public void Dispose()
             {
-
             }
 
-            public void Disable(IAnsiContext context)
+            public void Enable()
             {
-               
             }
 
-            public void Apply(IAnsiContext context)
+            public void Disable()
             {
-                
+            }
+
+            public void Apply()
+            {
             }
         }
 

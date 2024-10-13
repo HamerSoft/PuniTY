@@ -6,13 +6,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
     internal class HideWhenTrackingDisabled : IPointerMode
     {
         private readonly IPointer _pointer;
-        private readonly Func<bool> _checkMouseTrackingEnabled;
         public PointerMode Mode => PointerMode.HideIfNotTracking;
 
-        public HideWhenTrackingDisabled(IPointer pointer, Func<bool> checkMouseTrackingEnabled)
+        public HideWhenTrackingDisabled(IPointer pointer)
         {
             _pointer = pointer;
-            _checkMouseTrackingEnabled = checkMouseTrackingEnabled;
             // _acceptedModes = new HashSet<AnsiMode>()
             // {
             //     AnsiMode.SendMouseXY,
@@ -27,7 +25,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
 
         private void ScreenOnModeChanged(AnsiMode mode, bool enabled)
         {
-            if (_checkMouseTrackingEnabled())
+            if (_pointer.IsTrackingEnabled)
                 _pointer.Show();
             else
                 _pointer.Hide();
@@ -35,7 +33,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
 
         void IPointerMode.Apply(IPointer pointer, Rect _)
         {
-            if (_checkMouseTrackingEnabled())
+            if (pointer.IsTrackingEnabled)
                 pointer.Show();
             else
                 pointer.Hide();

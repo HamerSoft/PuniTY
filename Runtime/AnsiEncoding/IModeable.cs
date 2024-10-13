@@ -1,25 +1,24 @@
 ﻿using System;
-using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    internal interface IMode
+    internal interface IMode : IDisposable
     {
         /// <summary>
         /// Called when enabling the mode
         /// </summary>
-        public void Enable(IAnsiContext context);
+        public void Enable();
 
         /// <summary>
         /// Called when disabling the mode
         /// </summary>
-        public void Disable(IAnsiContext context);
+        public void Disable();
 
         /// <summary>
         /// Apply Mode if needs to be done repeatedly
         /// </summary>
-        public void Apply(IAnsiContext context);
+        public void Apply();
     }
     
     public interface IModeable

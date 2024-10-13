@@ -38,8 +38,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
             var iMode = _modeFactory.Create(mode, _context);
             if (iMode != null)
             {
-                AddMode(mode, iMode);
-                iMode.Enable(_context);
+                _activeModes.Add(mode, iMode);
+                iMode.Enable();
                 ModeChanged?.Invoke(mode, true);
             }
             else
@@ -50,10 +50,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
 
         void IModeable.ResetMode(AnsiMode mode)
         {
-            if (RemoveMode(mode, out var iMode))
+            if (_activeModes.Remove(mode, out var iMode))
             {
-                iMode.Disable(_context);
+                iMode.Disable();
                 ModeChanged?.Invoke(mode, false);
+                iMode.Dispose();
             }
             else
                 _logger.LogWarning($"Mode: {mode} is not active.");
@@ -73,27 +74,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 return;
             _pointerMode = mode;
             PointerModeChanged?.Invoke(_modeFactory.Create(mode, _context));
-        }
-
-        private void AddMode(AnsiMode mode, IMode iMode)
-        {
-            _activeModes.Add(mode, iMode);
-            if (iMode is PointerTrackingMode ptm)
-                _activePointerModes.Add(ptm);
-        }
-
-        private bool RemoveMode(AnsiMode mode, out IMode iMode)
-        {
-            if (!_activeModes.Remove(mode, out iMode))
-                return false;
-            if (iMode is PointerTrackingMode ptm)
-                _activePointerModes.Remove(ptm);
-            return true;
-        }
-
-        bool ITerminalModeContext.IsMouseTrackingEnabled()
-        {
-            return _activePointerModes.Count != 0;
         }
     }
 }

@@ -4,19 +4,21 @@ using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Logging;
+using Tests.Editor.AnsiDecoding.Stubs;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs
 {
     public class StubAnsiContext : AnsiContext
     {
-        public StubAnsiContext(IPointer pointer, IScreenConfiguration screenConfiguration, ILogger logger,
-            params ISequence[] sequences) : base(pointer, screenConfiguration, logger, sequences)
+        public StubAnsiContext(IInput input, IScreenConfiguration screenConfiguration, ILogger logger,
+            params ISequence[] sequences) : base(input, screenConfiguration, logger, sequences)
         {
             Logger = logger;
         }
 
         public StubAnsiContext(int rows, int columns, ILogger logger, params ISequence[] sequences) : base(
-            new StubPointer(new NeverHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
+            new StubInput(new StubPointer(new NeverHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
+                new StubKeyboard()),
             new Screen.DefaultScreenConfiguration(rows, columns, 8), logger, sequences)
         {
             Logger = logger;

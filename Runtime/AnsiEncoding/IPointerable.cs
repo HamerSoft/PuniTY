@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Numerics;
 using AnsiEncoding;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Vector2 = System.Numerics.Vector2;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -65,15 +67,32 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         internal void SetPointerMode(PointerMode mode);
     }
 
+    public enum MouseButton
+    {
+        None = 0,
+        Left = 1,
+        Right = 2,
+        Middle = 3,
+        ScrollUp = 4,
+        ScrollDown = 5
+    }
+
     public interface IPointer
     {
         public Vector2 Position { get; }
         public bool IsActive { get; }
+        public bool IsTrackingEnabled { get; }
 
         public void SetPosition(Vector2 position, Rect bounds);
+        public void PressButton(MouseButton mouseButton);
+        public void Release(MouseButton mouseButton);
         internal void Show();
         internal void Hide();
         internal void SetMode(IPointerMode mode);
+        internal void EnableTracking();
+        internal void DisableTracking();
+        internal event Action<MouseButton, bool> KeyPressed;
+        internal event Action<Vector2> Moved;
     }
 
     public interface IPointerMode

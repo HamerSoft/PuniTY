@@ -14,7 +14,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 case PointerMode.NeverHide:
                     return new NeverHide();
                 case PointerMode.HideIfNotTracking:
-                    return new HideWhenTrackingDisabled(context.Pointer, context.TerminalModeContext.IsMouseTrackingEnabled);
+                    return new HideWhenTrackingDisabled(context.Pointer);
                 case PointerMode.AlwaysHideInWindow:
                     return new HideInWindow();
                 case PointerMode.AlwaysHide:
@@ -53,8 +53,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 case AnsiMode.AutoRepeatKeys:
                     break;
                 case AnsiMode.SendMouseXY:
-                    return new SendModeXYMode();
-                    break;
+                    return new SendModeXYMode(context);
                 case AnsiMode.ShowToolbar:
                     break;
                 case AnsiMode.BlinkingCursor:

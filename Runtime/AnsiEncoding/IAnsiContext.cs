@@ -10,6 +10,7 @@ namespace AnsiEncoding
     {
         public IScreen Screen { get; }
         public IPointer Pointer { get; }
+        public IKeyboard Keyboard { get; }
         public ITerminalModeContext TerminalModeContext { get; }
         public IEscapeCharacterDecoder Decoder { get; }
         internal ILogger Logger { get; }

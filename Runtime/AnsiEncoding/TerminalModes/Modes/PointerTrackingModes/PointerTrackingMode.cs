@@ -2,18 +2,20 @@
 
 namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes.Modes
 {
-    internal abstract class PointerTrackingMode : IMode
+    internal abstract class PointerTrackingMode : TerminalMode
     {
-        public void Enable(IAnsiContext context)
+        protected PointerTrackingMode(IAnsiContext ansiContext) : base(ansiContext)
         {
         }
 
-        public void Disable(IAnsiContext context)
+        public override void Enable()
         {
+            AnsiContext.Pointer.EnableTracking();
         }
 
-        public void Apply(IAnsiContext context)
+        public override void Disable()
         {
+            AnsiContext.Pointer.DisableTracking();
         }
     }
 }

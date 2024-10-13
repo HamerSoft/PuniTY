@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AnsiEncoding.Input;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Logging;
@@ -10,6 +11,7 @@ namespace AnsiEncoding
     {
         public IScreen Screen { get; private set; }
         public IPointer Pointer { get; private set; }
+        public IKeyboard Keyboard { get; private set; }
         public ITerminalModeContext TerminalModeContext { get; private set; }
         public IEscapeCharacterDecoder Decoder { get; }
 
@@ -21,8 +23,9 @@ namespace AnsiEncoding
         private ILogger _logger;
         private ICursor _cursor;
         private bool _isDisposed;
+        private readonly InputTransmitter _inputTransmitter;
 
-        public AnsiContext(IPointer pointer, IScreenConfiguration screenConfiguration, ILogger logger,
+        public AnsiContext(IInput input, IScreenConfiguration screenConfiguration, ILogger logger,
             params ISequence[] sequences)
         {
             _cursor = new Cursor.Cursor();
@@ -31,11 +34,15 @@ namespace AnsiEncoding
             Decoder = new EscapeCharacterDecoder();
             _ansiDecoder = new AnsiDecoder(Decoder, ExecuteSequence, sequences);
             TerminalModeContext = new TerminalModeContext(this, new ModeFactory());
-            Pointer = pointer;
+            Pointer = input.Pointer;
+            Keyboard = input.KeyBoard;
+            TerminalModeContext.PointerModeChanged += Pointer.SetMode;
             Screen = new Screen(_cursor, _logger, screenConfiguration);
+            _inputTransmitter = new InputTransmitter(input, Screen);
         }
-        
-        internal AnsiContext(IPointer pointer, IScreenConfiguration screenConfiguration, ILogger logger, IModeFactory modeFactory,
+
+        internal AnsiContext(IPointer pointer, IScreenConfiguration screenConfiguration, ILogger logger,
+            IModeFactory modeFactory,
             params ISequence[] sequences)
         {
             _cursor = new Cursor.Cursor();
@@ -45,6 +52,7 @@ namespace AnsiEncoding
             _ansiDecoder = new AnsiDecoder(Decoder, ExecuteSequence, sequences);
             TerminalModeContext = new TerminalModeContext(this, modeFactory);
             Pointer = pointer;
+            TerminalModeContext.PointerModeChanged += pointer.SetMode;
             Screen = new Screen(_cursor, _logger, screenConfiguration);
         }
 
@@ -87,6 +95,8 @@ namespace AnsiEncoding
         {
             if (_isDisposed)
                 return;
+            TerminalModeContext.PointerModeChanged -= Pointer.SetMode;
+            _inputTransmitter.Dispose();
             _isDisposed = true;
             _logger.Log("Disposing AnsiContext.");
             _ansiDecoder.Dispose();

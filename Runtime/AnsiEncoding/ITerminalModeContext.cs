@@ -4,6 +4,5 @@ namespace AnsiEncoding
 {
     public interface ITerminalModeContext : IModeable, IPointerable
     {
-        internal bool IsMouseTrackingEnabled();
     }
 }

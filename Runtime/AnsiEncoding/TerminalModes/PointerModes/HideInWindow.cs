@@ -7,9 +7,9 @@
         void IPointerMode.Apply(IPointer pointer, Rect bounds)
         {
             if (bounds.Contains(pointer.Position))
-                pointer.Show();
-            else
                 pointer.Hide();
+            else
+                pointer.Show();
         }
     }
 }

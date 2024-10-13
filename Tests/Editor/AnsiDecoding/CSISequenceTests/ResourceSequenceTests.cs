@@ -3,6 +3,7 @@ using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
+using Tests.Editor.AnsiDecoding.Stubs;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
@@ -17,7 +18,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             base.SetUp();
             _pointer = new StubPointer(new NeverHide(), new Vector2(0, 0), _rect);
-            AnsiContext = new StubAnsiContext(_pointer,
+            AnsiContext = new StubAnsiContext(new StubInput(_pointer, new StubKeyboard()),
                 new Screen.DefaultScreenConfiguration(5, 5, 8),
                 Logger,
                 new ResourceSequence());
