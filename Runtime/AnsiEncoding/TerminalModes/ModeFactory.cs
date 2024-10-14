@@ -23,6 +23,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                     throw new ArgumentOutOfRangeException(nameof(pointerMode), pointerMode, null);
             }
         }
+
         IMode IModeFactory.Create(AnsiMode mode, IAnsiContext context)
         {
             IMode terminalMode = null;
@@ -131,7 +132,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 case AnsiMode.UrxvtMouse:
                     break;
                 case AnsiMode.SGRMousePixelMode:
-                    break;
+                    return new SGRPixelMode(context);
                 case AnsiMode.InterpretMetaKey:
                     break;
                 case AnsiMode.SpecialModifiersAltAndNumLockKeys:

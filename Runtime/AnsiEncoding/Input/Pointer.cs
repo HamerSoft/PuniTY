@@ -79,7 +79,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
                 _mode.Apply(this, _bounds);
         }
 
-        event Action<MouseButton, bool> IPointer.KeyPressed
+        event Action<MouseButton, bool> IPointer.ButtonPressed
         {
             add => KeyPressed += value;
             remove => KeyPressed -= value;

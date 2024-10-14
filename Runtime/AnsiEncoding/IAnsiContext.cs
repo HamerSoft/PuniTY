@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using AnsiEncoding.Input;
 using HamerSoft.PuniTY.AnsiEncoding;
-using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
 using HamerSoft.PuniTY.Logging;
 
 namespace AnsiEncoding
@@ -14,6 +13,6 @@ namespace AnsiEncoding
         public ITerminalModeContext TerminalModeContext { get; }
         public IEscapeCharacterDecoder Decoder { get; }
         internal ILogger Logger { get; }
-        internal IReadOnlyList<ISequence> Sequences { get; }
+        internal InputTransmitter InputTransmitter { get; }
     }
 }

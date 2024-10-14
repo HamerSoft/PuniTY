@@ -15,8 +15,8 @@ namespace AnsiEncoding
         public ITerminalModeContext TerminalModeContext { get; private set; }
         public IEscapeCharacterDecoder Decoder { get; }
 
-        IReadOnlyList<ISequence> IAnsiContext.Sequences => _sequences;
         ILogger IAnsiContext.Logger => _logger;
+        InputTransmitter IAnsiContext.InputTransmitter => _inputTransmitter;
 
         private AnsiDecoder _ansiDecoder;
         private IReadOnlyList<ISequence> _sequences;
@@ -95,10 +95,10 @@ namespace AnsiEncoding
         {
             if (_isDisposed)
                 return;
-            TerminalModeContext.PointerModeChanged -= Pointer.SetMode;
-            _inputTransmitter.Dispose();
             _isDisposed = true;
             _logger.Log("Disposing AnsiContext.");
+            TerminalModeContext.PointerModeChanged -= Pointer.SetMode;
+            _inputTransmitter.Dispose();
             _ansiDecoder.Dispose();
             _ansiDecoder = null;
             _sequences = Array.Empty<ISequence>();

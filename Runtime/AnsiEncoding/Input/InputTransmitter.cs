@@ -18,13 +18,14 @@ namespace AnsiEncoding.Input
         private KeyCode _keyCode;
         private KeyCode[] _modifiers;
         private bool _pixelMode;
+        private PointerReportStrategy _pointerReportStrategy;
 
         public InputTransmitter(IInput input, IScreen screen)
         {
             _pixelMode = true;
             _input = input;
             _screen = screen;
-            _input.Pointer.KeyPressed += PointerOnKeyPressed;
+            _input.Pointer.ButtonPressed += PointerOnButtonPressed;
             _input.Pointer.Moved += PointerOnMoved;
             _input.KeyBoard.KeyPressed += KeyBoardOnKeyPressed;
             _mouseButtons = new Dictionary<bool, HashSet<MouseButton>>
@@ -46,7 +47,7 @@ namespace AnsiEncoding.Input
             _modifiers = modifiers;
         }
 
-        private void PointerOnKeyPressed(MouseButton button, bool active)
+        private void PointerOnButtonPressed(MouseButton button, bool active)
         {
             _mouseButtons[active].Add(button);
             _mouseButtons[!active].Remove(button);
@@ -57,7 +58,16 @@ namespace AnsiEncoding.Input
         private void TransmitMouseTracking(MouseButton button, bool active)
         {
             var activeButton = active ? button : _mouseButtons[true].FirstOrDefault();
-            int value = ((int)activeButton) + GetMouseModifier(_keyCode);
+            int value = (int)activeButton + GetMouseModifier(_keyCode);
+            string command = $"{Escape}M{value}{GetMousePosition()}";
+
+            _screen.Transmit(ToBytes(command));
+        }
+
+        private void TransmitMouseTracking()
+        {
+            var activeButton = _mouseButtons[true].FirstOrDefault();
+            int value = (int)activeButton + GetMouseModifier(_keyCode);
             string command = $"{Escape}M{value}{GetMousePosition()}";
 
             _screen.Transmit(ToBytes(command));
@@ -65,10 +75,9 @@ namespace AnsiEncoding.Input
 
         private string GetMousePosition()
         {
-            var position = _input.Pointer.Position;
             if (_pixelMode)
             {
-                return $"{position.X}{position.Y}";
+                return $"{_mousePosition.X}{_mousePosition.Y}";
             }
 
             throw new NotImplementedException("Default mode not implemented yet");
@@ -111,7 +120,14 @@ namespace AnsiEncoding.Input
 
         public void Dispose()
         {
-            _input.Pointer.KeyPressed -= PointerOnKeyPressed;
+            _input.Pointer.ButtonPressed -= PointerOnButtonPressed;
+            _input.Pointer.Moved -= PointerOnMoved;
+            _input.KeyBoard.KeyPressed -= KeyBoardOnKeyPressed;
+        }
+
+        public void SetMouseReportingMode(PointerReportStrategy pointerReportStrategy)
+        {
+            _pointerReportStrategy = pointerReportStrategy;
         }
     }
 }

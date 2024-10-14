@@ -1,7 +1,5 @@
 ﻿using System;
 using AnsiEncoding;
-using UnityEngine;
-using UnityEngine.UIElements;
 using Vector2 = System.Numerics.Vector2;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -91,7 +89,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         internal void SetMode(IPointerMode mode);
         internal void EnableTracking();
         internal void DisableTracking();
-        internal event Action<MouseButton, bool> KeyPressed;
+        internal event Action<MouseButton, bool> ButtonPressed;
         internal event Action<Vector2> Moved;
     }
 
