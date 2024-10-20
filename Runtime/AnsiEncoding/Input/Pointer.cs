@@ -5,7 +5,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
 {
     public abstract class Pointer : IPointer
     {
-        private Vector2 _position;
         private Rect _bounds;
         private IPointerMode _mode;
         private uint _trackingCounter;
@@ -30,13 +29,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
 
         public void SetPosition(Vector2 position, Rect bounds)
         {
-            if (_position == Position && _bounds == bounds)
+            if (position == Position && _bounds == bounds)
                 return;
 
-            _position = position;
+            Position = position;
             _bounds = bounds;
             _mode.Apply(this, bounds);
-            Moved?.Invoke(_position);
+            Moved?.Invoke(Position);
         }
 
         public void PressButton(MouseButton mouseButton)

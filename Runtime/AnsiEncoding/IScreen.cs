@@ -10,7 +10,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
     public interface IScreen : ITabStop
     {
-        public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
@@ -29,6 +28,5 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditionPairs);
         public void InsertLines(int linesToInsert);
         public void DeleteLines(int linesToDelete);
-        internal void Transmit(byte[] data);
     }
 }

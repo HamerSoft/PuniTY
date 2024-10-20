@@ -13,6 +13,6 @@ namespace AnsiEncoding
         public ITerminalModeContext TerminalModeContext { get; }
         public IEscapeCharacterDecoder Decoder { get; }
         internal ILogger Logger { get; }
-        internal InputTransmitter InputTransmitter { get; }
+        internal IInputTransmitter InputTransmitter { get; }
     }
 }

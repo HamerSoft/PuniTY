@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.Device;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             base.SetUp();
             _output = new List<byte>();
-            Screen.Output += ScreenOnOutput;
+            AnsiContext.InputTransmitter.Output += ScreenOnOutput;
         }
 
         protected override DefaultTestSetup DoTestSetup()
@@ -130,6 +131,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         private void ScreenOnOutput(byte[] data)
         {
             _output.AddRange(data);
+        }
+
+        public override void TearDown()
+        {
+            AnsiContext.InputTransmitter.Output -= ScreenOnOutput;
+            base.TearDown();
         }
     }
 }

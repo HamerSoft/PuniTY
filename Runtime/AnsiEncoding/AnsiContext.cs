@@ -16,7 +16,7 @@ namespace AnsiEncoding
         public IEscapeCharacterDecoder Decoder { get; }
 
         ILogger IAnsiContext.Logger => _logger;
-        InputTransmitter IAnsiContext.InputTransmitter => _inputTransmitter;
+        IInputTransmitter IAnsiContext.InputTransmitter => _inputTransmitter;
 
         private AnsiDecoder _ansiDecoder;
         private IReadOnlyList<ISequence> _sequences;
@@ -36,9 +36,9 @@ namespace AnsiEncoding
             TerminalModeContext = new TerminalModeContext(this, new ModeFactory());
             Pointer = input.Pointer;
             Keyboard = input.KeyBoard;
+            _inputTransmitter = new InputTransmitter(input);
             TerminalModeContext.PointerModeChanged += Pointer.SetMode;
             Screen = new Screen(_cursor, _logger, screenConfiguration);
-            _inputTransmitter = new InputTransmitter(input, Screen);
         }
 
         internal AnsiContext(IPointer pointer, IScreenConfiguration screenConfiguration, ILogger logger,

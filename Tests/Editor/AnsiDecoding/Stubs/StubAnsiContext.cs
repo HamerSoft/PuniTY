@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using AnsiEncoding;
+using AnsiEncoding.Input;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
@@ -34,5 +35,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs
 
         internal ILogger Logger { get; }
         internal ICursor Cursor => Screen.Cursor;
+        internal IInputTransmitter InputTransmitter => ((IAnsiContext)this).InputTransmitter;
     }
 }

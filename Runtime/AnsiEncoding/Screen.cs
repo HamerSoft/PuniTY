@@ -43,7 +43,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private readonly ILogger _logger;
         private IScreenConfiguration _screenConfiguration;
-        public event Action<byte[]> Output;
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
@@ -231,11 +230,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             _currentGraphicAttributes =
                 GraphicsRenditionParser.Parse(_currentGraphicAttributes, _graphicRenditionPairs, _logger);
-        }
-
-        void IScreen.Transmit(byte[] data)
-        {
-            Output?.Invoke(data);
         }
 
         public void InsertLines(int linesToInsert = 1)
