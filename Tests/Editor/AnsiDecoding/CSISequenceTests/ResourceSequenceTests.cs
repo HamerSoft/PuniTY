@@ -1,9 +1,14 @@
-﻿using System.Numerics;
+﻿using System.Text.RegularExpressions;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
 using Tests.Editor.AnsiDecoding.Stubs;
+using UnityEngine;
+using UnityEngine.TestTools;
+using Rect = HamerSoft.PuniTY.AnsiEncoding.Rect;
+using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
+using Vector2 = System.Numerics.Vector2;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
 {
@@ -44,6 +49,13 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             Decode($"{Escape}>{argument}p");
             Assert.That(_currentMode.Mode, Is.EqualTo(expectedMode));
+        }
+
+        [Test]
+        public void ResourceSequence_SoftTerminalReset_Not_ImplementedWarning()
+        {
+            Decode($"{Escape}>!p");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
         public override void TearDown()

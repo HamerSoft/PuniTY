@@ -13,6 +13,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
+        public event Action<Character> CharacterReceived;
         internal IScreenConfiguration ScreenConfiguration { get; }
 
         public void SetCursorPosition(Position position);

@@ -72,7 +72,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return c != BellCharacter || Char.IsNumber(c) || c == ';' || c == '"' || c == '?';
             }
             else if (isCSI)
-                return Char.IsNumber(c) || c == ';' || c == '"' || c == '?' || c == '>';
+                return Char.IsNumber(c) || c == ';' || c == '"' || c == '?' || c == '>' || c == '!';
 
             return false;
         }

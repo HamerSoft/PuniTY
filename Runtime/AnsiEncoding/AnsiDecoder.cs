@@ -8,11 +8,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private readonly IEscapeCharacterDecoder _escapeCharacterDecoder;
         private readonly Action<ISequence, string> _onSequenceExecute;
         private readonly Dictionary<SequenceType, Dictionary<char, ISequence>> _sequences;
+        private readonly Action<byte[]> _onProcessOutput;
 
         internal AnsiDecoder(IEscapeCharacterDecoder escapeCharacterDecoder,
             Action<ISequence, string> onSequenceExecute,
+            Action<byte[]> onProcessOutput,
             params ISequence[] acceptedSequences)
         {
+            _onProcessOutput = onProcessOutput;
             _escapeCharacterDecoder = escapeCharacterDecoder;
             _onSequenceExecute = onSequenceExecute;
             _sequences = new Dictionary<SequenceType, Dictionary<char, ISequence>>();
@@ -37,7 +40,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private void ProcessOutput(byte[] output)
         {
-            throw new NotImplementedException();
+            _onProcessOutput.Invoke(output);
         }
 
         private void ProcessCommand(SequenceType sequenceType, char character, string parameters)
@@ -51,7 +54,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             _escapeCharacterDecoder.ProcessCommand -= ProcessCommand;
             _escapeCharacterDecoder.ProcessOutput -= ProcessOutput;
-            _escapeCharacterDecoder?.Dispose();
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public class ScreenIterator : IEnumerable<ICharacter>
+    public sealed class ScreenIterator : IEnumerable<ICharacter>
     {
         private readonly IScreen _screen;
         private readonly Position _startPosition;
@@ -47,5 +47,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         }
 
         public Position CurrentPosition => _currentPosition;
+
+        public void Reset()
+        {
+            _currentPosition = new Position(1, 1);
+        }
     }
 }

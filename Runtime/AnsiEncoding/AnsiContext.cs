@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using AnsiEncoding.Input;
 using HamerSoft.PuniTY.AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.TerminalModes;
@@ -19,7 +20,6 @@ namespace AnsiEncoding
         IInputTransmitter IAnsiContext.InputTransmitter => _inputTransmitter;
 
         private AnsiDecoder _ansiDecoder;
-        private IReadOnlyList<ISequence> _sequences;
         private ILogger _logger;
         private ICursor _cursor;
         private bool _isDisposed;
@@ -36,15 +36,20 @@ namespace AnsiEncoding
         {
             _cursor = new Cursor.Cursor();
             _logger = logger;
-            _sequences = sequences;
             Decoder = new EscapeCharacterDecoder();
-            _ansiDecoder = new AnsiDecoder(Decoder, ExecuteSequence, sequences);
+            _ansiDecoder = new AnsiDecoder(Decoder, ExecuteSequence, ProcessOutput, sequences);
             TerminalModeContext = new TerminalModeContext(this, modeFactory);
             Pointer = input.Pointer;
             Keyboard = input.KeyBoard;
             Screen = new Screen(_cursor, _logger, screenConfiguration);
             TerminalModeContext.PointerModeChanged += Pointer.SetMode;
             _inputTransmitter = new InputTransmitter(input, new CellReportStrategy(Pointer, Screen));
+        }
+
+        private void ProcessOutput(byte[] output)
+        {
+            foreach (byte b in output)
+                Screen.AddCharacter((char)b);
         }
 
         private void ExecuteSequence(ISequence sequence, string parameters)
@@ -92,7 +97,7 @@ namespace AnsiEncoding
             _inputTransmitter.Dispose();
             _ansiDecoder.Dispose();
             _ansiDecoder = null;
-            _sequences = Array.Empty<ISequence>();
+            Decoder.Dispose();
             Screen = null;
             Pointer = null;
             _cursor = null;
