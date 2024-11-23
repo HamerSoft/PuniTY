@@ -16,7 +16,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes.Modes
 
         public override void Disable()
         {
-            AnsiContext.InputTransmitter.SetMouseReportingMode(new CellReportStrategy(AnsiContext.Pointer));
+            AnsiContext.InputTransmitter.SetMouseReportingMode(new CellReportStrategy(AnsiContext.Pointer,
+                AnsiContext.Screen));
         }
     }
 }

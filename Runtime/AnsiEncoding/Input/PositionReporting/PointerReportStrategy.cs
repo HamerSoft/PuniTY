@@ -1,5 +1,6 @@
-﻿using System.Numerics;
-using HamerSoft.PuniTY.AnsiEncoding;
+﻿using HamerSoft.PuniTY.AnsiEncoding;
+using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
 namespace AnsiEncoding.Input
 {
@@ -29,13 +30,25 @@ namespace AnsiEncoding.Input
 
     internal class CellReportStrategy : PointerReportStrategy
     {
-        public CellReportStrategy(IPointer pointer) : base(pointer)
+        private readonly IScreen _screen;
+
+        public CellReportStrategy(IPointer pointer, IScreen screen) : base(pointer)
         {
+            _screen = screen;
         }
 
         public override Vector2 GetPosition()
         {
-            return Vector2.Zero;
+            var cell = new Vector2(
+                Mathf.CeilToInt(Pointer.Position.X / _screen.ScreenConfiguration.FontDimensions.Width),
+                Mathf.CeilToInt(Pointer.Position.Y / _screen.ScreenConfiguration.FontDimensions.Height));
+
+            if (cell.X <= 0 ||
+                cell.Y <= 0 ||
+                cell.X > _screen.Columns ||
+                cell.Y > _screen.Rows)
+                return Vector2.Zero;
+            return cell;
         }
     }
 }

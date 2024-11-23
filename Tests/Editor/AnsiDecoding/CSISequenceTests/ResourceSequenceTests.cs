@@ -19,10 +19,10 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             base.SetUp();
             _pointer = new StubPointer(new NeverHide(), new Vector2(0, 0), _rect);
             AnsiContext = new StubAnsiContext(new StubInput(_pointer, new StubKeyboard()),
-                new Screen.DefaultScreenConfiguration(5, 5, 8),
+                new Screen.DefaultScreenConfiguration(5, 5, 8, new FontDimensions(10, 10)),
                 Logger,
                 new ResourceSequence());
-             AnsiContext.TerminalModeContext.PointerModeChanged += ContextOnPointerModeChanged;
+            AnsiContext.TerminalModeContext.PointerModeChanged += ContextOnPointerModeChanged;
         }
 
         protected override DefaultTestSetup DoTestSetup()

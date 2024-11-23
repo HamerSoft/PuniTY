@@ -73,7 +73,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
             if (mode == _pointerMode)
                 return;
             _pointerMode = mode;
-            PointerModeChanged?.Invoke(_modeFactory.Create(mode, _context));
+            PointerModeChanged?.Invoke(_modeFactory.Create(mode));
         }
     }
 }

@@ -21,23 +21,27 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             public int TabStopSize => _customTabStopSize > 0 ? _customTabStopSize : DefaultTabStopSize;
             public ScreenDimensions ScreenDimensions { get; }
+            public FontDimensions FontDimensions { get; }
 
-            public DefaultScreenConfiguration(int rows, int columns, int tabStopSize)
+            public DefaultScreenConfiguration(int rows, int columns, int tabStopSize, FontDimensions fontDimensions)
             {
+                FontDimensions = fontDimensions;
                 ScreenDimensions = new ScreenDimensions(rows, columns);
                 _customTabStopSize = tabStopSize;
             }
 
-            internal DefaultScreenConfiguration(ScreenDimensions screenDimensions)
+            internal DefaultScreenConfiguration(ScreenDimensions screenDimensions, FontDimensions fontDimensions)
             {
                 ScreenDimensions = screenDimensions;
                 _customTabStopSize = 0;
+                FontDimensions = fontDimensions;
             }
 
             internal DefaultScreenConfiguration(DefaultScreenConfiguration other)
             {
                 _customTabStopSize = other.TabStopSize;
                 ScreenDimensions = other.ScreenDimensions;
+                FontDimensions = other.FontDimensions;
             }
         }
 
@@ -273,7 +277,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void ResetTabStops()
         {
             _clearedTabStops.Clear();
-            _screenConfiguration = new DefaultScreenConfiguration(_screenConfiguration.ScreenDimensions);
+            _screenConfiguration = new DefaultScreenConfiguration(_screenConfiguration.ScreenDimensions,
+                _screenConfiguration.FontDimensions);
         }
 
         public void ClearTabStop(int? column)
@@ -290,7 +295,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             else
             {
                 _screenConfiguration = new DefaultScreenConfiguration(_screenConfiguration.ScreenDimensions.Rows,
-                    _screenConfiguration.ScreenDimensions.Columns, 1);
+                    _screenConfiguration.ScreenDimensions.Columns, 1, _screenConfiguration.FontDimensions);
                 _clearedTabStops.Clear();
             }
         }

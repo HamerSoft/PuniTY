@@ -26,22 +26,11 @@ namespace AnsiEncoding
         private readonly InputTransmitter _inputTransmitter;
 
         public AnsiContext(IInput input, IScreenConfiguration screenConfiguration, ILogger logger,
-            params ISequence[] sequences)
+            params ISequence[] sequences) : this(input, screenConfiguration, logger, new ModeFactory(), sequences)
         {
-            _cursor = new Cursor.Cursor();
-            _logger = logger;
-            _sequences = sequences;
-            Decoder = new EscapeCharacterDecoder();
-            _ansiDecoder = new AnsiDecoder(Decoder, ExecuteSequence, sequences);
-            TerminalModeContext = new TerminalModeContext(this, new ModeFactory());
-            Pointer = input.Pointer;
-            Keyboard = input.KeyBoard;
-            _inputTransmitter = new InputTransmitter(input);
-            TerminalModeContext.PointerModeChanged += Pointer.SetMode;
-            Screen = new Screen(_cursor, _logger, screenConfiguration);
         }
 
-        internal AnsiContext(IPointer pointer, IScreenConfiguration screenConfiguration, ILogger logger,
+        internal AnsiContext(IInput input, IScreenConfiguration screenConfiguration, ILogger logger,
             IModeFactory modeFactory,
             params ISequence[] sequences)
         {
@@ -51,9 +40,11 @@ namespace AnsiEncoding
             Decoder = new EscapeCharacterDecoder();
             _ansiDecoder = new AnsiDecoder(Decoder, ExecuteSequence, sequences);
             TerminalModeContext = new TerminalModeContext(this, modeFactory);
-            Pointer = pointer;
-            TerminalModeContext.PointerModeChanged += pointer.SetMode;
+            Pointer = input.Pointer;
+            Keyboard = input.KeyBoard;
             Screen = new Screen(_cursor, _logger, screenConfiguration);
+            TerminalModeContext.PointerModeChanged += Pointer.SetMode;
+            _inputTransmitter = new InputTransmitter(input, new CellReportStrategy(Pointer, Screen));
         }
 
         private void ExecuteSequence(ISequence sequence, string parameters)

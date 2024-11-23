@@ -7,14 +7,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
 {
     internal class ModeFactory : IModeFactory
     {
-        IPointerMode IModeFactory.Create(PointerMode pointerMode, IAnsiContext context)
+        IPointerMode IModeFactory.Create(PointerMode pointerMode)
         {
             switch (pointerMode)
             {
                 case PointerMode.NeverHide:
                     return new NeverHide();
                 case PointerMode.HideIfNotTracking:
-                    return new HideWhenTrackingDisabled(context.Pointer);
+                    return new HideWhenTrackingDisabled();
                 case PointerMode.AlwaysHideInWindow:
                     return new HideInWindow();
                 case PointerMode.AlwaysHide:

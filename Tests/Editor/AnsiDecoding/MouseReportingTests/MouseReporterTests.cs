@@ -55,10 +55,20 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.MouseReportingTests
         }
 
         [Test]
-        public void Pointer_InCellMode_Reports_Mouse_Position_As_0_0()
+        public void Pointer_InCellMode_Reports_Mouse_Position_As_0_0_When_OutOfBounds()
         {
             AnsiContext.Pointer.SetPosition(new Vector2(50, 50), Bounds);
             Assert.That(_output.ToString(), Is.EqualTo($"{Escape}M000"));
+        }
+
+        [TestCase(3, 50, "15")]
+        [TestCase(5, 3, "11")]
+        [TestCase(12, 100, "210")]
+        [TestCase(20, 100, "210")]
+        public void Pointer_InCellMode_Reports_Mouse_Position_As_Cells(int positionX, int positionY, string report)
+        {
+            AnsiContext.Pointer.SetPosition(new Vector2(positionX, positionY), Bounds);
+            Assert.That(_output.ToString(), Is.EqualTo($"{Escape}M0{report}"));
         }
     }
 }

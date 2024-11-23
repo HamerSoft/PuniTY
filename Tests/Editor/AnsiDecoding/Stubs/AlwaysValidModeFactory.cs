@@ -33,7 +33,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests.ModeTests
             return new AlwaysValidMode();
         }
 
-        IPointerMode IModeFactory.Create(PointerMode pointerMode, IAnsiContext context)
+        IPointerMode IModeFactory.Create(PointerMode pointerMode)
         {
             throw new System.NotImplementedException();
         }

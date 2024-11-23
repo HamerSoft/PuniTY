@@ -20,15 +20,17 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs
         public StubAnsiContext(int rows, int columns, ILogger logger, params ISequence[] sequences) : base(
             new StubInput(new StubPointer(new NeverHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
                 new StubKeyboard()),
-            new Screen.DefaultScreenConfiguration(rows, columns, 8), logger, sequences)
+            new Screen.DefaultScreenConfiguration(rows, columns, 8, new FontDimensions(10, 10)), logger, sequences)
         {
             Logger = logger;
         }
 
         public StubAnsiContext(int rows, int columns, ILogger logger, IModeFactory modeFactory,
             params ISequence[] sequences) : base(
-            new StubPointer(new NeverHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
-            new Screen.DefaultScreenConfiguration(rows, columns, 8), logger, modeFactory, sequences)
+            new StubInput(new StubPointer(new NeverHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
+                new StubKeyboard()),
+            new Screen.DefaultScreenConfiguration(rows, columns, 8, new FontDimensions(10, 10)), logger, modeFactory,
+            sequences)
         {
             Logger = logger;
         }

@@ -25,7 +25,7 @@ namespace AnsiEncoding.Input
             remove => Output -= value;
         }
 
-        public InputTransmitter(IInput input)
+        public InputTransmitter(IInput input, PointerReportStrategy pointerReportStrategy)
         {
             _pixelMode = true;
             _input = input;
@@ -37,7 +37,7 @@ namespace AnsiEncoding.Input
                 { true, new HashSet<MouseButton>() },
                 { false, new HashSet<MouseButton>() }
             };
-            _pointerReportStrategy = new CellReportStrategy(input.Pointer);
+            _pointerReportStrategy = pointerReportStrategy;
         }
 
         private void PointerOnMoved(Vector2 _)

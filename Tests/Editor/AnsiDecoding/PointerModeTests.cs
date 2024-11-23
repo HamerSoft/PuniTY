@@ -18,7 +18,8 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             base.SetUp();
             _stubPointer = new StubPointer(new NeverHide(), new Vector2(0, 0), _bounds);
-            AnsiContext = new StubAnsiContext(new StubInput(_stubPointer, new StubKeyboard()), new Screen.DefaultScreenConfiguration(5, 5, 8), Logger);
+            AnsiContext = new StubAnsiContext(new StubInput(_stubPointer, new StubKeyboard()),
+                new Screen.DefaultScreenConfiguration(5, 5, 8, new FontDimensions(10, 10)), Logger);
         }
 
         protected override DefaultTestSetup DoTestSetup()
@@ -66,7 +67,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
             Assert.That(_stubPointer.IsActive, Is.True);
             AnsiContext.TerminalModeContext.SetPointerMode(PointerMode.AlwaysHideInWindow);
             _stubPointer.SetPosition(new Vector2(200, 0), _bounds);
-            Assert.That(_stubPointer.IsActive, Is.False);
+            Assert.That(_stubPointer.IsActive, Is.True);
         }
 
         [Test]

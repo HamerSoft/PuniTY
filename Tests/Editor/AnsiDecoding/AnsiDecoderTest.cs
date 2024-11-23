@@ -62,7 +62,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         protected class MockScreen : Screen
         {
             public MockScreen(int rows, int columns, ILogger logger) : base(new Cursor(), logger,
-                new DefaultScreenConfiguration(rows, columns, 8))
+                new DefaultScreenConfiguration(rows, columns, 8, new FontDimensions(10, 10)))
             {
             }
         }
