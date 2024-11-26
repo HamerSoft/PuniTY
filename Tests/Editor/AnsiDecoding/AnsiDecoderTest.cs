@@ -143,8 +143,6 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             AnsiContext.Dispose();
         }
-
-
         protected void PopulateScreen(char @char = DefaultChar)
         {
             var iterator = new ScreenIterator(Screen);

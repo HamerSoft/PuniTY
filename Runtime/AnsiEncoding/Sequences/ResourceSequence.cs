@@ -1,4 +1,5 @@
-﻿using AnsiEncoding;
+﻿using System;
+using AnsiEncoding;
 using HamerSoft.PuniTY.AnsiEncoding.SequenceTypes;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
@@ -9,6 +10,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private const char SetResource = '>';
         private const char DecSpecificIndicator = '?';
         private const char SoftTerminalReset = '!';
+        private const char ConformanceLevel = '"'; // not supported due to '"' in command
+        private const char RequestANSImode = '$';
 
         public override char Command => 'p';
 
@@ -24,11 +27,18 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                                 parameters.StartsWith(DecSpecificIndicator) ||
                                 parameters.StartsWith(SoftTerminalReset)
                 ? parameters.Substring(1, parameters.Length - 1)
-                : parameters;
+                : parameters.EndsWith(ConformanceLevel) ||
+                  parameters.EndsWith(RequestANSImode)
+                    ? parameters.Substring(0, Math.Clamp(parameters.Length - 1, 0, 4))
+                    : parameters;
+            bool isPrivateANSIModeRequest = paramsToParse.EndsWith(RequestANSImode);
+            paramsToParse = isPrivateANSIModeRequest
+                ? paramsToParse.Substring(0, Math.Clamp(paramsToParse.Length - 1, 0, 4))
+                : paramsToParse;
 
             if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
-                context.LogWarning($"Failed to parse argument {nameof(GetType)}, no parameters invalid. Int Expected.");
+                context.LogWarning($"Failed to parse argument {GetType()}, no parameters invalid. Int Expected.");
                 return;
             }
 
@@ -42,11 +52,43 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             if (parameters.StartsWith(SetResource))
                 SetPointerResourceMode(context.TerminalModeContext, argument);
             else if (parameters.StartsWith(DecSpecificIndicator))
-                ExecuteDecSpecific(screen, argument);
+                if (isPrivateANSIModeRequest)
+                    ExecuteRequestPrivateAnsiMode(context, argument);
+                else
+                    ExecuteDecSpecific(screen, argument);
             else if (parameters.StartsWith(SoftTerminalReset))
                 ExecuteSoftTerminalReset(context);
+            else if (parameters.EndsWith(RequestANSImode))
+                ExecuteRequestAnsiMode(context, argument);
             else
                 ExecuteNormal(screen, argument);
+        }
+
+        private void ExecuteRequestPrivateAnsiMode(IAnsiContext context, int argument)
+        {
+            context.LogWarning("Request Private ANSI mode, Not implemented.");
+        }
+
+        private void ExecuteRequestAnsiMode(IAnsiContext context, int argument)
+        {
+            switch (argument)
+            {
+                case 0:
+                    context.LogWarning("Request ANSI mode - 0 Not Recognized, Not implemented.");
+                    break;
+                case 1:
+                    context.LogWarning("Request ANSI mode - 1 set, Not implemented.");
+                    break;
+                case 2:
+                    context.LogWarning("Request ANSI mode - 2 reset, Not implemented.");
+                    break;
+                case 3:
+                    context.LogWarning("Request ANSI mode - 3 permanently set, Not implemented.");
+                    break;
+                case 4:
+                    context.LogWarning("Request ANSI mode - 4 permanently reset, Not implemented.");
+                    break;
+            }
         }
 
         /// <summary>

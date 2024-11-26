@@ -58,6 +58,31 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
+        [Test, Ignore("Not Supported")]
+        public void ResourceSequence_SetConformanceLevel_Not_ImplementedWarning()
+        {
+            Decode(@$"{Escape}61;0""p");
+            // LogAssert.Expect(LogType.Warning, new Regex(""));
+        }
+
+        [TestCase(0)]
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(4)]
+        public void ResourceSequence_RequestAnsiMode_Not_ImplementedWarning(int argument)
+        {
+            Decode(@$"{Escape}{argument}$p");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+        }
+
+        [TestCase(0)]
+        public void ResourceSequence_RequestDECPrivateMode_Not_ImplementedWarning(int argument)
+        {
+            Decode(@$"{Escape}?{argument}$p");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
+        }
+
         public override void TearDown()
         {
             AnsiContext.TerminalModeContext.PointerModeChanged -= ContextOnPointerModeChanged;
