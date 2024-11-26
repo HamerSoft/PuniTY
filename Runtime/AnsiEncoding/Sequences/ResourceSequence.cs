@@ -19,7 +19,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             if (string.IsNullOrWhiteSpace(parameters))
             {
-                context.LogWarning($"Failed to executed {nameof(GetType)}, no parameters given. Skipping command");
+                context.LogWarning($"Failed to executed {GetType()}, no parameters given. Skipping command");
                 return;
             }
 
