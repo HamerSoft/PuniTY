@@ -13,19 +13,37 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         [TestCase("hello! world")]
         [TestCase("hello! world!")]
         [TestCase("!hello! world!")]
-        [TestCase("?!><")]
+        [TestCase("?!>. <")]
         public void AnsiDecoder_Can_Return_Output_When_No_Commands_Are_Given(string input)
         {
             Decode(input);
-            Assert.That(AnsiContext.Screen.ToString().Replace('\0', ' ').TrimEnd(), Is.EqualTo(input));
+            Assert.That(GetOutput(), Is.EqualTo(input));
         }
 
-        [Test]
-        public void AnsiDecoder_Can_Return_Output_When_No_Commands_Are_Given()
+        [TestCase("\x001b[?2004hhello world", "hello world")]
+        [TestCase("\x001b[?2004h!hello world", "!hello world")]
+        [TestCase("\x001b[?2004h!>hello !world", "!>hello !world")]
+        
+        [TestCase("\x001b[2Jhello world", "hello world")]
+        [TestCase("\x001b[2J!hello world", "!hello world")]
+        [TestCase("\x001b[2J!>hello !world", "!>hello !world")]
+        
+        [TestCase("\x001b7hello world", "hello world")]
+        [TestCase("\x001b7!hello world", "!hello world")]
+        [TestCase("\x001b7!>hello !world", "!>hello !world")]
+        
+        [TestCase("\x001b[mhello world", "hello world")]
+        [TestCase("\x001b[m!hello world", "!hello world")]
+        [TestCase("\x001b[m!>hello !world", "!>hello !world")]
+        public void AnsiDecoder_Can_Return_Output_After_Commands_Are_Parsed(string input, string output)
         {
-            const string helloWorld = "!hello world";
-            Decode(helloWorld);
-            Assert.That(AnsiContext.Screen.ToString().Replace('\0', ' ').TrimEnd(), Is.EqualTo(helloWorld));
+            Decode(input);
+            Assert.That(GetOutput(), Is.EqualTo(output));
+        }
+
+        private string GetOutput()
+        {
+            return AnsiContext.Screen.ToString().Replace('\0', ' ').TrimEnd();
         }
     }
 }
