@@ -7,6 +7,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     public class AttributesSequence : CSISequence
     {
         private const char CursorStyle = ' ';
+        private const char CharacterProtection = '"';
         private const int InvalidArgument = -1;
         public override char Command => 'q';
 
@@ -19,6 +20,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
 
             var paramsToParse = parameters.EndsWith(CursorStyle)
+                                || parameters.EndsWith(CharacterProtection)
                 ? parameters.Substring(0, Math.Clamp(parameters.Length - 1, 0, 4))
                 : parameters;
 
@@ -34,12 +36,29 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
-            var screen = context.Screen;
             if (parameters.EndsWith(CursorStyle))
                 ExecuteSetCursorMode(context, argument);
+            else if (parameters.EndsWith(CharacterProtection))
+                ExecuteCharacterProtection(context, argument);
             else
             {
                 ExecuteNormal(context, argument);
+            }
+        }
+
+        private void ExecuteCharacterProtection(IAnsiContext context, int argument)
+        {
+            switch (argument)
+            {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                default:
+                    context.LogWarning($"Cannot set character protection, unknown argument{argument}.");
+                    break;
             }
         }
 
@@ -49,22 +68,25 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 case 0:
                 case 1:
-                    context.Screen.Cursor.Mode = CursorMode.BlinkingBlock;
+                    context.TerminalModeContext.SetCursorMode(CursorMode.BlinkingBlock);
                     break;
                 case 2:
-                    context.Screen.Cursor.Mode = CursorMode.SteadyBlock;
+                    context.TerminalModeContext.SetCursorMode(CursorMode.SteadyBlock);
                     break;
                 case 3:
-                    context.Screen.Cursor.Mode = CursorMode.BlinkingUnderline;
+                    context.TerminalModeContext.SetCursorMode(CursorMode.BlinkingUnderline);
                     break;
                 case 4:
-                    context.Screen.Cursor.Mode = CursorMode.SteadyUnderLine;
+                    context.TerminalModeContext.SetCursorMode(CursorMode.SteadyUnderLine);
                     break;
                 case 5:
-                    context.Screen.Cursor.Mode = CursorMode.BlinkingBar;
+                    context.TerminalModeContext.SetCursorMode(CursorMode.BlinkingBar);
                     break;
                 case 6:
-                    context.Screen.Cursor.Mode = CursorMode.SteadyBar;
+                    context.TerminalModeContext.SetCursorMode(CursorMode.SteadyBar);
+                    break;
+                default:
+                    context.LogWarning($"Cannot set CursorStyle, Unknown argument: {argument}.");
                     break;
             }
         }
@@ -93,6 +115,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     break;
                 case 23:
                     context.LogWarning("Extinguish Scroll Lock, not implemented");
+                    break;
+                default:
+                    context.LogWarning($"Cannot set LEDs, unknown argument: {argument}");
                     break;
             }
         }

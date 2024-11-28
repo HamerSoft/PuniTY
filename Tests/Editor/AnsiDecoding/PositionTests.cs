@@ -1,6 +1,5 @@
 ﻿using HamerSoft.PuniTY.AnsiEncoding;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 {
@@ -90,9 +89,9 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         }
 
         [Test]
-        public void Position_CanBe_Created_With_Vector2Int()
+        public void Position_CanBe_Created_With_SystemVector2()
         {
-            Assert.That(new Position(3, 4), Is.EqualTo(new Position(new Vector2Int(4, 3))));
+            Assert.That(new Position(3, 4), Is.EqualTo(new Position(new System.Numerics.Vector2(4, 3))));
         }
 
         [Test]

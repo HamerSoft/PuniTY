@@ -2,7 +2,7 @@
 
 namespace AnsiEncoding
 {
-    public interface ITerminalModeContext : IModeable, IPointerable
+    public interface ITerminalModeContext : IModeable, IPointerable, ICursorMode
     {
     }
 }

@@ -13,7 +13,6 @@
     public interface ICursor
     {
         public Position Position { get; }
-        public CursorMode Mode { get; internal set; }
         internal void SetPosition(Position position);
     }
 }

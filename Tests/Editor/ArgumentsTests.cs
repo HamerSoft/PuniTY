@@ -34,7 +34,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         }
 
         [Test]
-        public void ClientArguments_Are_Invalid_When_Encodier_IsNull()
+        public void ClientArguments_Are_Invalid_When_Encoder_IsNull()
         {
             var clientArguments = new ClientArguments("127.0.0.1", 1337, GetValidAppName(), null,
                 Application.dataPath);

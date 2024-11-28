@@ -10,6 +10,7 @@ using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
 using UnityEngine;
 using Cursor = AnsiEncoding.Cursor.Cursor;
+using CursorMode = HamerSoft.PuniTY.AnsiEncoding.CursorMode;
 using ILogger = HamerSoft.PuniTY.Logging.ILogger;
 using Screen = HamerSoft.PuniTY.AnsiEncoding.Screen;
 
@@ -51,6 +52,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
 
         protected class MockCursor : ICursor
         {
+            private CursorMode _mode;
             public Position Position { get; private set; }
 
             void ICursor.SetPosition(Position position)
@@ -143,6 +145,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         {
             AnsiContext.Dispose();
         }
+
         protected void PopulateScreen(char @char = DefaultChar)
         {
             var iterator = new ScreenIterator(Screen);

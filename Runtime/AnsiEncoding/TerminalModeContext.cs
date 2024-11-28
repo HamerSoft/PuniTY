@@ -14,9 +14,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
         private readonly ILogger _logger;
         private PointerMode _pointerMode;
         private HashSet<PointerTrackingMode> _activePointerModes;
+        private CursorMode _cursorMode;
 
         public event Action<AnsiMode, bool> ModeChanged;
         public event Action<IPointerMode> PointerModeChanged;
+        public event Action<CursorMode> CursorModeChanged;
 
         internal TerminalModeContext(IAnsiContext context, IModeFactory modeFactory)
         {
@@ -74,6 +76,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding.TerminalModes
                 return;
             _pointerMode = mode;
             PointerModeChanged?.Invoke(_modeFactory.Create(mode));
+        }
+
+        void ICursorMode.SetCursorMode(CursorMode mode)
+        {
+            if (_cursorMode == mode)
+                return;
+            _cursorMode = mode;
+            CursorModeChanged?.Invoke(mode);
         }
     }
 }

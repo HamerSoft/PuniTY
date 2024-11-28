@@ -1,5 +1,4 @@
-﻿using UnityEditor.UIElements;
-using UnityEngine;
+﻿using Vector2 = System.Numerics.Vector2;
 
 namespace HamerSoft.PuniTY.AnsiEncoding
 {
@@ -20,10 +19,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             Column = position.Item2;
         }
 
-        public Position(Vector2Int position)
+        public Position(Vector2 position)
         {
-            Row = position.y;
-            Column = position.x;
+            Row = (int)position.Y;
+            Column = (int)position.X;
         }
 
         internal bool IsValid(IScreen screen)

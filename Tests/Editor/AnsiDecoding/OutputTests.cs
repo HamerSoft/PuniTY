@@ -23,18 +23,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         [TestCase("\x001b[?2004hhello world", "hello world")]
         [TestCase("\x001b[?2004h!hello world", "!hello world")]
         [TestCase("\x001b[?2004h!>hello !world", "!>hello !world")]
+        [TestCase("\x001b[?2004h hello !world", " hello !world")]
         
         [TestCase("\x001b[2Jhello world", "hello world")]
         [TestCase("\x001b[2J!hello world", "!hello world")]
         [TestCase("\x001b[2J!>hello !world", "!>hello !world")]
+        [TestCase("\x001b[2J hello !world", " hello !world")]
         
         [TestCase("\x001b7hello world", "hello world")]
         [TestCase("\x001b7!hello world", "!hello world")]
         [TestCase("\x001b7!>hello !world", "!>hello !world")]
+        [TestCase("\x001b7 hello !world", " hello !world")]
         
         [TestCase("\x001b[mhello world", "hello world")]
         [TestCase("\x001b[m!hello world", "!hello world")]
         [TestCase("\x001b[m!>hello !world", "!>hello !world")]
+        [TestCase("\x001b[m hello !world", " hello !world")]
         public void AnsiDecoder_Can_Return_Output_After_Commands_Are_Parsed(string input, string output)
         {
             Decode(input);
