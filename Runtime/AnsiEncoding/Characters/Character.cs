@@ -1,16 +1,21 @@
 ﻿namespace HamerSoft.PuniTY.AnsiEncoding
 {
-    public readonly struct Character : ICharacter
+    internal readonly struct Character : ICharacter
     {
-        public char Char { get;  }
-        public Position Position { get; }
+        public char Char { get; }
         public GraphicAttributes GraphicAttributes { get; }
+        public bool IsProtected { get; }
 
-        public Character(GraphicAttributes graphicAttributes, Position position, char c = '\0')
+        internal Character(GraphicAttributes graphicAttributes, bool isProtected = false, char c = '\0')
         {
-            Position = position;
             GraphicAttributes = graphicAttributes;
             Char = c;
+            IsProtected = isProtected;
+        }
+
+        internal static ICharacter Invalid()
+        {
+            return new Character(default);
         }
 
         public override string ToString()

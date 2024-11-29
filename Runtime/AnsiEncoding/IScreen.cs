@@ -13,13 +13,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
-        public event Action<Character> CharacterReceived;
+        public event Action<ICharacter> CharacterReceived;
         internal IScreenConfiguration ScreenConfiguration { get; }
 
         public void SetCursorPosition(Position position);
         public void AddCharacter(char character);
         public void InsertCharacters(int charactersToInsert);
         public ICharacter GetCharacter(Position position);
+        internal void SetCharacterProtection(bool isProtected);
         public void MoveCursor(int cells, Direction direction);
         public void Erase(Position? from = null, Position? to = null);
         public void ClearSaved();

@@ -8,6 +8,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
     {
         private const char CursorStyle = ' ';
         private const char CharacterProtection = '"';
+        private const char PopVideoAttributes = '#';
         private const int InvalidArgument = -1;
         public override char Command => 'q';
 
@@ -23,6 +24,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                                 || parameters.EndsWith(CharacterProtection)
                 ? parameters.Substring(0, Math.Clamp(parameters.Length - 1, 0, 4))
                 : parameters;
+
+            if (paramsToParse == $"{PopVideoAttributes}")
+            {
+                context.LogWarning("Pop Video Attributes not implemented!");
+                return;
+            }
 
             if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
@@ -51,10 +58,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             switch (argument)
             {
                 case 0:
+                case 2:
+                    context.Screen.SetCharacterProtection(false);
                     break;
                 case 1:
-                    break;
-                case 2:
+                    context.Screen.SetCharacterProtection(true);
                     break;
                 default:
                     context.LogWarning($"Cannot set character protection, unknown argument{argument}.");

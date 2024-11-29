@@ -19,11 +19,6 @@ namespace HamerSoft.PuniTY.AnsiEncoding.Characters
             }
 
             context.Screen.InsertCharacters(charactersToInsert);
-
-            // emptyChars = Math.Clamp(emptyChars, 1, screen.Rows * screen.Columns);
-            //
-            // for (int i = 0; i < emptyChars; i++)
-            //     screen.InsertCharacter(EmptyCharacter);
         }
     }
 }

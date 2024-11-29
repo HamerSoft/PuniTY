@@ -51,7 +51,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public int Rows { get; }
         public int Columns { get; }
         public ICursor Cursor { get; }
-        public event Action<Character> CharacterReceived;
+        public event Action<ICharacter> CharacterReceived;
         IScreenConfiguration IScreen.ScreenConfiguration => _screenConfiguration;
 
         private List<List<ICharacter>> _characters;
@@ -62,6 +62,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         private PointerMode _pointerMode;
         private readonly IPointerModeFactory _pointerModeFactory;
         private readonly ScreenIterator _screenIterator;
+        private bool _areCharactersProtected;
 
         public Screen(ICursor cursor,
             ILogger logger,
@@ -78,16 +79,16 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             PopulateScreen(Rows, Columns);
             _clearedTabStops = new HashSet<int>();
             _screenIterator = new ScreenIterator(this);
-        }
 
-        private void PopulateScreen(int rows, int columns)
-        {
-            _characters = new List<List<ICharacter>>(rows);
-            for (int i = 0; i < rows; i++)
+            void PopulateScreen(int rows, int columns)
             {
-                _characters.Add(new List<ICharacter>(columns));
-                for (int j = 0; j < Columns; j++)
-                    _characters[i].Add(new Character(_currentGraphicAttributes, new Position(i + 1, j + 1)));
+                _characters = new List<List<ICharacter>>(rows);
+                for (int i = 0; i < rows; i++)
+                {
+                    _characters.Add(new List<ICharacter>(columns));
+                    for (int j = 0; j < Columns; j++)
+                        _characters[i].Add(new Character(_currentGraphicAttributes));
+                }
             }
         }
 
@@ -101,7 +102,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         {
             return position.IsValid(this)
                 ? _characters[position.Row + _rowOffset - 1][position.Column - 1]
-                : new Character();
+                : Character.Invalid();
+        }
+
+        void IScreen.SetCharacterProtection(bool isProtected)
+        {
+            _areCharactersProtected = isProtected;
         }
 
         public void AddCharacter(char character)
@@ -115,7 +121,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 default:
                     var position = new Position(Cursor.Position.Row + _rowOffset - 1, Cursor.Position.Column - 1);
                     _characters[position.Row][position.Column] =
-                        new Character(_currentGraphicAttributes, Cursor.Position, character);
+                        new Character(_currentGraphicAttributes, _areCharactersProtected, character);
                     MoveCursor(1, Direction.Forward);
                     break;
             }
@@ -123,8 +129,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void InsertCharacters(int charactersToInsert)
         {
+            var inheritChar = _characters[Cursor.Position.Row + _rowOffset - 1][Cursor.Position.Column - 1];
+
             for (var i = 0; i < charactersToInsert; i++)
-                _characters[Cursor.Position.Row + _rowOffset - 1].Insert(Cursor.Position.Column - 1, new Character());
+                _characters[Cursor.Position.Row + _rowOffset - 1].Insert(Cursor.Position.Column - 1,
+                    new Character(inheritChar.GraphicAttributes));
 
             for (int i = Cursor.Position.Row + _rowOffset - 1; i < _characters.Count; i++)
             {
@@ -145,7 +154,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
             for (int i = _characters[^1].Count; i < Columns; i++)
             {
-                _characters[^1].Add(new Character());
+                _characters[^1].Add(new Character(_currentGraphicAttributes));
             }
         }
 
@@ -193,7 +202,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                  j++)
                 if (i <= _characters.Count && j <= _characters[i - 1].Count)
                     _characters[i - 1][j - 1] =
-                        new Character(_currentGraphicAttributes, _characters[i - 1][j - 1].Position);
+                        new Character(_currentGraphicAttributes);
         }
 
         public void Scroll(int lines, Direction direction)
@@ -272,7 +281,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
         {
-            return Enumerable.Repeat<ICharacter>(new Character(), columns);
+            return Enumerable.Repeat<ICharacter>(new Character(_currentGraphicAttributes), columns);
         }
 
         public void ClearSaved()
@@ -294,8 +303,8 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             {
                 var tabStopToClear = column.Value % tabStopSize == 0
                     ? column.Value / tabStopSize
-                    : (Math.Clamp(column.Value / tabStopSize, 0,
-                        Columns / tabStopSize) + 1); // tabStopSize;
+                    : Math.Clamp(column.Value / tabStopSize, 0,
+                        Columns / tabStopSize) + 1;
                 _clearedTabStops.Add(tabStopToClear);
             }
             else
