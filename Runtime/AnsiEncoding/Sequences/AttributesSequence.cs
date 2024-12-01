@@ -31,6 +31,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(paramsToParse))
+                paramsToParse = "0";
+
             if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
                 context.LogWarning($"Failed to parse argument {GetType()}, no parameters invalid. Int Expected.");
@@ -48,9 +51,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             else if (parameters.EndsWith(CharacterProtection))
                 ExecuteCharacterProtection(context, argument);
             else
-            {
                 ExecuteNormal(context, argument);
-            }
         }
 
         private void ExecuteCharacterProtection(IAnsiContext context, int argument)

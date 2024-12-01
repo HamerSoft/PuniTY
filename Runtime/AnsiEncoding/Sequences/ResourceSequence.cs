@@ -23,6 +23,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 return;
             }
 
+            // ugly AF, refactor into sub sequences or something
             var paramsToParse = parameters.StartsWith(SetResource) ||
                                 parameters.StartsWith(DecSpecificIndicator) ||
                                 parameters.StartsWith(SoftTerminalReset)
@@ -35,6 +36,13 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             paramsToParse = isPrivateANSIModeRequest
                 ? paramsToParse.Substring(0, Math.Clamp(paramsToParse.Length - 1, 0, 4))
                 : paramsToParse;
+
+            if (parameters.EndsWith(ConformanceLevel))
+            {
+                var arguments = GetCommandArguments(paramsToParse, 2, 1);
+                SetConformanceLevel(context, arguments);
+                return;
+            }
 
             if (!TryParseInt(paramsToParse, out var argument, "-1"))
             {
@@ -64,9 +72,14 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                 ExecuteNormal(screen, argument);
         }
 
+        private void SetConformanceLevel(IAnsiContext context, int[] arguments)
+        {
+            context.LogWarning("SetConformance level not implemented.");
+        }
+
         private void ExecuteRequestPrivateAnsiMode(IAnsiContext context, int argument)
         {
-            context.LogWarning("Request Private ANSI mode, Not implemented.");
+            context.LogWarning($"Request Private ANSI mode {argument}, Not implemented.");
         }
 
         private void ExecuteRequestAnsiMode(IAnsiContext context, int argument)

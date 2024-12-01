@@ -31,4 +31,12 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void InsertLines(int linesToInsert);
         public void DeleteLines(int linesToDelete);
     }
+
+    public static class ScreenExtensions
+    {
+        public static ICharacter GetCharacter(this IScreen screen, int row, int column)
+        {
+            return screen.GetCharacter(new Position(row, column));
+        }
+    }
 }

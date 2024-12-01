@@ -58,11 +58,11 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
-        [Test, Ignore("Not Supported")]
+        [Test]
         public void ResourceSequence_SetConformanceLevel_Not_ImplementedWarning()
         {
             Decode(@$"{Escape}61;0""p");
-            // LogAssert.Expect(LogType.Warning, new Regex(""));
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
         [TestCase(0)]

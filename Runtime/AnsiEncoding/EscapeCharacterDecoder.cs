@@ -141,16 +141,15 @@ namespace HamerSoft.PuniTY.AnsiEncoding
                     }
                 }
 
-                bool insideQuotes = false;
+                // bool insideQuotes = false;
                 int end = start;
                 while (end < _commandBuffer.Count &&
-                       (IsValidParameterCharacter((char)_commandBuffer[end], isOscCommand, IsCsiCommand) ||
-                        insideQuotes))
+                       (IsValidParameterCharacter((char)_commandBuffer[end], isOscCommand, IsCsiCommand)))// || insideQuotes))
                 {
-                    if (_commandBuffer[end] == '"')
-                    {
-                        insideQuotes = !insideQuotes;
-                    }
+                    // if (_commandBuffer[end] == '"')
+                    // {
+                    //     insideQuotes = !insideQuotes;
+                    // }
 
                     if (_commandBuffer[end] == ']' || _commandBuffer[end] == BellCharacter)
                     {

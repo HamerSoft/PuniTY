@@ -54,10 +54,22 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         }
 
         [Test]
-        public void AttributeSequence_ps_Quote_SetCharacterProtection()
+        public void AttributeSequence_ps_1_Quote_Enables_CharacterProtection()
         {
-            Decode($"{Escape}\"q");
-            Assert.Fail();
+            Decode($"{Escape}1\"qthese characters are protected");
+            Assert.That(AnsiContext.Screen.GetCharacter(1, 1).Char, Is.EqualTo('t'));
+            Assert.That(AnsiContext.Screen.GetCharacter(1, 1).IsProtected, Is.True);
+        }
+
+        [TestCase("")]
+        [TestCase("0")]
+        [TestCase("2")]
+        public void AttributeSequence_ps_Quote_Disables_CharacterProtection(string argument)
+        {
+            Decode($"{Escape}1\"qthese characters");
+            Decode($"{Escape}{argument}\"qare not protected");
+            Assert.That(AnsiContext.Screen.GetCharacter(4, 2).Char, Is.EqualTo('a')); 
+            Assert.That(AnsiContext.Screen.GetCharacter(4, 2).IsProtected, Is.False);
         }
 
         public override void TearDown()
