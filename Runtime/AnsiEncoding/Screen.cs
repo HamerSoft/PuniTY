@@ -279,6 +279,11 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             }
         }
 
+        public void SetScrollingArea(int top, int bottom)
+        {
+            throw new NotImplementedException();
+        }
+
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
         {
             return Enumerable.Repeat<ICharacter>(new Character(_currentGraphicAttributes), columns);

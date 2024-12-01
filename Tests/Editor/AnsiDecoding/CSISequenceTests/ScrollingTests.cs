@@ -26,7 +26,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         protected override DefaultTestSetup DoTestSetup()
         {
             return new DefaultTestSetup(ScreenRows, ScreenColumns, typeof(ScrollDownSequence),
-                typeof(ScrollUpSequence));
+                typeof(ScrollUpSequence), typeof(SetScrollingAreaSequence));
         }
 
         private void PopulateScreen()
@@ -78,6 +78,12 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
         {
             Decode($"{Escape}1;8;2;3T");
             LogAssert.Expect(LogType.Warning, new Regex(""));
+        }
+
+        [TestCase("1","2")]
+        public void SetScrollArea_Locks_ScrollArea_To_TopBottom_Arguments(string top, string bottom)
+        {
+            Decode($"{Escape}{top};{bottom}r");
         }
 
         private void Scroll(int lines, Direction direction)

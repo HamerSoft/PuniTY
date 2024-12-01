@@ -30,6 +30,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         public void SetGraphicsRendition(params GraphicsPair[] _graphicRenditionPairs);
         public void InsertLines(int linesToInsert);
         public void DeleteLines(int linesToDelete);
+        public void SetScrollingArea(int top, int bottom);
     }
 
     public static class ScreenExtensions
