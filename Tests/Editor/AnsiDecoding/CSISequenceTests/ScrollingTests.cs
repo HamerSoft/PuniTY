@@ -80,10 +80,11 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.CSISequenceTests
             LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
-        [TestCase("1","2")]
+        [TestCase("1", "2")]
         public void SetScrollArea_Locks_ScrollArea_To_TopBottom_Arguments(string top, string bottom)
         {
             Decode($"{Escape}{top};{bottom}r");
+            LogAssert.Expect(LogType.Warning, new Regex(""));
         }
 
         private void Scroll(int lines, Direction direction)

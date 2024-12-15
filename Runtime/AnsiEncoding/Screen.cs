@@ -281,7 +281,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
 
         public void SetScrollingArea(int top, int bottom)
         {
-            throw new NotImplementedException();
+            _logger.LogWarning("Setting scroll region not implemented");
         }
 
         private IEnumerable<ICharacter> GenerateNewRow(int columns)
