@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading.Tasks;
+using AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding;
+using HamerSoft.PuniTY.AnsiEncoding.PointerModes;
 using HamerSoft.PuniTY.Core;
 using HamerSoft.PuniTY.Core.Logging;
+using HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs;
 using NUnit.Framework;
+using Tests.Editor.AnsiDecoding.Stubs;
 
 namespace HamerSoft.PuniTY.Tests.Editor
 {
@@ -11,18 +17,23 @@ namespace HamerSoft.PuniTY.Tests.Editor
     {
         private MockServer _server;
         private MockClient _client;
+        private AnsiContext _ansiContext;
 
         [SetUp]
         public void SetUp()
         {
             _server = new MockServer(new EditorLogger());
             _client = new MockClient(Guid.NewGuid(), _server);
+            _ansiContext = new AnsiContext(
+                new StubInput(new StubPointer(new AlwaysHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
+                    new StubKeyboard()), new Screen.DefaultScreenConfiguration(10, 10, 2, new FontDimensions(10, 10)),
+                new EditorLogger());
         }
 
         [Test]
         public async Task When_Terminal_Is_Started_It_Receives_Responses()
         {
-            var terminal = PunityFactory.CreateTerminal(_server, _client, new EditorLogger());
+            var terminal = PunityFactory.CreateTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             string receivedMessage = null;
             const string messageToBeSend = "HamerSoft";
@@ -155,7 +166,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         {
             var terminal = new PunityTerminal(_server, _client, new EditorLogger());
             terminal.Start(GetValidClientArguments(), null);
-            await terminal.Write(System.Text.Encoding.ASCII.GetBytes("foo-bar"));
+            await terminal.WriteAsync(System.Text.Encoding.ASCII.GetBytes("foo-bar"));
             Assert.That(_client.WrittenText, Is.EqualTo("foo-bar"));
         }
 

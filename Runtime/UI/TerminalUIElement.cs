@@ -26,16 +26,16 @@ namespace HamerSoft.PuniTY.UI
             _output = this.Q<TextField>("output");
             _input = this.Q<TextField>("input");
         }
-
+ 
         public async void Print(string message)
         {
             await Dispatcher.ToMainThread();
-            _output.value += message;
+            _output.value += $"{message.Replace('\0', ' ').TrimEnd()}\r\n";
         }
 
         public void Print(byte[] message)
         {
-          //  throw new NotImplementedException();
+            //  throw new NotImplementedException();
         }
 
         public void Close()

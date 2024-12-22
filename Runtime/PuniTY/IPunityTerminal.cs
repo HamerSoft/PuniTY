@@ -17,6 +17,7 @@ namespace HamerSoft.PuniTY
         public void Stop();
         public Task Write(string text);
         public Task WriteLine(string text);
-        public Task Write(byte[] bytes);
+        public Task WriteAsync(byte[] bytes);
+        public void Write(byte[] bytes);
     }
 }

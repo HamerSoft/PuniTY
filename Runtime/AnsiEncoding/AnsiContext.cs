@@ -8,7 +8,7 @@ using HamerSoft.PuniTY.Logging;
 
 namespace AnsiEncoding
 {
-    public class AnsiContext : IAnsiContext
+    internal class AnsiContext : IAnsiContext
     {
         public IScreen Screen { get; private set; }
         public IPointer Pointer { get; private set; }

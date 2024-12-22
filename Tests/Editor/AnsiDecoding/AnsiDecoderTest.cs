@@ -76,7 +76,7 @@ namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding
         protected HamerSoft.PuniTY.Logging.ILogger Logger;
         private StubAnsiContext _context;
 
-        protected StubAnsiContext AnsiContext
+        internal StubAnsiContext AnsiContext
         {
             get => _context;
             set

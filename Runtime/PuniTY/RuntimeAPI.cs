@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AnsiEncoding;
 using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Core;
 using HamerSoft.PuniTY.Utilities;
@@ -25,17 +26,17 @@ namespace HamerSoft.PuniTY
             Api.Instance.StartServer(new StartArguments("127.0.0.1", 13000));
         }
 
-        public static IPunityTerminal OpenTerminal(ClientArguments startArguments, ILogger logger = null,
+        public static IPunityTerminal OpenTerminal(ClientArguments startArguments, IAnsiContext ansiContext,
             ITerminalUI ui = null)
         {
-            return Api.Instance.OpenTerminal(startArguments, logger, ui);
+            return Api.Instance.OpenTerminal(startArguments, ansiContext, ui);
         }
 
         public static async Task<IPunityTerminal> OpenTerminalAsync(ClientArguments startArguments,
-            ILogger logger = null,
+            IAnsiContext ansiContext,
             ITerminalUI ui = null, CancellationToken token = default)
         {
-            return await Api.Instance.OpenTerminalAsync(startArguments, logger, ui, token);
+            return await Api.Instance.OpenTerminalAsync(startArguments, ansiContext, ui, token);
         }
 
         private static void UnityEventsOnApplicationQuit()

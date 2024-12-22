@@ -117,7 +117,13 @@ namespace HamerSoft.PuniTY.Core
                 await _client.WriteLine(text);
         }
 
-        public async Task Write(byte[] bytes)
+        public async Task WriteAsync(byte[] bytes)
+        {
+            if (_client != null)
+                await _client.Write(bytes);
+        }
+
+        public async void Write(byte[] bytes)
         {
             if (_client != null)
                 await _client.Write(bytes);

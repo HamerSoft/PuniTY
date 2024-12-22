@@ -83,5 +83,9 @@ namespace HamerSoft.PuniTY.AnsiEncoding.PointerModes
             add => KeyPressed += value;
             remove => KeyPressed -= value;
         }
+
+        public virtual void Dispose()
+        {
+        }
     }
 }

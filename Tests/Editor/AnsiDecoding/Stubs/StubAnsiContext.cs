@@ -9,7 +9,7 @@ using Tests.Editor.AnsiDecoding.Stubs;
 
 namespace HamerSoft.PuniTY.Tests.Editor.AnsiDecoding.Stubs
 {
-    public class StubAnsiContext : AnsiContext
+    internal class StubAnsiContext : AnsiContext
     {
         public StubAnsiContext(IInput input, IScreenConfiguration screenConfiguration, ILogger logger,
             params ISequence[] sequences) : base(input, screenConfiguration, logger, sequences)

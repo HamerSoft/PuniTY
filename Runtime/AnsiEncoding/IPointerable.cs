@@ -28,6 +28,10 @@ namespace HamerSoft.PuniTY.AnsiEncoding
             Height = height;
         }
 
+        public Rect(float x, float y, float width, float height) : this((int)x, (int)y, (int)width, (int)height)
+        {
+        }
+
         public override string ToString()
         {
             return $"[x: {X}, y: {Y}, width: {Width}, height: {Height}]";
@@ -75,7 +79,7 @@ namespace HamerSoft.PuniTY.AnsiEncoding
         ScrollDown = 5
     }
 
-    public interface IPointer
+    public interface IPointer : IDisposable
     {
         public Vector2 Position { get; }
         public bool IsActive { get; }
