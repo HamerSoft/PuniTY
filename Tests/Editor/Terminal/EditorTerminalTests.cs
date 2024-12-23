@@ -17,17 +17,14 @@ namespace HamerSoft.PuniTY.Tests.Editor
     {
         private MockServer _server;
         private MockClient _client;
-        private AnsiContext _ansiContext;
+        private IAnsiContext _ansiContext;
 
         [SetUp]
         public void SetUp()
         {
             _server = new MockServer(new EditorLogger());
             _client = new MockClient(Guid.NewGuid(), _server);
-            _ansiContext = new AnsiContext(
-                new StubInput(new StubPointer(new AlwaysHide(), new Vector2(0, 0), new Rect(0, 0, 100, 100)),
-                    new StubKeyboard()), new Screen.DefaultScreenConfiguration(10, 10, 2, new FontDimensions(10, 10)),
-                new EditorLogger());
+            _ansiContext = new StubAnsiContext(5, 5, new EditorLogger());
         }
 
         [Test]
@@ -55,7 +52,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_Terminal_Is_StartedAsync_It_Receives_Responses()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             await terminal.StartAsync(GetValidClientArguments(), null);
             string receivedMessage = null;
             const string messageToBeSend = "HamerSoft";
@@ -77,7 +74,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_Server_Stops_Terminal_Is_Stopped()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             var isStopped = false;
 
@@ -96,7 +93,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_Client_Exits_Terminal_Is_Stopped()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             var isStopped = false;
 
@@ -116,7 +113,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_Server_ConnectionLost_Terminal_IsStopped()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             var lostConnection = false;
 
@@ -136,7 +133,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public void When_Server_Is_Stopped_Terminal_Is_No_Longer_Running()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             Assert.IsTrue(terminal.IsRunning);
             _server.Stop();
@@ -146,7 +143,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_Writing_To_Terminal_Client_Receives_Message()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             await terminal.Write("foo");
             Assert.That(_client.WrittenText, Is.EqualTo("foo"));
@@ -155,7 +152,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_WritingLine_To_Terminal_Client_Receives_Message()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             await terminal.WriteLine("foo-bar");
             Assert.That(_client.WrittenText, Is.EqualTo("foo-bar"));
@@ -164,7 +161,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
         [Test]
         public async Task When_WritingBytes_To_Terminal_Client_Receives_Message()
         {
-            var terminal = new PunityTerminal(_server, _client, new EditorLogger());
+            var terminal = new PunityTerminal(_server, _client, _ansiContext);
             terminal.Start(GetValidClientArguments(), null);
             await terminal.WriteAsync(System.Text.Encoding.ASCII.GetBytes("foo-bar"));
             Assert.That(_client.WrittenText, Is.EqualTo("foo-bar"));
@@ -177,6 +174,7 @@ namespace HamerSoft.PuniTY.Tests.Editor
             _client = null;
             _server?.Stop();
             _server = null;
+            _ansiContext.Dispose();
         }
     }
 }

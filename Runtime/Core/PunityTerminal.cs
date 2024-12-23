@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using AnsiEncoding;
 using HamerSoft.PuniTY.Configuration;
 using HamerSoft.PuniTY.Logging;
 
@@ -10,27 +11,27 @@ namespace HamerSoft.PuniTY.Core
     internal class PunityTerminal : IPunityTerminal
     {
         private readonly IPunityServer _server;
-        private readonly ILogger _logger;
         private IPunityClient _client;
         private ITerminalUI _ui;
+        private readonly IAnsiContext _ansiContext;
 
         public event Action Stopped;
         public event Action<string> ResponseReceived;
         public event Action<byte[]> BytesReceived;
         public bool IsRunning { get; private set; }
 
-        internal PunityTerminal(IPunityServer server, IPunityClient client, ILogger logger)
+        internal PunityTerminal(IPunityServer server, IPunityClient client, IAnsiContext ansiContext)
         {
             _server = server;
             _client = client;
-            _logger = logger;
+            _ansiContext = ansiContext;
         }
 
         public void Start(ClientArguments arguments, ITerminalUI ui)
         {
             if (IsRunning)
             {
-                _logger.LogWarning("Terminal already running");
+                _ansiContext.LogWarning("Terminal already running");
                 return;
             }
 
@@ -44,7 +45,7 @@ namespace HamerSoft.PuniTY.Core
         {
             if (IsRunning)
             {
-                _logger.LogWarning("Terminal already running");
+                _ansiContext.LogWarning("Terminal already running");
                 return;
             }
 
@@ -63,6 +64,11 @@ namespace HamerSoft.PuniTY.Core
             _client.BytesReceived += ClientBytesReceived;
             if (ui != null)
             {
+                if (_ansiContext != null)
+                {
+                    _ansiContext.Decoder.ProcessOutput += HandleOutput;
+                }
+
                 _ui.Closed += Stop;
                 _ui.Written += UiWritten;
                 _ui.WrittenLine += UiWrittenLine;
@@ -95,6 +101,11 @@ namespace HamerSoft.PuniTY.Core
 
             if (_ui != null)
             {
+                if (_ansiContext != null)
+                {
+                    _ansiContext.Decoder.ProcessOutput -= HandleOutput;
+                }
+
                 _ui.Closed -= Stop;
                 _ui.Written -= UiWritten;
                 _ui.WrittenLine -= UiWrittenLine;
@@ -153,18 +164,23 @@ namespace HamerSoft.PuniTY.Core
         private void ClientResponseReceived(string message)
         {
             ResponseReceived?.Invoke(message);
-            _ui?.Print(message);
+            _ansiContext.Decoder.Decode(_ansiContext.Decoder.Encoding.GetBytes(message));
         }
 
         private void ClientBytesReceived(byte[] message)
         {
             BytesReceived?.Invoke(message);
-            _ui?.Print(message);
+            _ansiContext.Decoder.Decode(message);
+        }
+
+        private void HandleOutput(byte[] output)
+        {
+            _ui.Print(_ansiContext.Decoder.Encoding.GetString(output));
         }
 
         private void ClientExited()
         {
-            _ui?.Print("Connection to client lost! Exiting...");
+            _ui?.Print("PuniTY - Connection to client lost! Exiting...");
             Stop();
         }
     }

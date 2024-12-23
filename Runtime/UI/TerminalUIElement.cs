@@ -30,12 +30,11 @@ namespace HamerSoft.PuniTY.UI
         public async void Print(string message)
         {
             await Dispatcher.ToMainThread();
-            _output.value += $"{message.Replace('\0', ' ').TrimEnd()}\r\n";
+            _output.value += message;
         }
 
-        public void Print(byte[] message)
+        public async void Print(byte[] message)
         {
-            //  throw new NotImplementedException();
         }
 
         public void Close()

@@ -10,12 +10,9 @@ namespace HamerSoft.PuniTY
     internal class PunityFactory
     {
         internal static IPunityTerminal CreateTerminal(IPunityServer punityServer, IPunityClient client,
-            IAnsiContext ansiContext,
-            ILogger logger = null)
+            IAnsiContext ansiContext)
         {
-            var terminal =  new PunityTerminal(punityServer, client, logger ?? new EditorLogger());
-            terminal.BytesReceived += ansiContext.Decoder.Decode;
-            ansiContext.InputTransmitter.Output += terminal.Write;
+            var terminal = new PunityTerminal(punityServer, client, ansiContext);
             return terminal;
         }
 
@@ -34,7 +31,8 @@ namespace HamerSoft.PuniTY
             return new TerminalUIElement(logger ?? new EditorLogger());
         }
 
-        internal static IAnsiContext CreateAnsiContext(IInput input = null, IScreenConfiguration screenConfiguration = null,
+        internal static IAnsiContext CreateAnsiContext(IInput input = null,
+            IScreenConfiguration screenConfiguration = null,
             ILogger logger = null)
         {
             return new AnsiContext(input,
